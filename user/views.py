@@ -35,7 +35,30 @@ def user_home(request):
     if request.session['lid'] == 'out':
         return HttpResponse("<script>alert('please login');window.location='/'</script>")
     else:
-        return render(request,"user_home.html")
+        try:
+            usr_obj = user.objects.get(LOGIN=request.session['lid'])
+        except user.DoesNotExist:
+             return HttpResponse("<script>alert('User not found');window.location='/'</script>")
+        
+        # Fetch active orders (status not 'completed' or 'canceled', or delivery status not 'delivered')
+        # We can use exclude.
+        active_orders = ServiceOrder.objects.filter(USER=usr_obj).exclude(
+            status__in=['completed', 'canceled']
+        ).exclude(
+            logisticsassignment__delivery_status__in=['delivered', 'Delivered', 'canceled', 'Canceled']
+        ).order_by('-order_date')[:3]
+
+        # Fetch recent completed orders
+        recent_completed = ServiceOrder.objects.filter(
+            USER=usr_obj,
+            logisticsassignment__delivery_status__in=['delivered', 'Delivered']
+        ).order_by('-order_date')[:5]
+
+        return render(request, "user_home.html", {
+            'user': usr_obj,
+            'active_orders': active_orders,
+            'recent_completed': recent_completed
+        })
 
 
 def get_location_address(lat, lon):
