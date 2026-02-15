@@ -52,37 +52,37 @@
             </div>
         </div>
         <nav class="flex-1 py-8 flex flex-col gap-2 px-4">
-            <a class="flex items-center gap-4 px-4 py-3 bg-white text-black font-bold uppercase tracking-widest text-xs"
+            <a class="flex items-center gap-4 px-4 py-3 {% if request.resolver_match.url_name == 'user_home' %}bg-white text-black{% else %}text-white/50 hover:text-white hover:bg-white/5{% endif %} transition-all font-bold uppercase tracking-widest text-xs"
                 href="{% url 'user_home' %}">
                 <span class="material-symbols-outlined text-lg">dashboard</span>
                 Home
             </a>
-            <a class="flex items-center gap-4 px-4 py-3 text-white/50 hover:text-white hover:bg-white/5 transition-all font-bold uppercase tracking-widest text-xs"
+            <a class="flex items-center gap-4 px-4 py-3 {% if request.resolver_match.url_name == 'view_all_orders' %}bg-white text-black{% else %}text-white/50 hover:text-white hover:bg-white/5{% endif %} transition-all font-bold uppercase tracking-widest text-xs"
                 href="{% url 'view_all_orders' %}">
                 <span class="material-symbols-outlined text-lg">history</span>
                 History
             </a>
-            <a class="flex items-center gap-4 px-4 py-3 text-white/50 hover:text-white hover:bg-white/5 transition-all font-bold uppercase tracking-widest text-xs"
+            <a class="flex items-center gap-4 px-4 py-3 {% if request.resolver_match.url_name == 'view_profile_user' %}bg-white text-black{% else %}text-white/50 hover:text-white hover:bg-white/5{% endif %} transition-all font-bold uppercase tracking-widest text-xs"
                 href="{% url 'view_profile_user' %}">
                 <span class="material-symbols-outlined text-lg">person</span>
                 Profile
             </a>
-            <a class="flex items-center gap-4 px-4 py-3 text-white/50 hover:text-white hover:bg-white/5 transition-all font-bold uppercase tracking-widest text-xs"
+            <a class="flex items-center gap-4 px-4 py-3 {% if request.resolver_match.url_name == 'feedback_list' %}bg-white text-black{% else %}text-white/50 hover:text-white hover:bg-white/5{% endif %} transition-all font-bold uppercase tracking-widest text-xs"
                 href="{% url 'feedback_list' %}">
                 <span class="material-symbols-outlined text-lg">support_agent</span>
                 Support
             </a>
-            <a class="flex items-center gap-4 px-4 py-3 text-white/50 hover:text-white hover:bg-white/5 transition-all font-bold uppercase tracking-widest text-xs"
+            <a class="flex items-center gap-4 px-4 py-3 {% if request.resolver_match.url_name == 'subscription_details' %}bg-white text-black{% else %}text-white/50 hover:text-white hover:bg-white/5{% endif %} transition-all font-bold uppercase tracking-widest text-xs"
                 href="{% url 'subscription_details' %}">
                 <span class="material-symbols-outlined text-lg">card_membership</span>
                 Subscription
             </a>
-            <a class="flex items-center gap-4 px-4 py-3 text-white/50 hover:text-white hover:bg-white/5 transition-all font-bold uppercase tracking-widest text-xs"
+            <a class="flex items-center gap-4 px-4 py-3 {% if request.resolver_match.url_name == 'payment_history' %}bg-white text-black{% else %}text-white/50 hover:text-white hover:bg-white/5{% endif %} transition-all font-bold uppercase tracking-widest text-xs"
                 href="{% url 'payment_history' %}">
                 <span class="material-symbols-outlined text-lg">receipt_long</span>
                 Payments
             </a>
-            <a class="flex items-center gap-4 px-4 py-3 text-white/50 hover:text-white hover:bg-white/5 transition-all font-bold uppercase tracking-widest text-xs"
+            <a class="flex items-center gap-4 px-4 py-3 {% if request.resolver_match.url_name == 'scan_qr_page' %}bg-white text-black{% else %}text-white/50 hover:text-white hover:bg-white/5{% endif %} transition-all font-bold uppercase tracking-widest text-xs"
                 href="{% url 'scan_qr_page' %}">
                 <span class="material-symbols-outlined text-lg">qr_code_scanner</span>
                 QR Scan
@@ -91,7 +91,7 @@
         <div class="p-4 border-t border-white/10">
             <div class="flex items-center gap-3 px-4 py-3">
                 <div class="w-8 h-8 bg-white/10 flex items-center justify-center text-white font-bold text-xs">
-                    {% if user.first_name %}{{user.first_name|first}}{% if user.last_name %}{{user.last_name|first}}{%endif %}{% else %}U{% endif %}
+                    {% if user.first_name %}{{user.first_name|first}}{% if user.last_name%}{{user.last_name|first}}{%endif %}{% else %}U{% endif %}
                 </div>
                 <div class="flex flex-col">
                     <span class="text-xs font-bold text-white uppercase tracking-wider">{{user.first_name}}
@@ -206,7 +206,8 @@
                                     <span class="text-white font-bold uppercase tracking-wider">Order
                                         #{{order.id}}</span>
                                     <span
-                                        class="text-[10px] text-white/40 uppercase tracking-widest">{{order.order_date|date:"Md, Y, h:i A"}}</span>
+                                        class="text-[10px] text-white/40 uppercase tracking-widest">{{order.order_date|date:"Md,
+                                        Y, h:i A"}}</span>
                                 </div>
                                 <div class="text-sm text-white/60">{{ order.service_type }}</div>
                             </div>

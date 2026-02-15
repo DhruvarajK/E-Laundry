@@ -1,297 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Confirmation</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #4A6FDC;
-            --primary-dark: #3256C4;
-            --secondary: #F0F4FF;
-            --accent: #FFC107;
-            --text: #333;
-            --text-light: #666;
-            --light: #fff;
-            --success: #28a745;
-            --border-radius: 8px;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background-color: #f9f9f9;
-            color: var(--text);
-            line-height: 1.6;
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .container {
-            background-color: var(--light);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            padding: 32px;
-            margin-bottom: 32px;
-        }
-        
-        h1 {
-            color: var(--success);
-            margin-bottom: 24px;
-            font-size: 2rem;
-            text-align: center;
-            padding-bottom: 16px;
-            border-bottom: 2px solid var(--secondary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .intro-text {
-            text-align: center;
-            margin-bottom: 32px;
-            color: var(--text-light);
-            font-size: 18px;
-        }
-        
-        .confirmation-card {
-            background-color: var(--secondary);
-            border-radius: var(--border-radius);
-            padding: 24px;
-            margin: 30px 0;
-            position: relative;
-            border-left: 4px solid var(--success);
-        }
-        
-        .confirmation-badge {
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: var(--success);
-            color: white;
-            font-size: 14px;
-            font-weight: bold;
-            padding: 6px 16px;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .order-details {
-            margin-top: 30px;
-        }
-        
-        .detail-item {
-            display: flex;
-            margin-bottom: 16px;
-            padding-bottom: 16px;
-            border-bottom: 1px dashed #ddd;
-        }
-        
-        .detail-item:last-child {
-            border-bottom: none;
-        }
-        
-        .detail-label {
-            font-weight: 600;
-            width: 180px;
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .detail-label i {
-            color: var(--primary);
-            width: 20px;
-            text-align: center;
-        }
-        
-        .detail-value {
-            flex: 1;
-        }
-        
-        .actions {
-            display: flex;
-            justify-content: center;
-            margin-top: 32px;
-            gap: 16px;
-        }
-        
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background-color: var(--primary);
-            color: white;
-            text-decoration: none;
-            padding: 14px 24px;
-            border-radius: var(--border-radius);
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .btn:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-        }
-        
-        .btn-secondary {
-            background-color: var(--text-light);
-        }
-        
-        .btn-secondary:hover {
-            background-color: #555;
-        }
-        
-        .success-animation {
-            text-align: center;
-            margin: 40px 0;
-        }
-        
-        .checkmark {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            display: block;
-            stroke-width: 2;
-            stroke: #fff;
-            stroke-miterlimit: 10;
-            margin: 0 auto;
-            box-shadow: inset 0px 0px 0px var(--success);
-            animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
-        }
-        
-        .checkmark__circle {
-            stroke-dasharray: 166;
-            stroke-dashoffset: 166;
-            stroke-width: 2;
-            stroke-miterlimit: 10;
-            stroke: var(--success);
-            fill: none;
-            animation: stroke .6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
-        }
-        
-        .checkmark__check {
-            transform-origin: 50% 50%;
-            stroke-dasharray: 48;
-            stroke-dashoffset: 48;
-            animation: stroke .3s cubic-bezier(0.65, 0, 0.45, 1) .8s forwards;
-        }
-        
-        @keyframes stroke {
-            100% {
-                stroke-dashoffset: 0;
-            }
-        }
-        
-        @keyframes scale {
-            0%, 100% {
-                transform: none;
-            }
-            50% {
-                transform: scale3d(1.1, 1.1, 1);
-            }
-        }
-        
-        @keyframes fill {
-            100% {
-                box-shadow: inset 0px 0px 0px 30px var(--success);
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
-            
-            h1 {
-                font-size: 1.75rem;
-            }
-            
-            .detail-item {
-                flex-direction: column;
-            }
-            
-            .detail-label {
-                width: 100%;
-                margin-bottom: 8px;
-            }
-            
-            .actions {
-                flex-direction: column;
-            }
-            
-            .btn {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1><i class="fas fa-check-circle"></i> Order Confirmed!</h1>
-        
-        <p class="intro-text">Your order has been confirmed successfully. Below are the details:</p>
-        
-        <div class="success-animation">
-            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
-                <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-            </svg>
+{% extends 'user_home.html' %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto space-y-8">
+    <div class="space-y-2">
+        <h2 class="text-xs font-bold uppercase tracking-[0.4em] text-white/40">Success</h2>
+        <h3 class="text-3xl md:text-4xl font-black uppercase tracking-tight text-white">Order Confirmed!</h3>
+    </div>
+
+    <div class="border border-white/10 bg-black p-8 md:p-12 text-center space-y-8">
+        <div class="w-24 h-24 bg-white text-black rounded-full flex items-center justify-center mx-auto mb-6">
+            <span class="material-symbols-outlined text-5xl">check</span>
         </div>
-        
-        <div class="confirmation-card">
-            <span class="confirmation-badge"><i class="fas fa-tag"></i> Order Details</span>
-            
-            <div class="order-details">
-                <div class="detail-item">
-                    <div class="detail-label"><i class="fas fa-hashtag"></i> Order ID:</div>
-                    <div class="detail-value">{{ order.id }}</div>
+
+        <p class="text-white/60 text-lg">Your order has been officially placed. We've sent a confirmation email to your
+            inbox.</p>
+
+        <div class="border-t border-b border-white/10 py-8 my-8 text-left space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <span class="block text-[10px] font-bold uppercase tracking-widest text-white/40 mb-1">Order
+                        ID</span>
+                    <span class="block text-xl font-mono text-white">#{{ order.id }}</span>
                 </div>
-                
-                <div class="detail-item">
-                    <div class="detail-label"><i class="fas fa-tag"></i> Service Type:</div>
-                    <div class="detail-value">{{ order.service_type }}</div>
-                </div>
-                
-                <div class="detail-item">
-                    <div class="detail-label"><i class="fas fa-comment-alt"></i> Special Instructions:</div>
-                    <div class="detail-value">
-                        {% if order.special_instructions %}
-                            {{ order.special_instructions }}
-                        {% else %}
-                            <em>No special instructions provided</em>
-                        {% endif %}
-                    </div>
+                <div>
+                    <span class="block text-[10px] font-bold uppercase tracking-widest text-white/40 mb-1">Service
+                        Type</span>
+                    <span class="block text-xl text-white">{{ order.service_type }}</span>
                 </div>
             </div>
+            <div>
+                <span class="block text-[10px] font-bold uppercase tracking-widest text-white/40 mb-1">Special
+                    Instructions</span>
+                <span class="block text-white/80 italic">
+                    {% if order.special_instructions %}
+                    "{{ order.special_instructions }}"
+                    {% else %}
+                    No special instructions provided
+                    {% endif %}
+                </span>
+            </div>
         </div>
-        
-        <div class="actions">
-            <a href="{% url 'view_all_orders' %}" class="btn">
-                <i class="fas fa-list"></i> Back to Orders
+
+        <div class="flex flex-col md:flex-row gap-4 justify-center">
+            <a href="{% url 'view_all_orders' %}"
+                class="px-8 py-4 bg-white text-black font-bold uppercase tracking-widest text-xs hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined">list_alt</span>
+                View All Orders
             </a>
-            
-            <a href="#" class="btn btn-secondary">
-                <i class="fas fa-home"></i> Go to Dashboard
+            <a href="{% url 'user_home' %}"
+                class="px-8 py-4 border border-white/20 text-white font-bold uppercase tracking-widest text-xs hover:bg-white hover:text-black transition-colors flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined">dashboard</span>
+                Back to Dashboard
             </a>
         </div>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

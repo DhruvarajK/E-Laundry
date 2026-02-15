@@ -1,510 +1,111 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Track Orders</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #4a6fa5;
-            --secondary-color: #6c757d;
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-            --warning-color: #ffc107;
-            --info-color: #17a2b8;
-            --light-color: #f8f9fa;
-            --dark-color: #343a40;
-            --border-radius: 0.5rem;
-            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
+{% extends 'user_home.html' %}
+{% load static %}
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+{% block content %}
+<div class="space-y-8">
+    <div
+        class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-white/10 pb-8">
+        <div>
+            <h2 class="text-xs font-bold uppercase tracking-[0.4em] text-white/40 mb-2">Live Status</h2>
+            <h3 class="text-3xl font-black uppercase tracking-tight text-white">Track Orders</h3>
+        </div>
 
-        body {
-            background-color: #f5f7fa;
-            color: #333;
-            line-height: 1.6;
-            padding: 1rem;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1rem;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        h1 {
-            color: var(--primary-color);
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-        }
-
-        .filter-form {
-            background-color: white;
-            padding: 1.2rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--dark-color);
-        }
-
-        .checkbox-label {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        input[type="date"] {
-            width: 100%;
-            padding: 0.5rem;
-            border: 1px solid #ddd;
-            border-radius: 0.25rem;
-            font-size: 1rem;
-        }
-
-        input[type="checkbox"] {
-            margin-right: 0.5rem;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 1rem;
-            flex-wrap: wrap;
-        }
-
-        button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 0.25rem;
-            cursor: pointer;
-            font-weight: 500;
-            transition: background-color 0.2s;
-            display: flex;
-            align-items: center;
-        }
-
-        button:hover {
-            background-color: #3a5a84;
-        }
-
-        button i {
-            margin-right: 0.5rem;
-        }
-
-        .clear-btn {
-            background-color: var(--secondary-color);
-        }
-
-        .clear-btn:hover {
-            background-color: #5a6268;
-        }
-
-        .orders-container {
-            background-color: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            overflow: hidden;
-        }
-
-        .orders-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .orders-table th {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 1rem;
-            text-align: left;
-            font-weight: 600;
-        }
-
-        .orders-table td {
-            padding: 1rem;
-            border-bottom: 1px solid #eee;
-        }
-
-        .orders-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .orders-table tr:hover {
-            background-color: #f8f9fa;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 0.35rem 0.65rem;
-            border-radius: 1rem;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .status-pending {
-            background-color: var(--warning-color);
-            color: #212529;
-        }
-
-        .status-processing {
-            background-color: var(--info-color);
-            color: white;
-        }
-
-        .status-delivered {
-            background-color: var(--success-color);
-            color: white;
-        }
-
-        .status-cancelled {
-            background-color: var(--danger-color);
-            color: white;
-        }
-
-        .empty-message {
-            text-align: center;
-            padding: 2rem;
-            color: var(--secondary-color);
-            font-style: italic;
-        }
-
-        .delivery-man {
-            display: flex;
-            align-items: center;
-        }
-
-        .delivery-man i {
-            margin-right: 0.5rem;
-            color: var(--primary-color);
-        }
-
-        .not-assigned {
-            color: var(--secondary-color);
-            font-style: italic;
-        }
-
-        .date-field {
-            white-space: nowrap;
-        }
-
-        @media screen and (max-width: 992px) {
-            .orders-table {
-                display: block;
-                overflow-x: auto;
-            }
-        }
-
-        @media screen and (max-width: 768px) {
-            .filter-form {
-                flex-direction: column;
-            }
-            
-            .form-row {
-                flex-direction: column;
-            }
-            
-            header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            h1 {
-                margin-bottom: 1rem;
-            }
-            
-            .orders-table th, 
-            .orders-table td {
-                padding: 0.75rem 0.5rem;
-                font-size: 0.9rem;
-            }
-        }
-
-        @media screen and (max-width: 576px) {
-            .order-card {
-                display: block;
-                margin-bottom: 1rem;
-                padding: 1rem;
-                border-radius: var(--border-radius);
-                box-shadow: var(--box-shadow);
-                background-color: white;
-            }
-            
-            .orders-table {
-                display: none;
-            }
-            
-            .mobile-orders {
-                display: block;
-            }
-            
-            .order-card-row {
-                display: flex;
-                justify-content: space-between;
-                margin-bottom: 0.5rem;
-                border-bottom: 1px solid #f0f0f0;
-                padding-bottom: 0.5rem;
-            }
-            
-            .order-card-row:last-child {
-                border-bottom: none;
-                margin-bottom: 0;
-                padding-bottom: 0;
-            }
-            
-            .order-card-label {
-                font-weight: 600;
-                color: var(--secondary-color);
-            }
-            
-            .order-card-value {
-                text-align: right;
-                font-weight: 500;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1><i class="fas fa-box-open"></i> Track Your Orders</h1>
-        </header>
-
-        <!-- Filter Form -->
-        <form method="GET" class="filter-form">
-            <div class="form-group">
-                <label for="date">Filter by Date:</label>
-                <input type="date" id="date" name="date" value="{{ request.GET.date|default:'' }}">
+        <form method="GET" class="flex flex-wrap gap-4 items-end">
+            <div class="flex flex-col gap-1">
+                <label for="date" class="text-[10px] uppercase font-bold tracking-widest text-white/40">Date</label>
+                <input type="date" id="date" name="date" value="{{ request.GET.date|default:'' }}"
+                    class="bg-black/50 border border-white/10 text-white text-xs px-3 py-2 focus:border-white/40 focus:ring-0">
             </div>
-            
-            <div class="form-group">
-                <label class="checkbox-label">
-                    <input type="checkbox" id="hide_delivered" name="hide_delivered" value="1" 
-                           {% if request.GET.hide_delivered %}checked{% endif %}>
-                    Hide Delivered Orders
-                </label>
+
+            <div class="flex items-center gap-2 pb-2">
+                <input type="checkbox" id="hide_delivered" name="hide_delivered" value="1"
+                    class="bg-black/50 border-white/10 text-white rounded-none focus:ring-0" {% if request.GET.hide_delivered %}checked{% endif %}>
+                <label for="hide_delivered" class="text-[10px] uppercase font-bold tracking-widest text-white/60">Hide
+                    Delivered</label>
             </div>
-            
-            <div class="button-group">
-                <button type="submit"><i class="fas fa-filter"></i> Apply Filters</button>
-                <a href="{% url 'track_orders' %}" class="clear-btn" style="text-decoration: none;">
-                    <button type="button" class="clear-btn"><i class="fas fa-times"></i> Clear Filters</button>
+
+            <div class="flex gap-2">
+                <button type="submit"
+                    class="px-3 py-2 bg-white text-black text-[10px] uppercase font-bold tracking-widest hover:bg-gray-200 transition-colors">
+                    Filter
+                </button>
+                <a href="{% url 'track_orders' %}"
+                    class="px-3 py-2 border border-white/10 text-white/60 text-[10px] uppercase font-bold tracking-widest hover:bg-white/5 transition-colors">
+                    Clear
                 </a>
             </div>
         </form>
+    </div>
 
-        <!-- Orders Table (Desktop and Tablet) -->
-        <div class="orders-container">
-            <table class="orders-table">
-                <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Order Date</th>
-                        <th>Pickup Date</th>
-                        <th>Delivery Date</th>
-                        <th>Status</th>
-                        <th>Delivery Person</th>
-                        <th>Delivery Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for order in orders %}
-                    <tr>
-                        <td>#{{ order.id }}</td>
-                        <td class="date-field">{{ order.order_date.date }}</td>
-                        <td class="date-field">
-                            {% if order.pickup_date %}
-                                {{ order.pickup_date }}
-                            {% else %}
-                                <span class="not-assigned">Not Scheduled</span>
-                            {% endif %}
-                        </td>
-                        <td class="date-field">
-                            {% if order.delivery_date %}
-                                {{ order.delivery_date }}
-                            {% else %}
-                                <span class="not-assigned">Pending</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if order.status == 'pending' %}
-                                <span class="status-badge status-pending">Pending</span>
-                            {% elif order.status == 'processing' %}
-                                <span class="status-badge status-processing">Processing</span>
-                            {% elif order.status == 'delivered' %}
-                                <span class="status-badge status-delivered">Delivered</span>
-                            {% elif order.status == 'cancelled' %}
-                                <span class="status-badge status-cancelled">Cancelled</span>
-                            {% else %}
-                                <span class="status-badge">{{ order.status }}</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if order.logisticsassignment.pickup_or_delivery_man %}
-                                <div class="delivery-man">
-                                    <i class="fas fa-user-tie"></i>
-                                    {{ order.logisticsassignment.pickup_or_delivery_man.first_name }}
-                                </div>
-                            {% else %}
-                                <span class="not-assigned">Not Assigned</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if order.logisticsassignment.delivery_status == 'pending' %}
-                                <span class="status-badge status-pending">Pending</span>
-                            {% elif order.logisticsassignment.delivery_status == 'in_transit' %}
-                                <span class="status-badge status-processing">In Transit</span>
-                            {% elif order.logisticsassignment.delivery_status == 'delivered' %}
-                                <span class="status-badge status-delivered">Delivered</span>
-                            {% elif order.logisticsassignment.delivery_status == 'failed' %}
-                                <span class="status-badge status-cancelled">Failed</span>
-                            {% else %}
-                                <span class="status-badge">{{ order.logisticsassignment.delivery_status }}</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="7" class="empty-message">No orders found matching your criteria.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+    <div class="grid gap-6">
+    {% for order in orders %}
+    <div class="border border-white/10 bg-white/5 p-6 group hover:border-white/20 transition-all">
+        <div class="flex flex-col lg:flex-row gap-8 justify-between">
+            <div class="flex gap-6">
+                <div class="w-12 h-12 bg-white/10 flex items-center justify-center border border-white/10 shrink-0">
+                    <span class="font-mono text-white/60 font-bold text-xs">#{{ order.id }}</span>
+                </div>
+                <div>
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-lg font-bold text-white uppercase tracking-tight">
+                            {% if order.status == 'pending' %}Order Pending
+                            {% elif order.status == 'processing' %}Processing
+                            {% elif order.status == 'delivered' %}Delivered
+                            {% elif order.status == 'cancelled' %}Cancelled
+                            {% else %}{{ order.status }}{% endif %}
+                        </span>
+                        <span class="text-[10px] px-2 py-0.5 border border-white/10 text-white/40 uppercase tracking-widest">
+                            {{ order.order_date|date:"M d" }}
+                        </span>
+                    </div>
+                    <div class="flex flex-wrap gap-x-6 gap-y-2 text-xs text-white/40 uppercase tracking-widest">
+                        <span>Pickup: {% if order.pickup_date %}{{ order.pickup_date }}{% else %}Wait for assignment{% endif %}</span>
+                        <span>Delivery: {% if order.delivery_date %}{{ order.delivery_date }}{% else %}Est. 2 Days{% endif %}</span>
+                    </div>
+                </div>
+            </div>
 
-            <!-- Mobile View (Card Layout) -->
-            <div class="mobile-orders">
-                {% for order in orders %}
-                <div class="order-card">
-                    <div class="order-card-row">
-                        <div class="order-card-label">Order ID:</div>
-                        <div class="order-card-value">#{{ order.id }}</div>
+            <div class="flex flex-col gap-4 min-w-[300px]">
+                <!-- Progress Bar -->
+                <div class="relative pt-2">
+                    <div class="flex justify-between text-[10px] uppercase font-bold tracking-widest text-white/40 mb-2">
+                        <span class="{% if order.logisticsassignment.delivery_status != 'not_assigned' %}text-white{% endif %}">Pickup</span>
+                        <span class="{% if order.logisticsassignment.delivery_status == 'in_transit' or order.logisticsassignment.delivery_status == 'pickuped' %}text-white{% endif %}">Processing</span>
+                        <span class="{% if order.logisticsassignment.delivery_status == 'delivered' %}text-white{% endif %}">Delivered</span>
                     </div>
-                    <div class="order-card-row">
-                        <div class="order-card-label">Order Date:</div>
-                        <div class="order-card-value">{{ order.order_date.date }}</div>
-                    </div>
-                    <div class="order-card-row">
-                        <div class="order-card-label">Pickup Date:</div>
-                        <div class="order-card-value">
-                            {% if order.order_date.pickup_date %}
-                                {{ order.order_date.pickup_date }}
-                            {% else %}
-                                <span class="not-assigned">Not Scheduled</span>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="order-card-row">
-                        <div class="order-card-label">Delivery Date:</div>
-                        <div class="order-card-value">
-                            {% if order.order_date.delivery_date %}
-                                {{ order.order_date.delivery_date }}
-                            {% else %}
-                                <span class="not-assigned">Pending</span>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="order-card-row">
-                        <div class="order-card-label">Status:</div>
-                        <div class="order-card-value">
-                            {% if order.status == 'pending' %}
-                                <span class="status-badge status-pending">Pending</span>
-                            {% elif order.status == 'processing' %}
-                                <span class="status-badge status-processing">Processing</span>
-                            {% elif order.status == 'delivered' %}
-                                <span class="status-badge status-delivered">Delivered</span>
-                            {% elif order.status == 'cancelled' %}
-                                <span class="status-badge status-cancelled">Cancelled</span>
-                            {% else %}
-                                <span class="status-badge">{{ order.status }}</span>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="order-card-row">
-                        <div class="order-card-label">Delivery Person:</div>
-                        <div class="order-card-value">
-                            {% if order.logisticsassignment.pickup_or_delivery_man %}
-                                <div class="delivery-man">
-                                    <i class="fas fa-user-tie"></i>
-                                    {{ order.logisticsassignment.pickup_or_delivery_man.first_name }}
-                                </div>
-                            {% else %}
-                                <span class="not-assigned">Not Assigned</span>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="order-card-row">
-                        <div class="order-card-label">Delivery Status:</div>
-                        <div class="order-card-value">
-                            {% if order.logisticsassignment.delivery_status == 'pending' %}
-                                <span class="status-badge status-pending">Pending</span>
-                            {% elif order.logisticsassignment.delivery_status == 'in_transit' %}
-                                <span class="status-badge status-processing">In Transit</span>
-                            {% elif order.logisticsassignment.delivery_status == 'delivered' %}
-                                <span class="status-badge status-delivered">Delivered</span>
-                            {% elif order.logisticsassignment.delivery_status == 'failed' %}
-                                <span class="status-badge status-cancelled">Failed</span>
-                            {% else %}
-                                <span class="status-badge">{{ order.logisticsassignment.delivery_status }}</span>
-                            {% endif %}
+                    <div class="h-1 bg-white/10 w-full relative">
+                        <div class="absolute left-0 top-0 h-full bg-white transition-all duration-500"
+                             style="width: {% if order.logisticsassignment.delivery_status == 'delivered' %}100{% elif order.logisticsassignment.delivery_status == 'in_transit' or order.logisticsassignment.delivery_status == 'pickuped' %}50{% elif order.logisticsassignment.delivery_status != 'not_assigned' %}15{% else %}0{% endif %}%;">
                         </div>
                     </div>
                 </div>
-                {% empty %}
-                <div class="empty-message">No orders found matching your criteria.</div>
-                {% endfor %}
+
+                {% if order.logisticsassignment.pickup_or_delivery_man %}
+                <div class="flex items-center gap-3 bg-white/5 p-3 border border-white/5">
+                    <div class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center">
+                        <span class="material-symbols-outlined text-sm text-white">person</span>
+                    </div>
+                    <div>
+                        <span class="block text-xs font-bold text-white uppercase tracking-wider">
+                            {{ order.logisticsassignment.pickup_or_delivery_man.first_name }}
+                        </span>
+                        <span class="block text-[10px] text-white/40 uppercase tracking-widest">Delivery Partner</span>
+                    </div>
+                </div>
+                {% else %}
+                <div class="text-[10px] text-white/20 uppercase tracking-widest italic text-center py-2">
+                    Delivery partner assignment pending
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add any JavaScript functionality here if needed
-            const mobileOrders = document.querySelector('.mobile-orders');
-            const ordersTable = document.querySelector('.orders-table');
-            
-            function updateDisplay() {
-                if (window.innerWidth <= 576) {
-                    mobileOrders.style.display = 'block';
-                    ordersTable.style.display = 'none';
-                } else {
-                    mobileOrders.style.display = 'none';
-                    ordersTable.style.display = 'table';
-                }
-            }
-            
-            // Initial check
-            updateDisplay();
-            
-            // Listen for window resize
-            window.addEventListener('resize', updateDisplay);
-        });
-    </script>
-</body>
-</html>
+    {% empty %}
+    <div class="p-12 text-center border border-white/10 bg-white/5">
+        <span class="material-symbols-outlined text-4xl text-white/20 mb-4">search_off</span>
+        <p class="text-white/40 text-sm uppercase tracking-widest">No orders found matching your criteria</p>
+    </div>
+    {% endfor %}
+</div>
+</div>
+{% endblock %}

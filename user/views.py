@@ -61,6 +61,18 @@ def user_home(request):
         })
 
 
+def get_user_context(request):
+    """Helper to get user context for the sidebar"""
+    context = {}
+    if request.session.get('lid') and request.session['lid'] != 'out':
+        try:
+            usr_obj = user.objects.get(LOGIN=request.session['lid'])
+            context['user'] = usr_obj
+        except user.DoesNotExist:
+            pass
+    return context
+
+
 def get_location_address(lat, lon):
     geolocator = Nominatim(user_agent="your_app_name")
     location = geolocator.reverse((lat, lon), language='en')
@@ -221,6 +233,7 @@ def update_profile_user(request):
     return render(request, 'profile_update_user.html', {'user': usr_obj})
 
 def normal_order(request):
+    context = get_user_context(request)
     if request.method == 'POST':
         service_type = request.POST.get('service_type')
         special_instructions = request.POST.get('special_instructions')
@@ -254,7 +267,7 @@ def normal_order(request):
             except Business.DoesNotExist:
                 # Handle the error (for example, raise an exception or redirect with error message)
                 messages.error(request, 'No valid user or business account found.')
-                return render(request, 'normal_order.html')
+                return render(request, 'normal_order.html', context)
 
         # Create the service order with the appropriate field values
         order = ServiceOrder.objects.create(
@@ -276,9 +289,18 @@ def normal_order(request):
         payment.save()
 
         messages.success(request, 'Your order have been confirmed!')
-        return render(request, 'order_confirmed.html', {'order': order, 'payment': payment})
+        return redirect('order_confirmed', order_id=order.id)
 
-    return render(request, 'normal_order.html')
+    return render(request, 'normal_order.html', context)
+
+
+def order_confirmed(request, order_id):
+    context = get_user_context(request)
+    order = get_object_or_404(ServiceOrder, id=order_id)
+    payment = Payment.objects.filter(service_order=order).first()
+    
+    context.update({'order': order, 'payment': payment})
+    return render(request, 'order_confirmed.html', context)
 
 
 
@@ -442,6 +464,7 @@ def track_orders(request):
         orders = orders.exclude(logisticsassignment__delivery_status__in=['delivered', 'Delivered'])
     
     context = {'orders': orders}
+    context.update(get_user_context(request))
     return render(request, 'track_orders.html', context)
 
     

@@ -9,6 +9,7 @@ urlpatterns = [
     path('register/', views.register_user, name='register_user'),
     path('get-location/', views.get_current_location, name='get_current_location'),
     path('user_home/normal_order/', views.normal_order, name='normal_order'),
+    path('user_home/order_confirmed/<int:order_id>/', views.order_confirmed, name='order_confirmed'),
     path('user_home/', views.user_home, name='user_home'),
     path('track_orders/', views.track_orders, name='track_orders'),
     path('view_all_orders/', views.view_all_orders, name='view_all_orders'),

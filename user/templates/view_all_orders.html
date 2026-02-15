@@ -1,383 +1,143 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All Orders</title>
-  <style>
-    :root {
-      --primary-color: #4a6de5;
-      --secondary-color: #f8f9fa;
-      --accent-color: #6c757d;
-      --danger-color: #dc3545;
-      --success-color: #28a745;
-      --warning-color: #ffc107;
-      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      --border-radius: 8px;
-    }
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    
-    body {
-      background-color: #f5f7fa;
-      color: #333;
-      line-height: 1.6;
-      padding: 20px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    
-    h1 {
-      color: var(--primary-color);
-      margin-bottom: 20px;
-      font-size: 28px;
-      border-bottom: 2px solid var(--primary-color);
-      padding-bottom: 10px;
-    }
-    
-    form {
-      margin-bottom: 20px;
-    }
-    
-    label {
-      display: inline-block;
-      margin-bottom: 8px;
-      font-weight: 600;
-    }
-    
-    select {
-      padding: 10px;
-      border-radius: var(--border-radius);
-      border: 1px solid #ddd;
-      background-color: white;
-      font-size: 16px;
-      cursor: pointer;
-      box-shadow: var(--shadow);
-      transition: all 0.3s ease;
-    }
-    
-    select:focus {
-      outline: none;
-      border-color: var(--primary-color);
-    }
-    
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-      box-shadow: var(--shadow);
-      background: white;
-      border-radius: var(--border-radius);
-      overflow: hidden;
-    }
-    
-    th, td {
-      padding: 15px;
-      text-align: left;
-      border-bottom: 1px solid #eee;
-    }
-    
-    th {
-      background-color: var(--primary-color);
-      color: white;
-      font-weight: 600;
-    }
-    
-    tr:hover {
-      background-color: var(--secondary-color);
-    }
-    
-    .alert {
-      color: var(--danger-color);
-      font-weight: bold;
-      background-color: rgba(220, 53, 69, 0.1);
-      padding: 10px;
-      border-radius: var(--border-radius);
-      margin: 10px 0;
-      border-left: 4px solid var(--danger-color);
-    }
-    
-    button {
-      padding: 8px 16px;
-      border: none;
-      border-radius: var(--border-radius);
-      background-color: var(--primary-color);
-      color: white;
-      cursor: pointer;
-      font-weight: 500;
-      transition: background-color 0.3s ease;
-      box-shadow: var(--shadow);
-    }
-    
-    button:hover {
-      background-color: #3959c7;
-    }
-    
-    button[type="submit"] {
-      width: 100%;
-    }
-    
-    a {
-      display: inline-block;
-      margin-top: 10px;
-      color: var(--primary-color);
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.3s ease;
-    }
-    
-    a:hover {
-      color: #3959c7;
-      text-decoration: underline;
-    }
-    
-    .go-back {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      margin-top: 20px;
-      padding: 8px 16px;
-      background-color: var(--accent-color);
-      color: white;
-      border-radius: var(--border-radius);
-      text-decoration: none;
-      box-shadow: var(--shadow);
-    }
-    
-    .go-back:hover {
-      background-color: #5a6268;
-      text-decoration: none;
-      color: white;
-    }
-    
-    .status-pill {
-      display: inline-block;
-      padding: 6px 12px;
-      border-radius: 50px;
-      font-size: 14px;
-      font-weight: 500;
-    }
-    
-    .status-pending {
-      background-color: var(--warning-color);
-      color: #212529;
-    }
-    
-    .status-in-progress {
-      background-color: #17a2b8;
-      color: white;
-    }
-    
-    .status-completed {
-      background-color: var(--success-color);
-      color: white;
-    }
-    
-    .status-canceled {
-      background-color: var(--danger-color);
-      color: white;
-    }
-    
-    .payment-paid {
-      color: var(--success-color);
-      font-weight: 500;
-    }
-    
-    .payment-unpaid {
-      color: var(--danger-color);
-      font-weight: 500;
-    }
-    
-    .payment-partial {
-      color: var(--warning-color);
-      font-weight: 500;
-    }
-    
-    .cancel-button {
-      background-color: var(--danger-color);
-    }
-    
-    .cancel-button:hover {
-      background-color: #bd2130;
-    }
-    
-    .view-button {
-      background-color: var(--accent-color);
-    }
-    
-    .view-button:hover {
-      background-color: #5a6268;
-    }
-    
-    .empty-state {
-      text-align: center;
-      padding: 40px 20px;
-      background-color: white;
-      border-radius: var(--border-radius);
-      box-shadow: var(--shadow);
-    }
-    
-    /* Mobile Responsive Styles */
-    @media (max-width: 768px) {
-      body {
-        padding: 10px;
-      }
-      
-      h1 {
-        font-size: 24px;
-      }
-      
-      table {
-        display: block;
-        overflow-x: auto;
-      }
-      
-      th, td {
-        padding: 10px;
-      }
-      
-      .responsive-table {
-        display: block;
-        width: 100%;
-        overflow-x: auto;
-      }
-      
-      /* Convert table to cards on mobile */
-      @media (max-width: 576px) {
-        table, thead, tbody, th, td, tr {
-          display: block;
-        }
-        
-        thead tr {
-          position: absolute;
-          top: -9999px;
-          left: -9999px;
-        }
-        
-        tr {
-          margin-bottom: 15px;
-          border: 1px solid #ddd;
-          border-radius: var(--border-radius);
-          background-color: white;
-          box-shadow: var(--shadow);
-        }
-        
-        td {
-          position: relative;
-          padding-left: 50%;
-          text-align: right;
-          border-bottom: 1px solid #eee;
-        }
-        
-        td:last-child {
-          border-bottom: none;
-        }
-        
-        td:before {
-          position: absolute;
-          left: 10px;
-          width: 45%;
-          padding-right: 10px;
-          white-space: nowrap;
-          font-weight: 600;
-          text-align: left;
-        }
-        
-        /* Add labels for each td on mobile */
-        td:nth-of-type(1):before { content: "Order ID:"; }
-        td:nth-of-type(2):before { content: "Service Type:"; }
-        td:nth-of-type(3):before { content: "Status:"; }
-        td:nth-of-type(4):before { content: "Payment Status:"; }
-        td:nth-of-type(5):before { content: "Action:"; }
-      }
-    }
-  </style>
-</head>
-<body>
-  <h1>Your Orders</h1>
+{% extends 'user_home.html' %}
+{% load static %}
 
-  <!-- Filter orders by status -->
-  <form method="get">
-    <label for="status">Filter by Status:</label>
-    <select name="status" id="status" onchange="this.form.submit()">
-      <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All</option>
-      <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
-      <option value="in progress" {% if status_filter == 'in progress' %}selected{% endif %}>In Progress</option>
-      <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Completed</option>
-      <option value="canceled" {% if status_filter == 'canceled' %}selected{% endif %}>Cancelled</option>
-    </select>
-  </form>
+{% block content %}
+<div class="space-y-8">
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-white/10 pb-8">
+    <div>
+      <h2 class="text-xs font-bold uppercase tracking-[0.4em] text-white/40 mb-2">My Activity</h2>
+      <h3 class="text-3xl md:text-4xl font-black uppercase tracking-tight text-white">Order History</h3>
+    </div>
 
-  {% if orders %}
-    <div class="responsive-table">
-      <table>
-        <thead>
-          <tr>
-            <th>Order ID</th>
-            <th>Service Type</th>
-            <th>Status</th>
-            <th>Payment Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for order in orders %}
-            <tr>
-              <td>{{ order.id }}</td>
-              <td>{{ order.service_type }}</td>
-              <td>
-                <span class="status-pill status-{{ order.status|slugify }}">
-                  {{ order.status|title }}
-                </span>
-              </td>
-              <td class="payment-{{ order.payment.payment_status|slugify }}">
-                {{ order.payment.payment_status|title }}
-              </td>
-              <td>
-                {% if order.status == 'in progress' %}
-                  {% if order.payment.bill_items.all|length == 0 %}
-                    <span class="alert">Bill has not been generated yet.</span>
-                  {% else %}
-                    <form action="{% url 'view_bill' order.id %}" method="get">
-                      <button type="submit" class="view-button">View Payment</button>
-                    </form>
-                  {% endif %}
-                {% endif %}
-                <!-- Only show the "Cancel" button if the order is pending -->
-                {% if order.status == 'pending' %}
-                  <form action="{% url 'cancel_order' order_id=order.id %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="cancel-button">Cancel Order</button>
-                  </form>
-                {% endif %}
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+    <!-- Status Filter -->
+    <form method="get" class="flex items-center gap-4">
+      <label for="status" class="text-xs font-bold uppercase tracking-widest text-white/60">Filter:</label>
+      <div class="relative">
+        <div class="relative">
+      <select name="status" id="status" onchange="this.form.submit()"
+          class="appearance-none bg-white/5 border border-white/10 text-white px-4 py-2 pr-10 text-xs font-bold uppercase tracking-wider focus:outline-none focus:border-white/40 transition-colors">
+          <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All Orders</option>
+          <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+          <option value="in progress" {% if status_filter == 'in progress' %}selected{% endif %}>In Progress</option>
+          <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Completed</option>
+          <option value="canceled" {% if status_filter == 'canceled' %}selected{% endif %}>Cancelled</option>
+      </select>
+    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white/60">
+        <span class="material-symbols-outlined text-sm">expand_more</span>
     </div>
-  {% else %}
-    <div class="empty-state">
-      <p>No orders found for the selected status.</p>
-    </div>
-  {% endif %}
+</div>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white/60">
+          <span class="material-symbols-outlined text-sm">expand_more</span>
+        </div>
+      </div>
+    </form>
+  </div>
 
   {% if messages %}
+  <div class="space-y-4">
     {% for message in messages %}
-      <div class="alert">{{ message }}</div>
+    <div class="p-4 border border-white/10 bg-white/5 text-white text-sm flex items-center gap-3">
+      <span class="material-symbols-outlined text-white/60">info</span>
+      {{ message }}
+    </div>
     {% endfor %}
+  </div>
   {% endif %}
-  
-  <a href="javascript:history.go(-1)" class="go-back">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-      <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
-    </svg>
-    Go Back
-  </a>
-</body>
-</html>
+
+  {% if orders %}
+  <div class="grid gap-4">
+    {% for order in orders %}
+    <div
+      class="border border-white/10 bg-white/5 p-6 flex flex-col md:flex-row gap-6 md:items-center justify-between group hover:border-white/30 transition-colors">
+      <div class="flex items-center gap-6">
+        <!-- Icon based on service type -->
+        <div class="w-16 h-16 bg-white/10 flex items-center justify-center border border-white/10 shrink-0">
+          {% if 'dry' in order.service_type|lower %}
+          <span class="material-symbols-outlined text-white/60 text-2xl">checkroom</span>
+          {% elif 'iron' in order.service_type|lower %}
+          <span class="material-symbols-outlined text-white/60 text-2xl">iron</span>
+          {% else %}
+          <span class="material-symbols-outlined text-white/60 text-2xl">local_laundry_service</span>
+          {% endif %}
+        </div>
+
+        <div class="space-y-1">
+          <div class="flex items-center gap-3">
+            <span class="text-white font-bold uppercase tracking-wider">Order #{{ order.id }}</span>
+            <!-- Status Badge -->
+            {% if order.status == 'completed' %}
+            <span
+              class="px-2 py-0.5 bg-green-500/20 text-green-400 text-[10px] uppercase font-bold tracking-widest border border-green-500/20">Completed</span>
+            {% elif order.status == 'canceled' %}
+            <span
+              class="px-2 py-0.5 bg-red-500/20 text-red-400 text-[10px] uppercase font-bold tracking-widest border border-red-500/20">Cancelled</span>
+            {% elif order.status == 'pending' %}
+            <span
+              class="px-2 py-0.5 bg-yellow-500/20 text-yellow-400 text-[10px] uppercase font-bold tracking-widest border border-yellow-500/20">Pending</span>
+            {% else %}
+            <span
+              class="px-2 py-0.5 bg-blue-500/20 text-blue-400 text-[10px] uppercase font-bold tracking-widest border border-blue-500/20">{{order.status }}</span>
+            {% endif %}
+          </div>
+          <div class="text-sm text-white/60">{{ order.service_type }}</div>
+          <div class="text-[10px] text-white/40 uppercase tracking-widest">
+            Placed on {{ order.order_date|date:"M d, Y" }}
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col items-end gap-2 min-w-[200px]">
+        <!-- Payment Status -->
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-[10px] uppercase tracking-widest text-white/40">Payment:</span>
+          <span class="text-xs font-bold uppercase tracking-wider 
+                        {% if order.payment.payment_status == 'paid' %}text-green-400{% else %}text-white{% endif %}">
+            {{ order.payment.payment_status|default:"Pending" }}
+          </span>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex gap-2 w-full md:w-auto">
+          {% if order.status == 'in progress' %}
+          {% if order.payment.bill_items.all|length > 0 %}
+          <form action="{% url 'view_bill' order.id %}" method="get" class="flex-1 md:flex-none">
+            <button type="submit"
+              class="w-full md:w-auto px-4 py-2 bg-white text-black text-[10px] font-bold uppercase tracking-widest hover:bg-gray-200 transition-colors">
+              View Bill
+            </button>
+          </form>
+          {% else %}
+          <span class="text-[10px] text-white/40 uppercase tracking-widest italic py-2">Bill Generating...</span>
+          {% endif %}
+          {% endif %}
+
+          {% if order.status == 'pending' %}
+          <form action="{% url 'cancel_order' order_id=order.id %}" method="post" class="flex-1 md:flex-none">
+            {% csrf_token %}
+            <button type="submit"
+              class="w-full md:w-auto px-4 py-2 border border-red-500/50 text-red-400 text-[10px] font-bold uppercase tracking-widest hover:bg-red-500 hover:text-white transition-colors"
+              onclick="return confirm('Are you sure you want to cancel this order?');">
+              Cancel
+            </button>
+          </form>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="border border-white/10 bg-white/5 p-12 text-center">
+    <div class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4">
+      <span class="material-symbols-outlined text-white/20 text-3xl">inbox</span>
+    </div>
+    <p class="text-white/40 text-sm">No orders found.</p>
+    {% if status_filter != 'all' %}
+    <a href="?status=all"
+      class="inline-block mt-4 text-[10px] font-bold uppercase tracking-widest text-white border-b border-white pb-1 hover:opacity-70">Clear
+      Filters</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
