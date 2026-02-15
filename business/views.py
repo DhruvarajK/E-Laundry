@@ -32,7 +32,12 @@ def business_home(request):
     if request.session['lid'] == 'out':
         return HttpResponse("<script>alert('please login');window.location='/'</script>")
     else:
-        return render(request,"business_home.html")
+        try:
+            usr_obj = Business.objects.get(LOGIN=request.session['lid'])
+        except Business.DoesNotExist:
+             return HttpResponse("<script>alert('User not found');window.location='/'</script>")
+        
+        return render(request,"business_home.html",{'user':usr_obj})
 
 
 def get_location_address(lat, lon):
