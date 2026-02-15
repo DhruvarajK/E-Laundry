@@ -1,0 +1,99 @@
+{% extends 'user_home.html' %}
+{% block content %}
+
+<div class="space-y-8">
+    <div
+        class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-white/10 pb-8">
+        <div>
+            <h2 class="text-xs font-bold uppercase tracking-[0.4em] text-white/40 mb-2">Upgrade Your Experience</h2>
+            <h3 class="text-3xl md:text-4xl font-black uppercase tracking-tight text-white">Subscription Plans</h3>
+        </div>
+        <a href="javascript:history.go(-1)"
+            class="px-6 py-3 border border-white/20 text-white text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors">
+            Back
+        </a>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-8">
+        {% for plan in plans %}
+        <div
+            class="border border-white/10 bg-white/5 p-8 flex flex-col relative group hover:border-white/30 transition-colors">
+            {% if plan.service_type == "Premium" %}
+            <div
+                class="absolute top-0 right-0 bg-white text-black text-[10px] font-bold uppercase tracking-widest px-3 py-1">
+                Recommended
+            </div>
+            {% endif %}
+
+            <div class="mb-6">
+                <h4 class="text-xl font-bold uppercase tracking-widest text-white mb-2">{{ plan.name }}</h4>
+                <div class="flex items-baseline gap-1">
+                    <span class="text-3xl font-black text-white">₹{{ plan.price }}</span>
+                    <span class="text-xs text-white/40 uppercase tracking-widest">/ {{ plan.duration_days }} Days</span>
+                </div>
+            </div>
+
+            <div class="space-y-4 flex-1 mb-8">
+                <p class="text-white/60 text-sm leading-relaxed border-b border-white/10 pb-4">
+                    {{ plan.description }}
+                </p>
+                <ul class="space-y-3">
+                    <li class="flex items-center gap-3 text-sm text-white/80">
+                        <span class="material-symbols-outlined text-white text-lg">check_circle</span>
+                        <span>Service Type: {{ plan.service_type }}</span>
+                    </li>
+                    {% if plan.duration_days >= 30 %}
+                    <li class="flex items-center gap-3 text-sm text-white/80">
+                        <span class="material-symbols-outlined text-white text-lg">check_circle</span>
+                        <span>{{ plan.duration_days|divisibleby:30 }} Month{% if plan.duration_days > 30 %}s{% endif %}
+                            Access</span>
+                    </li>
+                    {% endif %}
+                    <li class="flex items-center gap-3 text-sm text-white/80">
+                        <span class="material-symbols-outlined text-white text-lg">check_circle</span>
+                        <span>Max Services: {{ plan.max_services }}</span>
+                    </li>
+                    {% if plan.service_type == "Premium" %}
+                    <li class="flex items-center gap-3 text-sm text-white/80">
+                        <span class="material-symbols-outlined text-white text-lg">check_circle</span>
+                        <span>Priority Processing</span>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            <form action="{% url 'subscribe' plan.id %}" method="get" onsubmit="validateForm(event, '{{ plan.name }}')">
+                <input type="hidden" name="subscription_for" value="user">
+
+                <div class="mb-6">
+                    <label class="flex items-start gap-3 cursor-pointer group/check">
+                        <input type="checkbox" name="accept_terms" required
+                            class="mt-1 w-4 h-4 border-white/20 bg-transparent text-white focus:ring-0 focus:ring-offset-0">
+                        <span class="text-xs text-white/40 group-hover/check:text-white/60 transition-colors">
+                            I accept the <a href="{% url 'terms_and_conditions' %}" target="_blank"
+                                class="text-white underline hover:no-underline">Terms and Conditions</a>
+                        </span>
+                    </label>
+                </div>
+
+                <button type="submit"
+                    class="w-full py-4 bg-white text-black text-xs font-bold uppercase tracking-widest hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-lg">credit_card</span>
+                    Subscribe Now
+                </button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    function validateForm(event, planName) {
+        const checkbox = event.target.querySelector('[name="accept_terms"]');
+        if (!checkbox.checked) {
+            alert('You must accept the Terms and Conditions before subscribing to ' + planName + '.');
+            event.preventDefault();
+        }
+    }
+</script>
+{% endblock %}

@@ -636,7 +636,19 @@ def pickup_laundry(user, bag_service_types):
 # Display all subscription plans
 def subscription_plans(request):
     plans = SubscriptionPlan.objects.all()
-    return render(request, 'subscription_plans.html', {'plans': plans})
+    context = {'plans': plans}
+    
+    # Check if user is logged in and is a 'user' type
+    if 'lid' in request.session and request.session['lid'] != 'out':
+        try:
+            login_instance = login.objects.get(id=request.session['lid'])
+            if login_instance.usertype == 'user':
+                context.update(get_user_context(request))
+                return render(request, 'user_subscription_plans.html', context)
+        except login.DoesNotExist:
+            pass
+            
+    return render(request, 'subscription_plans.html', context)
 
 
 
@@ -648,13 +660,26 @@ def subscription_confirmed(request, subscription_id):
     razorpay_order_id = request.session.get('razorpay_order_id')
     plan_price = subscription.subscription_plan.price
     amount = int(plan_price * 100)
-    return render(request, 'subscription_confirmed.html', {
+    
+    context = {
         'subscription': subscription,
         'order_id': razorpay_order_id,
         'amount': amount,
         'display_amount': plan_price,
         'razorpay_key': settings.RAZORPAY_KEY_ID
-    })
+    }
+    
+    # Check if user is logged in and is a 'user' type
+    if 'lid' in request.session and request.session['lid'] != 'out':
+        try:
+            login_instance = login.objects.get(id=request.session['lid'])
+            if login_instance.usertype == 'user':
+                context.update(get_user_context(request))
+                return render(request, 'user_subscription_confirmed.html', context)
+        except login.DoesNotExist:
+            pass
+            
+    return render(request, 'subscription_confirmed.html', context)
 
 
 
@@ -669,14 +694,19 @@ def subscribe(request, plan_id):
         subscription_for = 'business'
         business_instance = Business.objects.get(LOGIN=login_instance)
         active_subscription = Subscription.objects.filter(business=business_instance, is_active=True).exists()
+        template_name = 'subscribe.html'
+        context = {}
     else:
         subscription_for = 'user'
         user_instance = user.objects.get(LOGIN=login_instance)
         active_subscription = Subscription.objects.filter(user=user_instance, is_active=True).exists()
+        template_name = 'user_subscribe.html'
+        context = get_user_context(request)
 
     if active_subscription:
         messages.error(request, "You already have an active subscription. Please wait until it expires before purchasing a new one.")
-        return render(request, 'subscribe.html', {'plan': plan, 'active_subscription': True})
+        context.update({'plan': plan, 'active_subscription': True})
+        return render(request, template_name, context)
 
     if request.method == 'POST':
         try:
@@ -719,9 +749,11 @@ def subscribe(request, plan_id):
             return redirect('subscription_confirmed', subscription_id=subscription.id)
         except Exception as e:
             messages.error(request, f"An error occurred: {e}")
-            return render(request, 'subscribe.html', {'plan': plan, 'active_subscription': False})
+            context.update({'plan': plan, 'active_subscription': False})
+            return render(request, template_name, context)
 
-    return render(request, 'subscribe.html', {'plan': plan, 'active_subscription': False})
+    context.update({'plan': plan, 'active_subscription': False})
+    return render(request, template_name, context)
 
 
 from django.utils import timezone
@@ -733,6 +765,9 @@ def subscription_details(request):
     # Grab the login instance from the session using 'lid'
     login_instance = login.objects.get(id=request.session['lid'])
     
+    template_name = 'subscription_details.html'
+    context = {}
+
     # Check if the login is for a business or a user
     if login_instance.usertype.lower() == 'business':
         business_instance = Business.objects.get(LOGIN=login_instance)
@@ -740,6 +775,8 @@ def subscription_details(request):
     else:
         user_instance = user.objects.get(LOGIN=login_instance)
         subscription = Subscription.objects.filter(user=user_instance, is_active=True).first()
+        template_name = 'user_subscription_details.html'
+        context = get_user_context(request)
     
     # Calculate remaining days and update remaining_services
     if subscription:
@@ -754,14 +791,14 @@ def subscription_details(request):
         subscription.remaining_services = days_remaining
         subscription.save()
     else:
-        messages.error(request, "No active subscription found.")
+        # messages.error(request, "No active subscription found.") # This might show up even if just visiting the page
         days_remaining = 0
 
-    context = {
+    context.update({
         'subscription': subscription,
         'days_remaining': days_remaining,
-    }
-    return render(request, 'subscription_details.html', context)
+    })
+    return render(request, template_name, context)
 
 
 

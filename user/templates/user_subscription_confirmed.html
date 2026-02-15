@@ -1,0 +1,115 @@
+{% extends 'user_home.html' %}
+{% block content %}
+
+<div class="max-w-2xl mx-auto py-12">
+    <div class="bg-black border border-white/10 p-8 text-center relative overflow-hidden group">
+        <!-- Success/Pulse Animation Background Effect -->
+        <div
+            class="absolute inset-0 bg-gradient-to-tr from-green-500/10 to-transparent opacity-0 transition-opacity duration-1000 success-bg">
+        </div>
+
+        <div class="relative z-10">
+            <div class="mb-6 flex justify-center">
+                <div
+                    class="w-20 h-20 rounded-full bg-white/5 border border-white/10 flex items-center justify-center success-icon-container transition-all duration-500">
+                    <span class="material-symbols-outlined text-4xl text-white/60 success-icon">check_circle</span>
+                </div>
+            </div>
+
+            <h2 class="text-2xl font-black uppercase tracking-tight text-white mb-2 success-title">Subscription
+                Confirmed</h2>
+            <p class="text-white/40 text-sm uppercase tracking-widest mb-8 success-message">Your subscription is ready
+                for payment</p>
+
+            <div class="bg-white/5 border border-white/10 p-6 mb-8 text-left">
+                <div class="flex justify-between items-start mb-4 border-b border-white/10 pb-4">
+                    <div>
+                        <span class="text-[10px] uppercase tracking-widest text-white/40 block mb-1">Plan Name</span>
+                        <div class="text-xl font-bold text-white flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">stars</span>
+                            {{ subscription.subscription_plan.name }}
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[10px] uppercase tracking-widest text-white/40 block mb-1">Amount</span>
+                        <div class="text-2xl font-black text-white">₹{{ display_amount }}</div>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-xs text-white/60">Validity Period</span>
+                    <span class="text-xs font-bold text-white uppercase tracking-wider">{{
+                        subscription.subscription_plan.duration_days }} Days</span>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <p class="text-[10px] uppercase tracking-widest text-white/40 mb-2">Complete Payment Securely</p>
+                <button id="rzp-button1"
+                    class="w-full py-4 bg-white text-black text-xs font-bold uppercase tracking-widest hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-lg">credit_card</span>
+                    Pay & Activate
+                </button>
+                <div
+                    class="flex items-center justify-center gap-2 text-[10px] text-white/20 uppercase tracking-widest mt-4">
+                    <span class="material-symbols-outlined text-sm">lock</span>
+                    Secured by Razorpay
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-6">
+        <a href="#"
+            class="text-[10px] font-bold uppercase tracking-widest text-white/40 hover:text-white transition-colors">Contact
+            Support</a>
+    </div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    var options = {
+        "key": "{{ razorpay_key }}",
+        "amount": "{{ amount }}",
+        "currency": "INR",
+        "name": "Laundry Service",
+        "description": "{{ subscription.subscription_plan.name }} Subscription",
+        "order_id": "{{ order_id }}",
+        "handler": function (response) {
+            // Create success animation
+            const bg = document.querySelector('.success-bg');
+            const iconContainer = document.querySelector('.success-icon-container');
+            const icon = document.querySelector('.success-icon');
+            const title = document.querySelector('.success-title');
+            const message = document.querySelector('.success-message');
+
+            bg.classList.remove('opacity-0');
+            iconContainer.classList.add('bg-green-500', 'border-transparent');
+            icon.classList.remove('text-white/60');
+            icon.classList.add('text-white');
+            icon.innerText = 'thumb_up';
+
+            title.innerText = 'Payment Successful!';
+            message.innerText = 'Redirecting to your dashboard...';
+
+            // Redirect after a short delay
+            setTimeout(function () {
+                window.location.href = "/subscription_details/";
+            }, 2000);
+        },
+        "prefill": {
+            "name": "{{ user.first_name }} {{ user.last_name }}",
+            "email": "{{ user.email }}",
+            "contact": "{{ user.phone_number }}"
+        },
+        "theme": {
+            "color": "#000000"
+        }
+    };
+
+    var rzp1 = new Razorpay(options);
+    document.getElementById('rzp-button1').onclick = function (e) {
+        rzp1.open();
+        e.preventDefault();
+    }
+</script>
+{% endblock %}

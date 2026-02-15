@@ -1,0 +1,130 @@
+{% extends 'user_home.html' %}
+{% block content %}
+
+<div class="space-y-8">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-white/10 pb-8">
+        <div>
+            <h2 class="text-xs font-bold uppercase tracking-[0.4em] text-white/40 mb-2">My Membership</h2>
+            <h3 class="text-3xl md:text-4xl font-black uppercase tracking-tight text-white">Subscription Status</h3>
+        </div>
+        <a href="javascript:history.go(-1)"
+            class="px-6 py-3 border border-white/20 text-white text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors">
+            Back
+        </a>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-8">
+        {% if subscription %}
+        <div class="lg:col-span-2 space-y-8">
+            <!-- Main Widget -->
+            <div class="border border-white/10 bg-white/5 p-8 relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-8 opacity-5">
+                    <span class="material-symbols-outlined text-9xl text-white">card_membership</span>
+                </div>
+
+                <div class="relative z-10">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="w-12 h-12 bg-white flex items-center justify-center">
+                            <span class="material-symbols-outlined text-black">stars</span>
+                        </div>
+                        <div>
+                            <span class="text-[10px] uppercase tracking-widest text-white/40 block">Current Plan</span>
+                            <h4 class="text-2xl font-black uppercase tracking-tight text-white">{{
+                                subscription.subscription_plan.name }}</h4>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-8 mb-8">
+                        <div>
+                            <span class="text-[10px] uppercase tracking-widest text-white/40 block mb-2">Valid
+                                Until</span>
+                            <div class="text-lg font-bold text-white flex items-center gap-2">
+                                <span class="material-symbols-outlined text-white/60">calendar_month</span>
+                                {{ subscription.end_date|date:"M d, Y" }}
+                            </div>
+                        </div>
+                        <div>
+                            <span class="text-[10px] uppercase tracking-widest text-white/40 block mb-2">Plan
+                                Price</span>
+                            <div class="text-lg font-bold text-white flex items-center gap-2">
+                                <span class="material-symbols-outlined text-white/60">payments</span>
+                                ₹{{ subscription.subscription_plan.price }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Usage Stats -->
+                    <div class="space-y-6 pt-6 border-t border-white/10">
+                        <div>
+                            <div class="flex justify-between items-end mb-2">
+                                <span class="text-xs font-bold uppercase tracking-widest text-white/60">Services
+                                    Remaining</span>
+                                <span class="text-xs font-bold text-white">{{ subscription.remaining_services }} / {{
+                                    subscription.subscription_plan.max_services }}</span>
+                            </div>
+                            <div class="h-1 bg-white/10 w-full">
+                                <div class="h-full bg-white transition-all duration-500"
+                                    style="width: calc({{ subscription.remaining_services }} / {{ subscription.subscription_plan.max_services }} * 100%)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between items-end mb-2">
+                                <span class="text-xs font-bold uppercase tracking-widest text-white/60">Days
+                                    Remaining</span>
+                                <span class="text-xs font-bold text-white">{{ days_remaining }} Days</span>
+                            </div>
+                            <div class="h-1 bg-white/10 w-full">
+                                <div class="h-full bg-white transition-all duration-500"
+                                    style="width: calc({{ days_remaining }} / {{ subscription.subscription_plan.duration_days }} * 100%)">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="border border-white/10 bg-black p-8 flex flex-col gap-6">
+            <h5 class="text-sm font-bold uppercase tracking-widest text-white border-b border-white/10 pb-4">
+                Quick Actions</h5>
+            <div class="space-y-4">
+                <a href="{% url 'subscription_plans' %}" class="group block cursor-pointer">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-white text-sm font-bold">Upgrade Plan</span>
+                        <span
+                            class="material-symbols-outlined text-white/40 group-hover:text-white transition-colors">arrow_forward</span>
+                    </div>
+                    <div class="text-[10px] text-white/40 uppercase tracking-wider">Get more benefits</div>
+                </a>
+                <div class="pt-4 border-t border-white/5">
+                    <a href="#" class="group block cursor-pointer">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-white text-sm font-bold">Billing History</span>
+                            <span
+                                class="material-symbols-outlined text-white/40 group-hover:text-white transition-colors">history</span>
+                        </div>
+                        <div class="text-[10px] text-white/40 uppercase tracking-wider">View past payments</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {% else %}
+        <div class="lg:col-span-3 border border-white/10 bg-white/5 p-12 text-center">
+            <div class="inline-block p-6 rounded-full bg-white/5 border border-white/10 mb-6">
+                <span class="material-symbols-outlined text-4xl text-white/40">error_outline</span>
+            </div>
+            <h3 class="text-xl font-bold uppercase tracking-widest text-white mb-2">No Active Subscription</h3>
+            <p class="text-white/40 text-sm max-w-md mx-auto mb-8">You currently don't have an active subscription plan.
+                Subscribe now to enjoy exclusive benefits and discounts.</p>
+            <a href="{% url 'subscription_plans' %}"
+                class="inline-flex items-center gap-2 px-6 py-3 bg-white text-black text-xs font-bold uppercase tracking-widest hover:bg-gray-200 transition-colors">
+                <span class="material-symbols-outlined text-lg">loyalty</span> Browse Plans
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
