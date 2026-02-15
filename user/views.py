@@ -685,11 +685,8 @@ def subscription_confirmed(request, subscription_id):
 
 def subscribe(request, plan_id):
     plan = get_object_or_404(SubscriptionPlan, pk=plan_id)
-    
-    # Grab the login instance using 'lid' from the session
     login_instance = login.objects.get(id=request.session['lid'])
-    
-    # Determine the subscription type based on the login's usertype
+
     if login_instance.usertype.lower() == 'business':
         subscription_for = 'business'
         business_instance = Business.objects.get(LOGIN=login_instance)

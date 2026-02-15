@@ -1,208 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Subscription Plans</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#ffffff",
+            "background-light": "#f6f6f8",
+            "background-dark": "#000000",
+          },
+          fontFamily: {
+            "display": ["Inter", "sans-serif"]
+          },
+        },
+      },
+    }
+  </script>
   <style>
-    :root {
-      --primary-color: #3498db;
-      --secondary-color: #2ecc71;
-      --accent-color: #e74c3c;
-      --dark-color: #2c3e50;
-      --light-color: #ecf0f1;
-      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      --transition: all 0.3s ease;
-    }
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      min-height: 100vh;
-      padding: 2rem;
-      color: var(--dark-color);
-    }
-    
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    
-    h1 {
-      text-align: center;
-      margin-bottom: 2rem;
-      color: var(--dark-color);
-      font-size: 2.2rem;
-    }
-    
-    .plans-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 2rem;
-      list-style-type: none;
-    }
-    
-    .plan-card {
-      background-color: white;
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: var(--box-shadow);
-      transition: var(--transition);
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    .plan-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-    }
-    
-    .plan-header {
-      background-color: var(--primary-color);
-      color: white;
-      padding: 1.5rem;
-      text-align: center;
-    }
-    
-    .plan-name {
-      font-size: 1.4rem;
-      margin-bottom: 0.5rem;
-    }
-    
-    .plan-price {
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-    
-    .plan-duration {
-      font-size: 0.9rem;
-      opacity: 0.9;
-    }
-    
-    .plan-body {
-      padding: 1.5rem;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    .plan-description {
-      margin-bottom: 1.2rem;
-      line-height: 1.6;
-      flex-grow: 1;
-    }
-    
-    .plan-features {
-      margin-bottom: 1.5rem;
-    }
-    
-    .feature-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 0.8rem;
-    }
-    
-    .feature-icon {
-      color: var(--secondary-color);
-      margin-right: 0.8rem;
-      font-size: 1.1rem;
-    }
-    
-    .plan-footer {
-      padding: 1.5rem;
-      background-color: rgba(236, 240, 241, 0.5);
-      border-top: 1px solid #eee;
-    }
-    
-    .terms-checkbox {
-      display: flex;
-      align-items: flex-start;
-      margin-bottom: 1.2rem;
-    }
-    
-    .terms-checkbox input {
-      margin-top: 0.3rem;
-      margin-right: 0.8rem;
-    }
-    
-    .terms-checkbox label {
-      font-size: 0.9rem;
-      line-height: 1.5;
-    }
-    
-    .terms-link {
-      color: var(--primary-color);
-      text-decoration: none;
-      font-weight: 600;
-      transition: var(--transition);
-    }
-    
-    .terms-link:hover {
-      text-decoration: underline;
-    }
-    
-    .subscribe-btn {
-      display: block;
-      width: 100%;
-      padding: 0.8rem;
-      background-color: var(--primary-color);
-      color: white;
-      border: none;
-      border-radius: 50px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transition);
-      box-shadow: var(--box-shadow);
-      text-align: center;
-    }
-    
-    .subscribe-btn:hover {
-      background-color: #2980b9;
-    }
-    
-    @media (max-width: 768px) {
-      .plans-grid {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 1.5rem;
-      }
-      
-      h1 {
-        font-size: 1.8rem;
-        margin-bottom: 1.5rem;
-      }
-      
-      .plan-header {
-        padding: 1.2rem;
-      }
-      
-      .plan-body, .plan-footer {
-        padding: 1.2rem;
-      }
-    }
-    
-    @media (max-width: 480px) {
-      body {
-        padding: 1rem;
-      }
-      
-      .plans-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      h1 {
-        font-size: 1.5rem;
-        margin-bottom: 1.2rem;
-      }
+      font-family: 'Inter', sans-serif;
     }
   </style>
   <script>
@@ -215,71 +41,94 @@
     }
   </script>
 </head>
-<body>
-  <div class="container">
-    <div style="display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    justify-content: space-between;">
-    <h1>Subscription Plans</h1><a href="javascript:history.go(-1)" style="text-decoration: none;"><button style="padding: 10px;" class="subscribe-btn" >Back</button></a></div>
-    
-    <ul class="plans-grid">
+
+<body class="bg-black text-white antialiased min-h-screen p-6 lg:p-12 font-display">
+  <div class="max-w-7xl mx-auto space-y-8">
+    <div
+      class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-white/10 pb-8">
+      <div>
+        <h2 class="text-xs font-bold uppercase tracking-[0.4em] text-white/40 mb-2">Upgrade Your Experience</h2>
+        <h3 class="text-3xl md:text-4xl font-black uppercase tracking-tight text-white">Subscription Plans</h3>
+      </div>
+      <a href="javascript:history.go(-1)"
+        class="px-6 py-3 border border-white/20 text-white text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors">
+        Back
+      </a>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-8">
       {% for plan in plans %}
-      <li class="plan-card">
-        <div class="plan-header">
-          <h3 class="plan-name">{{ plan.name }}</h3>
-          <div class="plan-price">₹{{ plan.price }}</div>
-          <div class="plan-duration">{{ plan.duration_days }} days</div>
+      <div
+        class="border border-white/10 bg-white/5 p-8 flex flex-col relative group hover:border-white/30 transition-colors">
+        {% if plan.service_type == "Premium" %}
+        <div
+          class="absolute top-0 right-0 bg-white text-black text-[10px] font-bold uppercase tracking-widest px-3 py-1">
+          Recommended
         </div>
-        
-        <div class="plan-body">
-          <div class="plan-description">
+        {% endif %}
+
+        <div class="mb-6">
+          <h4 class="text-xl font-bold uppercase tracking-widest text-white mb-2">{{ plan.name }}</h4>
+          <div class="flex items-baseline gap-1">
+            <span class="text-3xl font-black text-white">₹{{ plan.price }}</span>
+            <span class="text-xs text-white/40 uppercase tracking-widest">/ {{ plan.duration_days }} Days</span>
+          </div>
+        </div>
+
+        <div class="space-y-4 flex-1 mb-8">
+          <p class="text-white/60 text-sm leading-relaxed border-b border-white/10 pb-4">
             {{ plan.description }}
-          </div>
-          
-          <div class="plan-features">
-            <div class="feature-item">
-              <span class="feature-icon"><i class="fas fa-check-circle"></i></span>
+          </p>
+          <ul class="space-y-3">
+            <li class="flex items-center gap-3 text-sm text-white/80">
+              <span class="material-symbols-outlined text-white text-lg">check_circle</span>
               <span>Service Type: {{ plan.service_type }}</span>
-            </div>
-            
+            </li>
             {% if plan.duration_days >= 30 %}
-            <div class="feature-item">
-              <span class="feature-icon"><i class="fas fa-check-circle"></i></span>
-              <span>{{ plan.duration_days|divisibleby:30 }} month{% if plan.duration_days > 30 %}s{% endif %} of service</span>
-            </div>
+            <li class="flex items-center gap-3 text-sm text-white/80">
+              <span class="material-symbols-outlined text-white text-lg">check_circle</span>
+              <span>{{ plan.duration_days|divisibleby:30 }} Month{% if plan.duration_days > 30 %}s{% endif %}
+                Access</span>
+            </li>
             {% endif %}
-            
+            <li class="flex items-center gap-3 text-sm text-white/80">
+              <span class="material-symbols-outlined text-white text-lg">check_circle</span>
+              <span>Max Services: {{ plan.max_services }}</span>
+            </li>
+
             {% if plan.service_type == "Premium" %}
-            <div class="feature-item">
-              <span class="feature-icon"><i class="fas fa-check-circle"></i></span>
-              <span>Priority processing</span>
-            </div>
+            <li class="flex items-center gap-3 text-sm text-white/80">
+              <span class="material-symbols-outlined text-white text-lg">check_circle</span>
+              <span>Priority Processing</span>
+            </li>
             {% endif %}
+          </ul>
+        </div>
+
+        <form action="{% url 'subscribe' plan.id %}" method="get" onsubmit="validateForm(event, '{{ plan.name }}')">
+          <input type="hidden" name="subscription_for" value="user">
+
+          <div class="mb-6">
+            <label class="flex items-start gap-3 cursor-pointer group/check">
+              <input type="checkbox" name="accept_terms" required
+                class="mt-1 w-4 h-4 border-white/20 bg-transparent text-white focus:ring-0 focus:ring-offset-0">
+              <span class="text-xs text-white/40 group-hover/check:text-white/60 transition-colors">
+                I accept the <a href="{% url 'terms_and_conditions' %}" target="_blank"
+                  class="text-white underline hover:no-underline">Terms and Conditions</a>
+              </span>
+            </label>
           </div>
-        </div>
-        
-        <div class="plan-footer">
-          <form action="{% url 'subscribe' plan.id %}" method="get" onsubmit="validateForm(event, '{{ plan.name }}')">
-            <input type="hidden" name="subscription_for" value="user">
-            
-            <div class="terms-checkbox">
-              <input type="checkbox" id="terms-{{ plan.id }}" name="accept_terms" required>
-              <label for="terms-{{ plan.id }}">
-                I accept the <a href="{% url 'terms_and_conditions' %}" target="_blank" class="terms-link">Terms and Conditions</a>
-              </label>
-            </div>
-            
-            <button type="submit" class="subscribe-btn">
-              <i class="fas fa-credit-card"></i> Subscribe Now
-            </button>
-          </form>
-        </div>
-      </li>
+
+          <button type="submit"
+            class="w-full py-4 bg-white text-black text-xs font-bold uppercase tracking-widest hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-lg">credit_card</span>
+            Subscribe Now
+          </button>
+        </form>
+      </div>
       {% endfor %}
-    </ul>
+    </div>
   </div>
-  
 </body>
 
 </html>
