@@ -1,244 +1,99 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pending Service Orders</title>
-    <style>
-        :root {
-            --primary-color: #3498db;
-            --secondary-color: #2980b9;
-            --success-color: #27ae60;
-            --danger-color: #e74c3c;
-            --light-gray: #f8f9fa;
-            --dark-gray: #343a40;
-            --border-color: #dee2e6;
-        }
+{% extends 'logistics_home.html' %}
+{% load static %}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+{% block center_column %}
+<div class="flex items-center justify-between mb-6">
+    <h3 class="text-3xl font-black uppercase tracking-tight text-white mb-2">Available Orders</h3>
+    <p class="text-white/60 text-sm">Review and accept pending orders.</p>
+</div>
 
-        body {
-            background-color: #f0f2f5;
-            color: #333;
-            line-height: 1.6;
-            padding: 20px;
-        }
+{% if error %}
+<div class="p-4 mb-4 text-xs text-red-500 bg-red-500/10 border border-red-500/20 rounded">
+    {{ error }}
+</div>
+{% endif %}
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
+<div class="flex flex-col gap-4">
+    {% if pending_orders %}
+    {% for order in pending_orders %}
+    <!-- Order Card -->
+    <div class="group border border-white/10 p-6 bg-white/5 hover:bg-white/10 transition-colors relative">
+        <div
+            class="absolute top-0 right-0 bg-white text-black px-3 py-1 text-[10px] font-bold uppercase tracking-wider">
+            Pending
+        </div>
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        h1 {
-            color: var(--dark-gray);
-            font-size: 24px;
-            font-weight: 600;
-        }
-
-        .error-message {
-            background-color: rgba(231, 76, 60, 0.1);
-            border-left: 4px solid var(--danger-color);
-            color: var(--danger-color);
-            padding: 10px 15px;
-            margin-bottom: 20px;
-            border-radius: 4px;
-        }
-
-        .no-orders {
-            text-align: center;
-            padding: 30px;
-            background-color: var(--light-gray);
-            border-radius: 4px;
-            color: #666;
-        }
-
-        .orders-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-
-        .orders-table th {
-            background-color: var(--primary-color);
-            color: white;
-            font-weight: 500;
-            text-align: left;
-            padding: 12px 15px;
-        }
-
-        .orders-table th:first-child {
-            border-top-left-radius: 4px;
-        }
-
-        .orders-table th:last-child {
-            border-top-right-radius: 4px;
-            text-align: center;
-        }
-
-        .orders-table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid var(--border-color);
-            vertical-align: top;
-        }
-
-        .orders-table tr:nth-child(even) {
-            background-color: var(--light-gray);
-        }
-
-        .orders-table tr:hover {
-            background-color: rgba(52, 152, 219, 0.05);
-        }
-
-        .orders-table td:last-child {
-            text-align: center;
-        }
-
-        .contact-info, .address-info, .order-details {
-            line-height: 1.4;
-        }
-
-        .order-id {
-            font-weight: bold;
-            color: var(--primary-color);
-        }
-
-        .service-type {
-            font-weight: 500;
-        }
-
-        .order-date {
-            color: #666;
-            font-size: 0.9em;
-        }
-
-        button {
-            background-color: var(--success-color);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        button:hover {
-            background-color: #219653;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        @media (max-width: 768px) {
-            .orders-table {
-                display: block;
-                overflow-x: auto;
-            }
-
-            .container {
-                padding: 15px;
-            }
-
-            h1 {
-                font-size: 20px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>Pending Service Orders</h1>
-        </header>
-
-        {% if error %}
-            <div class="error-message">
-                {{ error }}
+        <div class="flex flex-col md:flex-row gap-6 items-start md:items-center">
+            <div class="flex flex-col items-center gap-1 min-w-[60px]">
+                <!-- Using Order ID or Day as the big number -->
+                <span class="text-3xl font-black text-white/40 group-hover:text-white transition-colors">
+                    {{ order.id }}
+                </span>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-white/40">
+                    {{ order.order_date|date:"H:i" }}
+                </span>
             </div>
-        {% endif %}
 
-        {% if pending_orders %}
-            <table class="orders-table">
-                <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Service For</th>
-                        <th>Contact Information</th>
-                        <th>Address</th>
-                        <th>Order Details</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for order in pending_orders %}
-                        <tr>
-                            <td class="order-id">{{ order.id }}</td>
-                            <td>{{ order.service_for }}</td>
-                            <td class="contact-info">
-                                {% if order.USER.first_name %}
-                                    <strong>{{ order.USER.first_name }}</strong><br>
-                                    {% if order.USER.phone_number %}
-                                        {{ order.USER.phone_number }}
-                                    {% endif %}
-                                {% endif %}
+            <div class="h-10 w-[1px] bg-white/10 hidden md:block"></div>
 
-                                {% if order.BUSINESS.business_name %}
-                                    <strong>{{ order.BUSINESS.business_name }}</strong><br>
-                                    {% if order.BUSINESS.owner_name %}
-                                        {{ order.BUSINESS.owner_name }}<br>
-                                    {% endif %}
-                                    {% if order.BUSINESS.business_phone_number %}
-                                        {{ order.BUSINESS.business_phone_number }}
-                                    {% endif %}
-                                {% endif %}
-                            </td>
-                            <td class="address-info">
-                                {% if order.USER.house or order.USER.district or order.USER.place or order.USER.pin %}
-                                    {{ order.USER.house }} {{ order.USER.district }} {{ order.USER.place }} {{ order.USER.pin }}
-                                {% endif %}
+            <div class="flex-1">
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="bg-white/20 text-white text-[10px] font-bold px-2 py-0.5 uppercase tracking-wider">
+                        {{ order.service_type }}
+                    </span>
+                    <h5 class="font-bold text-lg uppercase tracking-wide text-white">
+                        {% if order.USER.first_name %}
+                        {{ order.USER.first_name }}
+                        {% elif order.BUSINESS.business_name %}
+                        {{ order.BUSINESS.business_name }}
+                        {% else %}
+                        User #{{ order.USER_id }}
+                        {% endif %}
+                    </h5>
+                </div>
 
-                                {% if order.BUSINESS.business_address or order.BUSINESS.district or order.BUSINESS.place or order.BUSINESS.pin %}
-                                    {{ order.BUSINESS.business_address }} {{ order.BUSINESS.district }} {{ order.BUSINESS.place }} {{ order.BUSINESS.pin }}
-                                {% endif %}
-                            </td>
-                            <td class="order-details">
-                                <span class="service-type">{{ order.service_type }}</span><br>
-                                <span class="order-date">{{ order.order_date }}</span>
-                            </td>
-                            <td>
-                                <form method="post" action="{% url 'deliveryman_pending_orders' %}">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="order_id" value="{{ order.id }}">
-                                    <button type="submit">Assign to Me</button>
-                                </form>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <div class="no-orders">
-                <p>No pending orders available at this time.</p>
+                <p class="text-sm text-white/60 font-medium">
+                    {% if order.USER.place %}
+                    {{ order.USER.house }}, {{ order.USER.place }}
+                    {% elif order.BUSINESS.place %}
+                    {{ order.BUSINESS.place }}
+                    {% else %}
+                    Address Unavailable
+                    {% endif %}
+                </p>
+
+                <div class="mt-3 flex gap-2">
+                    <span class="text-[10px] border border-white/20 text-white/60 px-2 py-1 uppercase tracking-wide">
+                        {{ order.order_date|date:"F d, Y" }}
+                    </span>
+                    <span class="text-[10px] border border-white/20 text-white/60 px-2 py-1 uppercase tracking-wide">
+                        Make Payment
+                    </span>
+                </div>
             </div>
-        {% endif %}
+
+            <div class="flex flex-row md:flex-col gap-2 w-full md:w-auto">
+                <form method="post" action="{% url 'deliveryman_pending_orders' %}" class="w-full">
+                    {% csrf_token %}
+                    <input type="hidden" name="order_id" value="{{ order.id }}">
+                    <button type="submit"
+                        class="w-full px-4 py-3 bg-white text-black text-[10px] font-bold uppercase tracking-widest hover:bg-white/90 transition-colors">
+                        Assign to Me
+                    </button>
+                </form>
+                <button
+                    class="w-full px-4 py-3 border border-white/20 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-white/5 transition-colors">
+                    Details
+                </button>
+            </div>
+        </div>
     </div>
-</body>
-</html>
+    {% endfor %}
+    {% else %}
+    <div class="py-12 text-center border border-white/10 bg-white/5">
+        <i data-lucide="inbox" class="w-12 h-12 text-white/20 mx-auto mb-4"></i>
+        <p class="text-sm font-bold uppercase tracking-widest text-white/40">No Pending Orders Available</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

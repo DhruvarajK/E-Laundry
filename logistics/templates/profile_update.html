@@ -1,212 +1,114 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Profile</title>
-    <style>
-        :root {
-            --primary-color: #4a6fa5;
-            --secondary-color: #6c8bae;
-            --text-color: #333;
-            --light-bg: #f8f9fa;
-            --border-color: #dee2e6;
-            --success-color: #28a745;
-            --input-focus: #e8f0fe;
-        }
+{% extends 'logistics_home.html' %}
+{% load static %}
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f7fa;
-            color: var(--text-color);
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 30px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-        }
-
-        h1 {
-            color: var(--primary-color);
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group.full-width {
-            grid-column: span 2;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 500;
-            color: var(--primary-color);
-        }
-
-        input[type="text"],
-        input[type="file"] {
-            width: 100%;
-            padding: 10px 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        input[type="text"]:focus {
-            outline: none;
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.2);
-            background-color: var(--input-focus);
-        }
-
-        input[type="file"] {
-            padding: 8px;
-            background-color: var(--light-bg);
-        }
-
-        .btn-container {
-            text-align: center;
-            margin-top: 30px;
-            grid-column: span 2;
-        }
-
-        button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            font-weight: 500;
-        }
-
-        button:hover {
-            background-color: var(--secondary-color);
-        }
-
-        .file-input-wrapper {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-            cursor: pointer;
-            background-color: var(--light-bg);
-            border-radius: 5px;
-            border: 1px solid var(--border-color);
-            padding: 10px;
-        }
-
-        .file-label {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
-        .current-image {
-            margin-top: 8px;
-            font-size: 14px;
-            color: #666;
-        }
-
-        @media (max-width: 768px) {
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .form-group.full-width {
-                grid-column: span 1;
-            }
-
-            .container {
-                padding: 20px;
-                margin: 20px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Update Profile</h1>
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="first_name">First Name</label>
-                    <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}" required placeholder="Enter your first name">
-                </div>
-
-                <div class="form-group">
-                    <label for="last_name">Last Name</label>
-                    <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}" required placeholder="Enter your last name">
-                </div>
-
-                <div class="form-group full-width">
-                    <label for="profile_image">Profile Image</label>
-                    <div class="file-input-wrapper">
-                        <input type="file" id="profile_image" name="profile_image">
-                    </div>
-                    {% if user.profile_image %}
-                    <div class="current-image">Current: {{ user.profile_image.name }}</div>
-                    {% endif %}
-                </div>
-
-                <div class="form-group">
-                    <label for="phone_number">Phone Number</label>
-                    <input type="text" id="phone_number" name="phone_number" value="{{ user.phone_number }}" required placeholder="Enter your phone number">
-                </div>
-
-                <div class="form-group">
-                    <label for="house">House</label>
-                    <input type="text" id="house" name="house" value="{{ user.house }}" required placeholder="Enter your house name">
-                </div>
-
-                <div class="form-group">
-                    <label for="district">District</label>
-                    <input type="text" id="district" name="district" value="{{ user.district }}" required placeholder="Enter your district">
-                </div>
-
-                <div class="form-group">
-                    <label for="place">Place</label>
-                    <input type="text" id="place" name="place" value="{{ user.place }}" required placeholder="Enter your place">
-                </div>
-
-                <div class="form-group">
-                    <label for="post">Post</label>
-                    <input type="text" id="post" name="post" value="{{ user.post }}" required placeholder="Enter your post office name">
-                </div>
-
-                <div class="form-group">
-                    <label for="pin">PIN Code</label>
-                    <input type="text" id="pin" name="pin" value="{{ user.pin }}" required placeholder="Enter your PIN code">
-                </div>
-
-                <div class="btn-container">
-                    <button type="submit">Save Changes</button>
-                </div>
-            </div>
-        </form>
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-black text-white uppercase tracking-tight">Edit Profile</h1>
+            <p class="text-white/40 text-sm mt-1">Update your personal information.</p>
+        </div>
     </div>
-</body>
-</html>
+
+    <form method="POST" enctype="multipart/form-data" class="bg-black border border-white/10 p-8">
+        {% csrf_token %}
+
+        <h3 class="text-xs font-bold uppercase tracking-widest text-white/40 mb-6 border-b border-white/10 pb-4">
+            Personal Information</h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <!-- First Name -->
+            <div class="space-y-2">
+                <label for="first_name" class="block text-[10px] font-bold uppercase tracking-wider text-white/60">First
+                    Name</label>
+                <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}" required
+                    class="w-full bg-white/5 border border-white/10 text-white text-sm focus:ring-0 focus:border-white/30 px-4 py-3 placeholder-white/20">
+            </div>
+
+            <!-- Last Name -->
+            <div class="space-y-2">
+                <label for="last_name" class="block text-[10px] font-bold uppercase tracking-wider text-white/60">Last
+                    Name</label>
+                <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}" required
+                    class="w-full bg-white/5 border border-white/10 text-white text-sm focus:ring-0 focus:border-white/30 px-4 py-3 placeholder-white/20">
+            </div>
+
+            <!-- Phone Number -->
+            <div class="space-y-2">
+                <label for="phone_number"
+                    class="block text-[10px] font-bold uppercase tracking-wider text-white/60">Phone Number</label>
+                <input type="text" id="phone_number" name="phone_number" value="{{ user.phone_number }}" required
+                    class="w-full bg-white/5 border border-white/10 text-white text-sm focus:ring-0 focus:border-white/30 px-4 py-3 placeholder-white/20">
+            </div>
+
+            <!-- Profile Image -->
+            <div class="space-y-2">
+                <label for="profile_image"
+                    class="block text-[10px] font-bold uppercase tracking-wider text-white/60">Profile Image</label>
+                <input type="file" id="profile_image" name="profile_image"
+                    class="w-full bg-white/5 border border-white/10 text-white text-xs file:mr-4 file:py-2 file:px-4 file:border-0 file:text-[10px] file:font-bold file:uppercase file:tracking-widest file:bg-white file:text-black hover:file:bg-white/90">
+                {% if user.profile_image %}
+                <p class="text-[10px] text-white/40 mt-1">Current: {{ user.profile_image.name }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <h3 class="text-xs font-bold uppercase tracking-widest text-white/40 mb-6 border-b border-white/10 pb-4">Address
+            Information</h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <!-- House -->
+            <div class="space-y-2">
+                <label for="house" class="block text-[10px] font-bold uppercase tracking-wider text-white/60">House
+                    Name</label>
+                <input type="text" id="house" name="house" value="{{ user.house }}" required
+                    class="w-full bg-white/5 border border-white/10 text-white text-sm focus:ring-0 focus:border-white/30 px-4 py-3 placeholder-white/20">
+            </div>
+
+            <!-- Place -->
+            <div class="space-y-2">
+                <label for="place"
+                    class="block text-[10px] font-bold uppercase tracking-wider text-white/60">Place</label>
+                <input type="text" id="place" name="place" value="{{ user.place }}" required
+                    class="w-full bg-white/5 border border-white/10 text-white text-sm focus:ring-0 focus:border-white/30 px-4 py-3 placeholder-white/20">
+            </div>
+
+            <!-- District -->
+            <div class="space-y-2">
+                <label for="district"
+                    class="block text-[10px] font-bold uppercase tracking-wider text-white/60">District</label>
+                <input type="text" id="district" name="district" value="{{ user.district }}" required
+                    class="w-full bg-white/5 border border-white/10 text-white text-sm focus:ring-0 focus:border-white/30 px-4 py-3 placeholder-white/20">
+            </div>
+
+            <!-- Post -->
+            <div class="space-y-2">
+                <label for="post" class="block text-[10px] font-bold uppercase tracking-wider text-white/60">Post
+                    Office</label>
+                <input type="text" id="post" name="post" value="{{ user.post }}" required
+                    class="w-full bg-white/5 border border-white/10 text-white text-sm focus:ring-0 focus:border-white/30 px-4 py-3 placeholder-white/20">
+            </div>
+
+            <!-- PIN -->
+            <div class="space-y-2 md:col-span-2">
+                <label for="pin" class="block text-[10px] font-bold uppercase tracking-wider text-white/60">PIN
+                    Code</label>
+                <input type="text" id="pin" name="pin" value="{{ user.pin }}" required
+                    class="w-full md:w-1/2 bg-white/5 border border-white/10 text-white text-sm focus:ring-0 focus:border-white/30 px-4 py-3 placeholder-white/20">
+            </div>
+        </div>
+
+        <div class="pt-6 border-t border-white/10 flex items-center justify-end gap-4">
+            <a href="{% url 'profile_view' %}"
+                class="px-6 py-3 border border-white/20 text-white text-xs font-bold uppercase tracking-widest hover:bg-white/5 transition-colors">
+                Cancel
+            </a>
+            <button type="submit"
+                class="px-8 py-3 bg-white text-black text-xs font-bold uppercase tracking-widest hover:bg-white/90 transition-colors">
+                Save Changes
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

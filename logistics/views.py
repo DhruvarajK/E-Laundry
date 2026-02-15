@@ -21,13 +21,73 @@ from django.contrib import messages
 from datetime import datetime
 from myadmin.views import send_email
 
+
+def get_dashboard_stats(delivery_man):
+    # Completed Assignments
+    completed_assignments = LogisticsAssignment.objects.filter(
+        pickup_or_delivery_man=delivery_man,
+        delivery_status='delivered'
+    )
+    completed_count = completed_assignments.count()
+    
+    # Earnings Calculation
+    earnings = 0
+    for assignment in completed_assignments:
+        try:
+            # Check if payment exists and is paid
+            if hasattr(assignment.service_order, 'payment') and assignment.service_order.payment.payment_status == 'paid':
+                 if assignment.service_order.payment.total_price:
+                    earnings += assignment.service_order.payment.total_price
+        except Exception:
+            pass
+            
+    # Pending / Active Assignments (Assigned, Picked Up, In Transit)
+    pending_assignments = LogisticsAssignment.objects.filter(
+        pickup_or_delivery_man=delivery_man,
+        delivery_status__in=['assigned', 'pickuped', 'in_transit']
+    )
+    pending_count = pending_assignments.count()
+
+    # Assessments/Jobs Assigned Today
+    try:
+        today = timezone.now().date()
+        today_assignments = LogisticsAssignment.objects.filter(
+            pickup_or_delivery_man=delivery_man,
+            assignment_date__date=today
+        )
+        today_count = today_assignments.count()
+    except Exception:
+        today_count = 0
+
+    return {
+        'completed_count': completed_count,
+        'earnings': earnings,
+        'pending_count': pending_count,
+        'today_count': today_count
+    }
+
 def logistics_home(request):
-    if request.session['lid'] == 'out':
+    login_id = request.session.get('lid')
+    if not login_id or login_id == 'out':
         return HttpResponse("<script>alert('please login');window.location='/'</script>")
-    else:
-        return render(request,"logistics_home.html")
+    
+    try:
+        delivery_man = DeliveryMan.objects.get(LOGIN__id=login_id)
+        stats = get_dashboard_stats(delivery_man)
+        
+        # Fetch active assignments for the dashboard
+        active_assignments = LogisticsAssignment.objects.filter(
+            pickup_or_delivery_man=delivery_man,
+            delivery_status__in=['assigned', 'pickuped', 'in_transit']
+        ).order_by('assignment_date')
 
-
+        return render(request, "logistics_home.html", {
+            'stats': stats,
+            'user': delivery_man,
+            'active_assignments': active_assignments
+        })
+    except DeliveryMan.DoesNotExist:
+         return HttpResponse("<script>alert('User not found');window.location='/'</script>")
 
 
 def register_delivery_man(request):
@@ -173,10 +233,13 @@ def view_assigned_services(request):
         if status_filter:
             services = services.filter(delivery_status=status_filter)
         
+        stats = get_dashboard_stats(deliveryman)
+
         context = {
             'assigned_services': services,
             'selected_date': selected_date,
             'status_filter': status_filter,
+            'stats': stats, # Add stats to context
         }
         return render(request, 'assigned_services.html', context)
     else:
@@ -337,19 +400,19 @@ def camera(request):
 #         service_order = get_object_or_404(ServiceOrder, id=service_order_id)
 #         user_instance = service_order.USER
 #         num_bags_needed = user_instance.num_bags
-
+#
 #         # Check if the user has already been assigned the required number of bags
 #         assigned_bags_count = LaundryBag.objects.filter(USER=user_instance).count()
-
+#
 #         # Check if the QR code already exists
 #         existing_bag = LaundryBag.objects.filter(qr_code=qr_code).first()
-
+#
 #         # If the bag already exists, update its service type
 #         if existing_bag:
 #             existing_bag.service_type = service_type
 #             existing_bag.save()
 #             messages.success(request, "Laundry bag updated successfully!")
-        
+#
 #         # If the QR code doesn't exist and the user hasn't reached the limit of bags
 #         elif assigned_bags_count < num_bags_needed:
 #             LaundryBag.objects.create(
@@ -362,7 +425,7 @@ def camera(request):
 #             messages.error(request, "Cannot assign more bags than the required number.")
 #             return HttpResponse("<script>alert('Cannot assign more bags than the required number.');window.location='/assigned-services'</script>")
 #         return redirect('view_assigned_services')  # Redirect to a relevant page after submission
-
+#
 #     return render(request, 'qr_scanner.html', {'service_order_id': service_order_id})
 
 
@@ -474,13 +537,16 @@ def deliveryman_pending_orders(request):
     # Use consistent status casing (using "pending" in this case)
     pending_orders = ServiceOrder.objects.filter(status="pending")
     
+    stats = get_dashboard_stats(current_delivery_man)
+
     if request.method == "POST":
         order_id = request.POST.get("order_id")
         if not order_id:
             return render(request, "deliveryman_pending_orders.html", {
                 "pending_orders": pending_orders,
                 "delivery_man": current_delivery_man,
-                "error": "No order selected."
+                "error": "No order selected.",
+                "stats": stats
             })
 
         # Ensure the order exists and is still pending (use "pending")
@@ -501,6 +567,8 @@ def deliveryman_pending_orders(request):
 
     return render(request, "deliveryman_pending_orders.html", {
         "pending_orders": pending_orders,
-        "delivery_man": current_delivery_man
+        "delivery_man": current_delivery_man,
+        "stats": stats
     })
+
 
