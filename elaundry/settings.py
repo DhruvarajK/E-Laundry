@@ -13,12 +13,12 @@ SECRET_KEY = 'django-insecure-nd(s+f(ycmop^8dj#ry#v=i_-gcl9eau_fj$l$-y7ms9c8drc$
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*','b7a3-2409-40f3-1009-a49f-34a2-722a-5d9d-4f33.ngrok-free.app']
 
 
 CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8000',
-    'https://83f8-117-230-44-56.ngrok-free.app',
+    'https://b7a3-2409-40f3-1009-a49f-34a2-722a-5d9d-4f33.ngrok-free.app',
 ]
 
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10242880  # 5MB, for example

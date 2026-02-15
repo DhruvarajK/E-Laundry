@@ -1,275 +1,211 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html class="dark" lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bag Details</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Bag Details | ELaundry</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#ffffff",
+            "background-light": "#f6f6f8",
+            "background-dark": "#000000",
+          },
+          fontFamily: {
+            "display": ["Inter", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0px",
+            "lg": "0px",
+            "xl": "0px",
+            "full": "0px"
+          },
+        },
+      },
+    }
+  </script>
   <style>
-    :root {
-      --primary-color: #3498db;
-      --secondary-color: #2ecc71;
-      --accent-color: #e74c3c;
-      --dark-color: #2c3e50;
-      --light-color: #ecf0f1;
-      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      --transition: all 0.3s ease;
-    }
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
-      color: var(--dark-color);
-    }
-    
-    .container {
-      width: 100%;
-      max-width: 800px;
-      background-color: white;
-      border-radius: 15px;
-      padding: 2rem;
-      box-shadow: var(--box-shadow);
-      margin-bottom: 2rem;
-    }
-    
-    h1 {
-      text-align: center;
-      margin-bottom: 1.5rem;
-      color: var(--dark-color);
-      font-size: 1.8rem;
-    }
-    
-    .error {
-      color: var(--accent-color);
-      text-align: center;
-      font-weight: 500;
-      background-color: rgba(231, 76, 60, 0.1);
-      padding: 1rem;
-      border-radius: 10px;
-      border-left: 4px solid var(--accent-color);
-      margin-bottom: 1.5rem;
-    }
-    
-    .details-card {
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: var(--box-shadow);
-    }
-    
-    .details-header {
-      background-color: var(--primary-color);
-      color: white;
-      padding: 1rem;
-      text-align: center;
-      font-weight: 600;
-      font-size: 1.1rem;
-    }
-    
-    .details-table {
-      width: 100%;
-      border-collapse: collapse;
-      background: white;
-    }
-    
-    .details-table tr:not(:last-child) {
-      border-bottom: 1px solid #eee;
-    }
-    
-    .details-table tr:nth-child(even) {
-      background-color: rgba(236, 240, 241, 0.5);
-    }
-    
-    .details-table th, 
-    .details-table td {
-      padding: 1rem;
-      text-align: left;
-    }
-    
-    .details-table th {
-      width: 35%;
-      font-weight: 600;
-      color: var(--dark-color);
-    }
-    
-    .details-table td {
-      width: 65%;
-    }
-    
-    .user-info, .business-info {
-      margin-top: 1.5rem;
-      background-color: #f8f9fa;
-      border-radius: 10px;
-      padding: 1rem;
-      border-left: 4px solid var(--secondary-color);
-    }
-    
-    .user-info h3, .business-info h3 {
-      font-size: 1rem;
-      margin-bottom: 0.5rem;
-      color: var(--dark-color);
-      display: flex;
-      align-items: center;
-    }
-    
-    .user-info h3 i, .business-info h3 i {
-      margin-right: 8px;
-      color: var(--secondary-color);
-    }
-    
-    .user-info p, .business-info p {
-      margin-bottom: 0.5rem;
-      color: #555;
-      line-height: 1.5;
-      padding-left: 1.5rem;
-    }
-    
-    .actions {
-      display: flex;
-      justify-content: center;
-      margin-top: 2rem;
-    }
-    
-    .back-button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 12px 24px;
-      background-color: var(--primary-color);
-      color: white;
-      text-decoration: none;
-      border-radius: 50px;
-      font-weight: 600;
-      transition: var(--transition);
-      box-shadow: var(--box-shadow);
-    }
-    
-    .back-button:hover {
-      background-color: #2980b9;
-      transform: translateY(-2px);
-    }
-    
-    .back-button i {
-      margin-right: 8px;
-    }
-    
-    @media (max-width: 768px) {
-      .container {
-        padding: 1.5rem;
-      }
-      
-      .details-table th, 
-      .details-table td {
-        padding: 0.8rem;
-      }
-    }
-    
-    @media (max-width: 480px) {
-      .container {
-        padding: 1rem;
-      }
-      
-      h1 {
-        font-size: 1.5rem;
-      }
-      
-      .details-table {
-        display: block;
-      }
-      
-      .details-table tbody {
-        display: block;
-      }
-      
-      .details-table tr {
-        display: flex;
-        flex-direction: column;
-        padding: 0.5rem 0;
-      }
-      
-      .details-table th, 
-      .details-table td {
-        display: block;
-        width: 100%;
-        padding: 0.5rem 1rem;
-      }
-      
-      .details-table th {
-        background-color: rgba(236, 240, 241, 0.5);
-        border-left: 3px solid var(--primary-color);
-        font-size: 0.9rem;
-      }
-      
-      .user-info, .business-info {
-        padding: 0.8rem;
-      }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
     }
   </style>
 </head>
-<body>
-  <div class="container">
-    <h1>Laundry Bag Details</h1>
-    
-    {% if error %}
-      <p class="error">{{ error }}</p>
-    {% else %}
-      <div class="details-card">
-        <div class="details-header">
-          Bag Information
-        </div>
-        <table class="details-table">
-          <tr>
-            <th>Service Type</th>
-            <td>{{ bag.service_type }}</td>
-          </tr>
-          <tr>
-            <th>Preference</th>
-            <td>{{ bag.preference }}</td>
-          </tr>
-          <tr>
-            <th>Assigned</th>
-            <td>{{ bag.assigned }}</td>
-          </tr>
-        </table>
+
+<body
+  class="bg-background-light dark:bg-background-dark font-display text-black dark:text-white antialiased overflow-hidden h-screen flex">
+  <aside class="w-64 bg-black border-r border-white/10 flex-col hidden md:flex h-full">
+    <div class="h-20 flex items-center px-8 border-b border-white/10">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-white text-2xl">waves</span>
+        <h1 class="text-white text-lg font-black tracking-tighter uppercase">ELaundry</h1>
       </div>
-      
-      {% if bag.USER %}
-        <div class="user-info">
-          <h3><i class="fas fa-user"></i> Customer Information</h3>
-          <p><strong>Name:</strong> {{ bag.USER.first_name }} {{ bag.USER.last_name }}</p>
-          <p><strong>Address:</strong> {{ bag.USER.house }}, {{ bag.USER.place }}, {{ bag.USER.district }}, {{ bag.USER.post }}</p>
+    </div>
+    <nav class="flex-1 py-8 flex flex-col gap-2 px-4">
+      <a class="flex items-center gap-4 px-4 py-3 text-white/50 hover:text-white hover:bg-white/5 transition-all font-bold uppercase tracking-widest text-xs"
+        href="{% url 'user_home' %}">
+        <span class="material-symbols-outlined text-lg">dashboard</span>
+        Home
+      </a>
+      <a class="flex items-center gap-4 px-4 py-3 text-white/50 hover:text-white hover:bg-white/5 transition-all font-bold uppercase tracking-widest text-xs"
+        href="{% url 'view_all_orders' %}">
+        <span class="material-symbols-outlined text-lg">history</span>
+        History
+      </a>
+      <a class="flex items-center gap-4 px-4 py-3 text-white/50 hover:text-white hover:bg-white/5 transition-all font-bold uppercase tracking-widest text-xs"
+        href="{% url 'view_profile_user' %}">
+        <span class="material-symbols-outlined text-lg">person</span>
+        Profile
+      </a>
+      <a class="flex items-center gap-4 px-4 py-3 text-white/50 hover:text-white hover:bg-white/5 transition-all font-bold uppercase tracking-widest text-xs"
+        href="{% url 'feedback_list' %}">
+        <span class="material-symbols-outlined text-lg">support_agent</span>
+        Support
+      </a>
+      <a class="flex items-center gap-4 px-4 py-3 text-white/50 hover:text-white hover:bg-white/5 transition-all font-bold uppercase tracking-widest text-xs"
+        href="{% url 'subscription_details' %}">
+        <span class="material-symbols-outlined text-lg">card_membership</span>
+        Subscription
+      </a>
+      <a class="flex items-center gap-4 px-4 py-3 text-white/50 hover:text-white hover:bg-white/5 transition-all font-bold uppercase tracking-widest text-xs"
+        href="{% url 'payment_history' %}">
+        <span class="material-symbols-outlined text-lg">receipt_long</span>
+        Payments
+      </a>
+      <a class="flex items-center gap-4 px-4 py-3 bg-white text-black transition-all font-bold uppercase tracking-widest text-xs"
+        href="{% url 'scan_qr_page' %}">
+        <span class="material-symbols-outlined text-lg">qr_code_scanner</span>
+        QR Scan
+      </a>
+    </nav>
+    <div class="p-4 border-t border-white/10">
+      <div class="flex items-center gap-3 px-4 py-3">
+        <div class="w-8 h-8 bg-white/10 flex items-center justify-center text-white font-bold text-xs">
+          {% if user.first_name %}{{user.first_name|first}}{% if user.last_name%}{{user.last_name|first}}{%endif %}{%else %}U{% endif %}
         </div>
-      {% elif bag.BUSINESS %}
-        <div class="business-info">
-          <h3><i class="fas fa-building"></i> Business Information</h3>
-          <p><strong>Name:</strong> {{ bag.BUSINESS.owner_name }} {{ bag.BUSINESS.business_name }}</p>
-          <p><strong>Address:</strong> {{ bag.BUSINESS.house }}, {{ bag.BUSINESS.place }}, {{ bag.BUSINESS.district }}, {{ bag.BUSINESS.post }}</p>
+        <div class="flex flex-col">
+          <span class="text-xs font-bold text-white uppercase tracking-wider">{{user.first_name}}
+            {{user.last_name}}</span>
+          <span class="text-[10px] text-white/40 uppercase tracking-widest">User</span>
         </div>
-      {% endif %}
-      
-    {% endif %}
-
-
-
-  
-
-    
-    <div class="actions">
-      <a href="{% url 'scan_qr_page' %}" class="back-button">
-        <i class="fas fa-qrcode"></i> Scan Another QR
+      </div>
+      <a href="{% url 'logout' %}"
+        class="w-full mt-2 flex items-center gap-2 px-4 py-2 text-white/40 hover:text-red-400 text-[10px] uppercase font-bold tracking-widest transition-colors">
+        <span class="material-symbols-outlined text-sm">logout</span>
+        Sign Out
       </a>
     </div>
-  </div>
+  </aside>
+  <main class="flex-1 overflow-y-auto bg-black relative">
+    <header
+      class="md:hidden h-16 bg-black border-b border-white/10 flex items-center justify-between px-6 sticky top-0 z-30">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-white text-2xl">waves</span>
+        <span class="text-white text-lg font-black tracking-tighter uppercase">ELaundry</span>
+      </div>
+      <button class="text-white">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+    </header>
+
+    <div class="p-6 lg:p-12 max-w-4xl mx-auto space-y-8">
+      <div class="border-b border-white/10 pb-8">
+        <h2 class="text-xs font-bold uppercase tracking-[0.4em] text-white/40 mb-2">Scan Result</h2>
+        <h3 class="text-3xl md:text-4xl font-black uppercase tracking-tight text-white">Laundry Bag Details</h3>
+      </div>
+
+      {% if error %}
+      <div
+        class="p-4 border border-red-500/50 bg-red-500/10 text-red-200 text-sm font-bold uppercase tracking-wider text-center">
+        {{ error }}
+      </div>
+      {% else %}
+
+      <div class="space-y-6">
+        <!-- Bag Info Card -->
+        <div class="border border-white/10 bg-white/5 p-8">
+          <h4
+            class="text-sm font-bold uppercase tracking-widest text-white border-b border-white/10 pb-4 mb-4 flex items-center gap-3">
+            <span class="material-symbols-outlined text-white/60">shopping_bag</span>
+            Bag Information
+          </h4>
+          <div class="space-y-4">
+            <div class="flex justify-between items-center py-2 border-b border-white/5">
+              <span class="text-[10px] font-bold uppercase tracking-widest text-white/40">Service Type</span>
+              <span class="text-sm font-bold text-white uppercase">{{ bag.service_type }}</span>
+            </div>
+            <div class="flex justify-between items-center py-2 border-b border-white/5">
+              <span class="text-[10px] font-bold uppercase tracking-widest text-white/40">Preference</span>
+              <span class="text-sm font-bold text-white uppercase">{{ bag.preference }}</span>
+            </div>
+            <div class="flex justify-between items-center py-2 border-b border-white/5">
+              <span class="text-[10px] font-bold uppercase tracking-widest text-white/40">Assigned</span>
+              <span class="text-sm font-bold text-white uppercase">{{ bag.assigned }}</span>
+            </div>
+          </div>
+        </div>
+
+        {% if bag.USER %}
+        <!-- Customer Info Card -->
+        <div class="border border-white/10 bg-white/5 p-8">
+          <h4
+            class="text-sm font-bold uppercase tracking-widest text-white border-b border-white/10 pb-4 mb-4 flex items-center gap-3">
+            <span class="material-symbols-outlined text-white/60">person</span>
+            Customer Information
+          </h4>
+          <div class="space-y-4">
+            <div class="py-2 border-b border-white/5">
+              <span class="block text-[10px] font-bold uppercase tracking-widest text-white/40 mb-1">Name</span>
+              <span class="text-sm font-bold text-white">{{ bag.USER.first_name }} {{ bag.USER.last_name }}</span>
+            </div>
+            <div class="py-2 border-b border-white/5">
+              <span class="block text-[10px] font-bold uppercase tracking-widest text-white/40 mb-1">Address</span>
+              <span class="text-sm text-white/80 leading-relaxed">{{ bag.USER.house }}, {{ bag.USER.place }}, {{bag.USER.district }}, {{ bag.USER.post }}</span>
+            </div>
+          </div>
+        </div>
+        {% elif bag.BUSINESS %}
+        <!-- Business Info Card -->
+        <div class="border border-white/10 bg-white/5 p-8">
+          <h4
+            class="text-sm font-bold uppercase tracking-widest text-white border-b border-white/10 pb-4 mb-4 flex items-center gap-3">
+            <span class="material-symbols-outlined text-white/60">business</span>
+            Business Information
+          </h4>
+          <div class="space-y-4">
+            <div class="py-2 border-b border-white/5">
+              <span class="block text-[10px] font-bold uppercase tracking-widest text-white/40 mb-1">Name</span>
+              <span class="text-sm font-bold text-white">{{ bag.BUSINESS.owner_name }} {{ bag.BUSINESS.business_name
+                }}</span>
+            </div>
+            <div class="py-2 border-b border-white/5">
+              <span class="block text-[10px] font-bold uppercase tracking-widest text-white/40 mb-1">Address</span>
+              <span class="text-sm text-white/80 leading-relaxed">{{ bag.BUSINESS.house }}, {{ bag.BUSINESS.place }}, {{bag.BUSINESS.district }}, {{ bag.BUSINESS.post }}</span>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      <div class="flex justify-center pt-8">
+        <a href="{% url 'scan_qr_page' %}"
+          class="group flex items-center gap-3 px-8 py-4 border border-white/20 text-white font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all">
+          <span class="material-symbols-outlined group-hover:-translate-x-1 transition-transform">qr_code_scanner</span>
+          Scan Another QR
+        </a>
+      </div>
+    </div>
+  </main>
 </body>
+
 </html>

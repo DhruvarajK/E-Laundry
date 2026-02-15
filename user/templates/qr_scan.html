@@ -1,29 +1,193 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Scanner</title>
-</head>
-<body>
-    <h2>Scan QR Code</h2>
-    <video id="preview" autoplay playsinline></video>
-    <canvas id="qr-canvas" style="display:none;"></canvas>
-    <button onclick="scanQR()">Scan QR Code</button>
-    <p id="result"></p>
+<html class="dark" lang="en">
 
-    <form id="qrForm" method="POST" action="/check-assign-bags/">
-        {% csrf_token %}
-        <input type="hidden" id="qr_code" name="qr_code">
-        <label for="service_type">Service Type:</label>
-        <select name="service_type" required>
-            <option value="hand wash">Hand Wash</option>
-            <option value="machine wash">Machine Wash</option>
-            <option value="dry clean">Dry Clean</option>
-            <option value="Ironing">Ironing</option>
-        </select>
-        <button type="submit">Assign Bag</button>
-    </form>
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>QR Scan | ELaundry</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ffffff",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#000000",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0px",
+                        "lg": "0px",
+                        "xl": "0px",
+                        "full": "0px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Custom styles to override forms plugin for this specific page if needed */
+        select option {
+            background-color: #000;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark font-display text-black dark:text-white antialiased overflow-hidden h-screen flex">
+    <aside class="w-64 bg-black border-r border-white/10 flex-col hidden md:flex h-full">
+        <div class="h-20 flex items-center px-8 border-b border-white/10">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-white text-2xl">waves</span>
+                <h1 class="text-white text-lg font-black tracking-tighter uppercase">ELaundry</h1>
+            </div>
+        </div>
+        <nav class="flex-1 py-8 flex flex-col gap-2 px-4">
+            <a class="flex items-center gap-4 px-4 py-3 text-white/50 hover:text-white hover:bg-white/5 transition-all font-bold uppercase tracking-widest text-xs"
+                href="{% url 'user_home' %}">
+                <span class="material-symbols-outlined text-lg">dashboard</span>
+                Home
+            </a>
+            <a class="flex items-center gap-4 px-4 py-3 text-white/50 hover:text-white hover:bg-white/5 transition-all font-bold uppercase tracking-widest text-xs"
+                href="{% url 'view_all_orders' %}">
+                <span class="material-symbols-outlined text-lg">history</span>
+                History
+            </a>
+            <a class="flex items-center gap-4 px-4 py-3 text-white/50 hover:text-white hover:bg-white/5 transition-all font-bold uppercase tracking-widest text-xs"
+                href="{% url 'view_profile_user' %}">
+                <span class="material-symbols-outlined text-lg">person</span>
+                Profile
+            </a>
+            <a class="flex items-center gap-4 px-4 py-3 text-white/50 hover:text-white hover:bg-white/5 transition-all font-bold uppercase tracking-widest text-xs"
+                href="{% url 'feedback_list' %}">
+                <span class="material-symbols-outlined text-lg">support_agent</span>
+                Support
+            </a>
+            <a class="flex items-center gap-4 px-4 py-3 text-white/50 hover:text-white hover:bg-white/5 transition-all font-bold uppercase tracking-widest text-xs"
+                href="{% url 'subscription_details' %}">
+                <span class="material-symbols-outlined text-lg">card_membership</span>
+                Subscription
+            </a>
+            <a class="flex items-center gap-4 px-4 py-3 text-white/50 hover:text-white hover:bg-white/5 transition-all font-bold uppercase tracking-widest text-xs"
+                href="{% url 'payment_history' %}">
+                <span class="material-symbols-outlined text-lg">receipt_long</span>
+                Payments
+            </a>
+            <a class="flex items-center gap-4 px-4 py-3 bg-white text-black transition-all font-bold uppercase tracking-widest text-xs"
+                href="{% url 'scan_qr_page' %}">
+                <span class="material-symbols-outlined text-lg">qr_code_scanner</span>
+                QR Scan
+            </a>
+        </nav>
+        <div class="p-4 border-t border-white/10">
+            <div class="flex items-center gap-3 px-4 py-3">
+                <div class="w-8 h-8 bg-white/10 flex items-center justify-center text-white font-bold text-xs">
+                    {% if user.first_name %}{{user.first_name|first}}{% if
+                    user.last_name%}{{user.last_name|first}}{%endif %}{% else %}U{% endif %}
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xs font-bold text-white uppercase tracking-wider">{{user.first_name}}
+                        {{user.last_name}}</span>
+                    <span class="text-[10px] text-white/40 uppercase tracking-widest">User</span>
+                </div>
+            </div>
+            <a href="{% url 'logout' %}"
+                class="w-full mt-2 flex items-center gap-2 px-4 py-2 text-white/40 hover:text-red-400 text-[10px] uppercase font-bold tracking-widest transition-colors">
+                <span class="material-symbols-outlined text-sm">logout</span>
+                Sign Out
+            </a>
+        </div>
+    </aside>
+    <main class="flex-1 overflow-y-auto bg-black relative">
+        <header
+            class="md:hidden h-16 bg-black border-b border-white/10 flex items-center justify-between px-6 sticky top-0 z-30">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-white text-2xl">waves</span>
+                <span class="text-white text-lg font-black tracking-tighter uppercase">ELaundry</span>
+            </div>
+            <button class="text-white">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+        </header>
+
+        <div class="p-6 lg:p-12 max-w-4xl mx-auto space-y-8">
+            <div class="border-b border-white/10 pb-8">
+                <h2 class="text-xs font-bold uppercase tracking-[0.4em] text-white/40 mb-2">Scan & Assign</h2>
+                <h3 class="text-3xl md:text-4xl font-black uppercase tracking-tight text-white">QR Code Scanner</h3>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Video Section -->
+                <div class="space-y-4">
+                    <div
+                        class="aspect-video bg-black border border-white/20 relative overflow-hidden flex items-center justify-center">
+                        <video id="preview" autoplay playsinline class="w-full h-full object-cover"></video>
+                        <canvas id="qr-canvas" style="display:none;"></canvas>
+                        <!-- Scanner overlay effect -->
+                        <div class="absolute inset-0 border-2 border-white/10 pointer-events-none"></div>
+                        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <div class="w-64 h-64 border-2 border-white/50 relative">
+                                <div class="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-white"></div>
+                                <div class="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-white"></div>
+                                <div class="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-white"></div>
+                                <div class="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-white"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="scanQR()"
+                        class="w-full py-3 bg-white text-black font-bold uppercase tracking-widest hover:bg-gray-200 transition-colors">
+                        Activate Camera
+                    </button>
+                    <p id="result" class="text-center text-sm font-mono text-white/60 min-h-[1.5rem]"></p>
+                </div>
+
+                <!-- Form Section -->
+                <div class="bg-white/5 border border-white/10 p-8 flex flex-col justify-center">
+                    <h4 class="text-sm font-bold uppercase tracking-widest text-white mb-6">Assignment Details</h4>
+                    <form id="qrForm" method="POST" action="/check-assign-bags/" class="space-y-6">
+                        {% csrf_token %}
+                        <input type="hidden" id="qr_code" name="qr_code">
+
+                        <div class="space-y-2">
+                            <label for="service_type"
+                                class="text-[10px] font-bold uppercase tracking-widest text-white/60">Service
+                                Type</label>
+                            <select name="service_type" required
+                                class="w-full bg-black border border-white/20 text-white px-4 py-3 focus:ring-0 focus:border-white transition-colors uppercase text-xs font-bold tracking-wider">
+                                <option value="hand wash">Hand Wash</option>
+                                <option value="machine wash">Machine Wash</option>
+                                <option value="dry clean">Dry Clean</option>
+                                <option value="Ironing">Ironing</option>
+                            </select>
+                        </div>
+
+                        <button type="submit"
+                            class="w-full py-4 border border-white/20 text-white font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all flex items-center justify-center gap-2 group">
+                            Assign Bag
+                            <span
+                                class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </main>
 
     <script src="https://unpkg.com/@zxing/library@latest"></script>
     <script>
@@ -33,10 +197,16 @@
         async function scanQR() {
             try {
                 const devices = await codeReader.getVideoInputDevices();
-                await codeReader.decodeFromVideoDevice(devices[0].deviceId, videoElement, (result, err) => {
+                // Prefer back camera if available
+                const backCamera = devices.find(device => device.label.toLowerCase().includes('back'));
+                const deviceId = backCamera ? backCamera.deviceId : devices[0].deviceId;
+
+                await codeReader.decodeFromVideoDevice(deviceId, videoElement, (result, err) => {
                     if (result) {
-                        document.getElementById('result').innerText = "QR Code: " + result.text;
+                        document.getElementById('result').innerText = "QR Code Detected: " + result.text;
                         document.getElementById('qr_code').value = result.text;
+                        // Optional: Highlight success visually
+                        videoElement.style.borderColor = "#c3ff00"; // Light green highlight
                         codeReader.reset();
                     }
                 });
@@ -46,4 +216,5 @@
         }
     </script>
 </body>
+
 </html>
