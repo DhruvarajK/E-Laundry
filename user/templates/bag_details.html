@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bag Details</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #3498db;
+      --secondary-color: #2ecc71;
+      --accent-color: #e74c3c;
+      --dark-color: #2c3e50;
+      --light-color: #ecf0f1;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      color: var(--dark-color);
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 800px;
+      background-color: white;
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: var(--box-shadow);
+      margin-bottom: 2rem;
+    }
+    
+    h1 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: var(--dark-color);
+      font-size: 1.8rem;
+    }
+    
+    .error {
+      color: var(--accent-color);
+      text-align: center;
+      font-weight: 500;
+      background-color: rgba(231, 76, 60, 0.1);
+      padding: 1rem;
+      border-radius: 10px;
+      border-left: 4px solid var(--accent-color);
+      margin-bottom: 1.5rem;
+    }
+    
+    .details-card {
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--box-shadow);
+    }
+    
+    .details-header {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    
+    .details-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+    }
+    
+    .details-table tr:not(:last-child) {
+      border-bottom: 1px solid #eee;
+    }
+    
+    .details-table tr:nth-child(even) {
+      background-color: rgba(236, 240, 241, 0.5);
+    }
+    
+    .details-table th, 
+    .details-table td {
+      padding: 1rem;
+      text-align: left;
+    }
+    
+    .details-table th {
+      width: 35%;
+      font-weight: 600;
+      color: var(--dark-color);
+    }
+    
+    .details-table td {
+      width: 65%;
+    }
+    
+    .user-info, .business-info {
+      margin-top: 1.5rem;
+      background-color: #f8f9fa;
+      border-radius: 10px;
+      padding: 1rem;
+      border-left: 4px solid var(--secondary-color);
+    }
+    
+    .user-info h3, .business-info h3 {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      color: var(--dark-color);
+      display: flex;
+      align-items: center;
+    }
+    
+    .user-info h3 i, .business-info h3 i {
+      margin-right: 8px;
+      color: var(--secondary-color);
+    }
+    
+    .user-info p, .business-info p {
+      margin-bottom: 0.5rem;
+      color: #555;
+      line-height: 1.5;
+      padding-left: 1.5rem;
+    }
+    
+    .actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+    
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 24px;
+      background-color: var(--primary-color);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: var(--transition);
+      box-shadow: var(--box-shadow);
+    }
+    
+    .back-button:hover {
+      background-color: #2980b9;
+      transform: translateY(-2px);
+    }
+    
+    .back-button i {
+      margin-right: 8px;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.5rem;
+      }
+      
+      .details-table th, 
+      .details-table td {
+        padding: 0.8rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      .details-table {
+        display: block;
+      }
+      
+      .details-table tbody {
+        display: block;
+      }
+      
+      .details-table tr {
+        display: flex;
+        flex-direction: column;
+        padding: 0.5rem 0;
+      }
+      
+      .details-table th, 
+      .details-table td {
+        display: block;
+        width: 100%;
+        padding: 0.5rem 1rem;
+      }
+      
+      .details-table th {
+        background-color: rgba(236, 240, 241, 0.5);
+        border-left: 3px solid var(--primary-color);
+        font-size: 0.9rem;
+      }
+      
+      .user-info, .business-info {
+        padding: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Laundry Bag Details</h1>
+    
+    {% if error %}
+      <p class="error">{{ error }}</p>
+    {% else %}
+      <div class="details-card">
+        <div class="details-header">
+          Bag Information
+        </div>
+        <table class="details-table">
+          <tr>
+            <th>Service Type</th>
+            <td>{{ bag.service_type }}</td>
+          </tr>
+          <tr>
+            <th>Preference</th>
+            <td>{{ bag.preference }}</td>
+          </tr>
+          <tr>
+            <th>Assigned</th>
+            <td>{{ bag.assigned }}</td>
+          </tr>
+        </table>
+      </div>
+      
+      {% if bag.USER %}
+        <div class="user-info">
+          <h3><i class="fas fa-user"></i> Customer Information</h3>
+          <p><strong>Name:</strong> {{ bag.USER.first_name }} {{ bag.USER.last_name }}</p>
+          <p><strong>Address:</strong> {{ bag.USER.house }}, {{ bag.USER.place }}, {{ bag.USER.district }}, {{ bag.USER.post }}</p>
+        </div>
+      {% elif bag.BUSINESS %}
+        <div class="business-info">
+          <h3><i class="fas fa-building"></i> Business Information</h3>
+          <p><strong>Name:</strong> {{ bag.BUSINESS.owner_name }} {{ bag.BUSINESS.business_name }}</p>
+          <p><strong>Address:</strong> {{ bag.BUSINESS.house }}, {{ bag.BUSINESS.place }}, {{ bag.BUSINESS.district }}, {{ bag.BUSINESS.post }}</p>
+        </div>
+      {% endif %}
+      
+    {% endif %}
+
+
+
+  
+
+    
+    <div class="actions">
+      <a href="{% url 'scan_qr_page' %}" class="back-button">
+        <i class="fas fa-qrcode"></i> Scan Another QR
+      </a>
+    </div>
+  </div>
+</body>
+</html>

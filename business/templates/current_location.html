@@ -1,0 +1,35 @@
+{% extends 'register_user.html' %}
+
+{% block inner_body %}
+    
+    
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    
+    <form class="form-contact contact_form" method="POST" id="locationForm">
+        {% csrf_token %}
+        <div class="form-group mt-3"><button class="button button-contactForm boxed-btn" type="button" onclick="getLocation()">Fill</button></div>
+        <input type="hidden" name="latitude" id="latitude">
+        <input type="hidden" name="longitude" id="longitude">
+    </form>
+
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    // Update hidden fields with latitude and longitude
+                    document.getElementById('latitude').value = position.coords.latitude;
+                    document.getElementById('longitude').value = position.coords.longitude;
+                    
+                    // Automatically submit the form after location is retrieved
+                    document.getElementById('locationForm').submit();
+                }, function (error) {
+                    alert('Unable to retrieve location. Make sure you have allowed location access.');
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Delivery Man</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        select {
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        }
+        
+        @media (max-width: 640px) {
+            .responsive-table {
+                display: block;
+                width: 100%;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header Section -->
+        <header class="bg-white shadow-md rounded-lg p-6 mb-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-bold text-blue-600">
+                        <i class="fas fa-user-check mr-2"></i>Assign Delivery Personnel
+                    </h1>
+                    <p class="text-gray-500 mt-1">Assign delivery staff to pending orders</p>
+                </div>
+                
+                <!-- Navigation Button -->
+                <div class="mt-4 md:mt-0">
+                    <a href="{% url 'track_delivery_works' %}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-150 ease-in-out">
+                        <i class="fas fa-chart-line mr-2"></i> Track Works
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Section -->
+        <main class="bg-white shadow-md rounded-lg p-6">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-2">
+                    <i class="fas fa-clipboard-list mr-2"></i>Order Details
+                </h2>
+                <p class="text-sm text-gray-600">Assign a delivery person to the following order:</p>
+            </div>
+
+            <div class="responsive-table mb-6">
+                <table class="min-w-full divide-y divide-gray-200 border border-gray-200 rounded-lg overflow-hidden">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <i class="fas fa-hashtag mr-1"></i> Order ID
+                            </th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <i class="fas fa-tag mr-1"></i> Service Type
+                            </th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <i class="fas fa-user mr-1"></i> Select Delivery Man
+                            </th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <i class="fas fa-tasks mr-1"></i> Action
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr>
+                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-blue-600">
+                                #{{ order.id }}
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap">
+                                <span class="px-3 py-1 inline-flex text-sm leading-5 font-medium rounded-full 
+                                    {% if order.service_type == 'Delivery' %}
+                                        bg-blue-100 text-blue-800
+                                    {% elif order.service_type == 'Installation' %}
+                                        bg-green-100 text-green-800
+                                    {% elif order.service_type == 'Repair' %}
+                                        bg-yellow-100 text-yellow-800
+                                    {% else %}
+                                        bg-purple-100 text-purple-800
+                                    {% endif %}">
+                                    {{ order.service_type }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-4">
+                                <form method="POST" class="flex flex-col sm:flex-row items-start sm:items-center">
+                                    {% csrf_token %}
+                                    <div class="w-full relative">
+                                        <select name="delivery_man_id" id="delivery_man_id" 
+                                            class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md shadow-sm text-gray-700" 
+                                            required>
+                                            <option value="" disabled selected>Select Delivery Person</option>
+                                            {% for delivery_man in delivery_men %}
+                                                <option value="{{ delivery_man.id }}">{{ delivery_man.first_name }} {{ delivery_man.last_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                            </td>
+                            <td class="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <button type="submit" 
+                                        class="inline-flex items-center px-4 py-2 bg-green-600 text-white font-medium rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-150 ease-in-out">
+                                        <i class="fas fa-user-plus mr-2"></i> Assign
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Order Information Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+                <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                    <h3 class="font-medium text-blue-700 mb-2">
+                        <i class="fas fa-info-circle mr-1"></i> Order Information
+                    </h3>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex items-center text-gray-700">
+                            <span class="w-32 font-medium">Order ID:</span>
+                            <span>#{{ order.id }}</span>
+                        </li>
+                        <li class="flex items-center text-gray-700">
+                            <span class="w-32 font-medium">Service Type:</span>
+                            <span>{{ order.service_type }}</span>
+                        </li>
+                        <!-- You can add more order details here -->
+                    </ul>
+                </div>
+                
+                <div class="bg-yellow-50 rounded-lg p-4 border border-yellow-200">
+                    <h3 class="font-medium text-yellow-700 mb-2">
+                        <i class="fas fa-exclamation-triangle mr-1"></i> Assignment Tips
+                    </h3>
+                    <ul class="list-disc list-inside space-y-1 text-sm text-gray-700">
+                        <li>Consider the delivery person's current workload</li>
+                        <li>Check their availability and location</li>
+                        <li>Assign based on experience with service type</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="mt-8 text-center text-gray-500 text-sm">
+            <p>&copy; {% now "Y" %} Delivery Management System. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

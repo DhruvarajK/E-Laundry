@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place Your Order</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4A6FDC;
+            --primary-dark: #3256C4;
+            --secondary: #F0F4FF;
+            --accent: #FFC107;
+            --text: #333;
+            --text-light: #666;
+            --light: #fff;
+            --danger: #dc3545;
+            --success: #28a745;
+            --border-radius: 8px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            background-color: var(--light);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        
+        h1 {
+            color: var(--primary);
+            margin-bottom: 24px;
+            font-size: 2rem;
+            text-align: center;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--secondary);
+        }
+        
+        h2 {
+            color: var(--success);
+            margin: 32px 0 20px;
+            font-size: 1.75rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        form {
+            margin-top: 24px;
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text);
+        }
+        
+        select, textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: border 0.3s;
+            background-color: var(--light);
+        }
+        
+        select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 111, 220, 0.2);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        button:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-secondary {
+            background-color: var(--text-light);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #555;
+        }
+        
+        .alert {
+            padding: 16px;
+            background-color: rgba(255, 193, 7, 0.2);
+            border-left: 4px solid var(--accent);
+            margin: 20px 0;
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+        }
+        
+        .alert::before {
+            content: "\f06a";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            margin-right: 12px;
+            color: var(--accent);
+            font-size: 18px;
+        }
+        
+        .order-confirmation {
+            background-color: var(--secondary);
+            padding: 24px;
+            border-radius: var(--border-radius);
+            margin-top: 32px;
+            border-left: 4px solid var(--success);
+        }
+        
+        .order-details {
+            margin-top: 16px;
+        }
+        
+        .order-detail-item {
+            display: flex;
+            margin-bottom: 12px;
+            border-bottom: 1px dashed #ddd;
+            padding-bottom: 12px;
+        }
+        
+        .order-label {
+            font-weight: 600;
+            width: 180px;
+            color: var(--text);
+        }
+        
+        .order-value {
+            flex: 1;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.75rem;
+            }
+            
+            .order-detail-item {
+                flex-direction: column;
+            }
+            
+            .order-label {
+                width: 100%;
+                margin-bottom: 4px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-shopping-cart"></i> Place Your Order</h1>
+        
+        {% if not order %}
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="service_type"><i class="fas fa-tags"></i> Service Type:</label>
+                    <select id="service_type" name="service_type">
+                        <option value="" disabled selected>Select a service</option>
+                        <option value="dry-clean">Dry Clean</option>
+                        <option value="Machine Wash">Machine Wash</option>
+                        <option value="iron">Iron</option>
+                        <option value="fold">Fold</option>
+                        <option value="steam-press">Steam Press</option>
+                        <option value="starch">Starch</option>
+                        <option value="hand-wash">Hand Wash</option>
+                        <option value="spot-cleaning">Spot Cleaning</option>
+                        <option value="delicate-care">Delicate Care</option>
+                        <option value="Hand wash & Ironing">Hand wash & Ironing</option>
+                        <option value="Machine wash & Ironing">Machine wash & Ironing</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="special_instructions"><i class="fas fa-comment-alt"></i> Special Instructions:</label>
+                    <textarea name="special_instructions" placeholder="Add any special instructions or notes for your order here..."></textarea>
+                </div>
+                
+                <button type="submit"><i class="fas fa-check-circle"></i> Confirm Order</button>
+            </form>
+        {% endif %}
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        
+        {% if order %}
+            <div class="order-confirmation">
+                <h2><i class="fas fa-check-circle"></i> Order Confirmed!</h2>
+                
+                <div class="order-details">
+                    <div class="order-detail-item">
+                        <div class="order-label">Order ID:</div>
+                        <div class="order-value">{{ order.id }}</div>
+                    </div>
+                    
+                    <div class="order-detail-item">
+                        <div class="order-label">Service Type:</div>
+                        <div class="order-value">{{ order.service_type }}</div>
+                    </div>
+                    
+                    <div class="order-detail-item">
+                        <div class="order-label">Special Instructions:</div>
+                        <div class="order-value">
+                            {% if order.special_instructions %}
+                                {{ order.special_instructions }}
+                            {% else %}
+                                <em>No special instructions provided</em>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <form action="{% url 'view_payment' order_id=order.id %}" method="get">
+                        <button type="submit"><i class="fas fa-credit-card"></i> View Payment</button>
+                    </form>
+                    
+                    <a href="#" class="btn-secondary" style="text-decoration: none; color: white; padding: 14px 24px; border-radius: 8px; display: inline-flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-home"></i> Return to Dashboard
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

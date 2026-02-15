@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Details</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4A6FDC;
+            --primary-dark: #3256C4;
+            --secondary: #F0F4FF;
+            --accent: #FFC107;
+            --text: #333;
+            --text-light: #666;
+            --light: #fff;
+            --danger: #dc3545;
+            --success: #28a745;
+            --border-radius: 8px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .container {
+            background-color: var(--light);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+        
+        h1 {
+            color: var(--primary);
+            margin-bottom: 24px;
+            font-size: 2rem;
+            text-align: center;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--secondary);
+        }
+        
+        h2 {
+            color: var(--primary);
+            margin-bottom: 24px;
+            font-size: 1.75rem;
+            text-align: center;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .subscription-details {
+            background-color: var(--secondary);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            margin-top: 20px;
+        }
+        
+        .detail-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+            padding: 12px 16px;
+            background-color: var(--light);
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .detail-item i {
+            font-size: 24px;
+            color: var(--primary);
+            margin-right: 16px;
+            width: 30px;
+            text-align: center;
+        }
+        
+        .detail-item .label {
+            font-weight: 600;
+            margin-right: 8px;
+            color: var(--text);
+            flex: 1;
+        }
+        
+        .detail-item .value {
+            font-weight: 500;
+            color: var(--primary-dark);
+        }
+        
+        .progress-container {
+            margin: 30px 0;
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .progress-bar {
+            height: 12px;
+            background-color: #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 6px;
+            transition: width 0.3s ease;
+        }
+        
+        .no-subscription {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: var(--secondary);
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+        }
+        
+        .no-subscription i {
+            font-size: 48px;
+            color: var(--text-light);
+            margin-bottom: 16px;
+            display: block;
+        }
+        
+        .no-subscription p {
+            font-size: 18px;
+            color: var(--text);
+            margin-bottom: 24px;
+        }
+        
+        .btn-subscribe {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        .btn-subscribe:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .detail-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .detail-item i {
+                margin-bottom: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-receipt"></i> Subscription Details</h1>
+        
+        {% if subscription %}
+            <h2>
+                <i class="fas fa-crown"></i>
+                Your {{ subscription.subscription_plan.name }} Subscription
+            </h2>
+            
+            <div class="subscription-details">
+                <div class="detail-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span class="label">Ends on:</span>
+                    <span class="value">{{ subscription.end_date }}</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-money-check-alt"></i> <span class="label">Subscription Price</span>
+                    <span class="value">{{ subscription.subscription_plan.price }}</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-list-check"></i>
+                    <span class="label">Remaining Services:</span>
+                    <span class="value">{{ subscription.remaining_services }}</span>
+                </div>
+                
+                <div class="detail-item">
+                    <i class="fas fa-hourglass-half"></i>
+                    <span class="label">Days Remaining:</span>
+                    <span class="value">{{ days_remaining }}</span>
+                </div>
+                
+                <!-- Assuming we can calculate percentage of days used -->
+               <!-- Progress bar for subscription time remaining -->
+<div class="progress-container">
+    <div class="progress-label">
+        <span>Subscription Time Remaining</span>
+        <span>{{ days_remaining }} days</span>
+    </div>
+    <div class="progress-bar">
+        <div class="progress-fill" style="width: calc({{ days_remaining }} / {{ subscription.subscription_plan.duration_days }} * 100%)"></div>
+    </div>
+</div>
+
+                
+                <!-- Assuming we can calculate percentage of services used -->
+                <div class="progress-container">
+                    <div class="progress-label">
+                        <span>Services Remaining</span>
+                        <span>{{ subscription.remaining_services }}</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: calc({{  subscription.remaining_services }}/{{ days_remaining }}  * 100%)"></div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="no-subscription">
+                <i class="fas fa-exclamation-circle"></i>
+                <p>You do not have an active subscription at this moment.</p>
+                <a href="/subscriptions/" class="btn-subscribe">
+                    <i class="fas fa-tag"></i> Browse Subscription Plans
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

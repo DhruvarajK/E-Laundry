@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Number of Bags</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --light-gray: #f8f9fa;
+            --mid-gray: #e9ecef;
+            --border-color: #dee2e6;
+            --text-color: #343a40;
+            --success: #28a745;
+            --border-radius: 6px;
+            --shadow: 0 2px 5px rgba(0,0,0,0.1);
+            --transition: all 0.2s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            background-color: #f5f7fa;
+            line-height: 1.6;
+            padding: 1rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        h1 {
+            color: var(--primary-dark);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .card {
+            background-color: #fff;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            background-color: var(--light-gray);
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .card-body {
+            padding: 1rem;
+        }
+        
+        /* Search Form Styles */
+        .search-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-items: center;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .form-group label {
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .form-control {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            width: 100%;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .search-button-container {
+            align-self: flex-end;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.25rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-sm {
+            padding: 0.4rem 0.75rem;
+            font-size: 0.9rem;
+        }
+        
+        /* Table Styles */
+        .table-responsive {
+            overflow-x: auto;
+            width: 100%;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        
+        .table th, 
+        .table td {
+            padding: 1rem;
+            text-align: left;
+        }
+        
+        .table th {
+            background-color: var(--light-gray);
+            font-weight: 600;
+            color: var(--text-color);
+            border-bottom: 2px solid var(--border-color);
+            position: sticky;
+            top: 0;
+        }
+        
+        .table tr {
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .table tr:last-child {
+            border-bottom: none;
+        }
+        
+        .table tr:nth-child(even) {
+            background-color: var(--light-gray);
+        }
+        
+        .table tr:hover {
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+        
+        /* Update Form Styles */
+        .update-form {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .number-input {
+            width: 70px;
+            padding: 0.4rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        .number-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .empty-message {
+            padding: 2rem;
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .search-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-button-container {
+                align-self: stretch;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .table th, 
+            .table td {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.85rem;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .card-body {
+                padding: 0.75rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .update-form {
+                flex-wrap: wrap;
+            }
+            
+            .number-input {
+                flex: 1;
+            }
+            
+            .btn-sm {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Update Number of Bags</h1>
+        
+        <!-- Filter and Search Form -->
+        <div class="card">
+            <div class="card-header">
+                <h2 style="font-size: 1.2rem; margin: 0;">Search &amp; Filter</h2>
+            </div>
+            <div class="card-body">
+                <form class="search-form" method="get">
+                    <div class="form-group">
+                        <label for="filter">Filter By:</label>
+                        <select class="form-control" name="filter" id="filter">
+                            <option value="user" {% if filter_type == "user" %}selected{% endif %}>User</option>
+                            <option value="business" {% if filter_type == "business" %}selected{% endif %}>Business</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="search">Search:</label>
+                        <input class="form-control" type="text" id="search" name="search" placeholder="Search by name or email..." value="{{ search_query }}">
+                    </div>
+                    <div class="search-button-container">
+                        <button type="submit" class="btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                            </svg>
+                            Search
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Display Objects in a Table -->
+        <div class="card">
+            <div class="card-header">
+                <h2 style="font-size: 1.2rem; margin: 0;">Results</h2>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                {% if filter_type == "user" %}
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Email</th>
+                                {% else %}
+                                    <th>Business Name</th>
+                                    <th>Owner Name</th>
+                                    <th>Business Email</th>
+                                {% endif %}
+                                <th>Current Bags</th>
+                                <th>Update Bags</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for obj in objects %}
+                            <tr>
+                                {% if filter_type == "user" %}
+                                    <td>{{ obj.first_name }}</td>
+                                    <td>{{ obj.last_name }}</td>
+                                    <td>{{ obj.email }}</td>
+                                {% else %}
+                                    <td>{{ obj.business_name }}</td>
+                                    <td>{{ obj.owner_name }}</td>
+                                    <td>{{ obj.business_email }}</td>
+                                {% endif %}
+                                <td>{{ obj.num_bags }}</td>
+                                <td>
+                                    <form class="update-form" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="object_id" value="{{ obj.id }}">
+                                        <input type="number" class="number-input form-control" name="num_bags" min="1" value="{{ obj.num_bags }}">
+                                        <button type="submit" class="btn btn-sm">Update</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="empty-message">No records found. Try a different search!</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

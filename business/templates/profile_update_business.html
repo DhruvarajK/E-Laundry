@@ -1,0 +1,304 @@
+<!doctype html>
+<html class="no-js" lang="zxx">
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Laundry | Business Profile Update</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="manifest" href="{% static 'site.webmanifest' %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/img/favicon.ico' %}">
+
+    <!-- CSS here -->
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/slicknav.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/flaticon.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/progressbar_barfiller.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/gijgo.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/animate.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/animated-headline.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/fontawesome-all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/themify-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/slick.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/nice-select.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #6785FF;
+        }
+
+        .profile-container {
+            width: 80%;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-form {
+            width: 100%;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .form-group label {
+            flex: 0 0 30%;
+            font-weight: 600;
+            color: #555;
+            padding: 10px 0;
+        }
+
+        .form-group input {
+            flex: 0 0 70%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #6785FF;
+            outline: none;
+            box-shadow: 0 0 5px rgba(103, 133, 255, 0.3);
+        }
+
+        .form-group input[type="file"] {
+            padding: 6px;
+            border: none;
+        }
+
+        .submit-button {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        button[type="submit"] {
+            padding: 12px 30px;
+            background-color: #6785FF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #5674e8;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .profile-container {
+                width: 90%;
+                padding: 20px;
+            }
+
+            .form-group {
+                flex-direction: column;
+            }
+
+            .form-group label {
+                flex: 0 0 100%;
+                margin-bottom: 5px;
+            }
+
+            .form-group input {
+                flex: 0 0 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ? Preloader Start -->
+    <div id="preloader-active">
+        <div class="preloader d-flex align-items-center justify-content-center">
+            <div class="preloader-inner position-relative">
+                <div class="preloader-circle"></div>
+                <div class="preloader-img pere-text">
+                    <img src="{%static 'assets/img/logo/loder.png' %}" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Preloader Start -->
+    <header>
+        <!-- Header Start -->
+        <div class="header-area">
+            <div class="main-header header-sticky">
+                <!-- Logo -->
+                <div class="header-left">
+                    <div class="logo">
+                        <a href="#"><img src="{%static 'assets/img/logo/logo.png'%}" alt=""></a>
+                    </div>
+                    <div class="menu-wrapper  d-flex align-items-center">
+                        <!-- Main-menu -->
+                        <div class="main-menu d-none d-lg-block">
+                            <nav>
+                                <ul id="navigation">
+                                    <li><a href="{% url 'business_home' %}">Home</a></li>
+                                    <li><a href="about.html">About</a></li>
+                                    <li><a href="{% url 'track_orders' %}#abc ">Track your Order</a></li>
+                                    <li><a href="#">Services</a>
+                                        <ul class="submenu">
+                                            <li><a href="{%url 'normal_order'%}">Normal Order</a></li>
+                                            <li><a href="#">Subscription</a></li>
+                                            <li><a href="{%url 'view_all_orders' %}">All orders</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="active"><a href="#">Profile</a>
+                                        <ul class="submenu">
+                                            <li><a href="{%url 'view_profile_business'%}">View Profile</a></li>
+                                            <li><a href="{%url 'profile_update_business' %}">Update Profile</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="{%url 'logout'%}">Logout</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Header End -->
+        <div class="col-12">
+            <div class="mobile_menu d-block d-lg-none"></div>
+        </div>
+    </header>
+
+    <div class="profile-container">
+        <h1>Update Business Profile</h1>
+
+        <form method="POST" enctype="multipart/form-data" class="profile-form">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="business_name">Business Name:</label>
+                <input type="text" id="business_name" name="business_name" value="{{ user.business_name }}" placeholder="Enter your business name" />
+            </div>
+
+            <div class="form-group">
+                <label for="owner_name">Owner Name:</label>
+                <input type="text" id="owner_name" name="owner_name" value="{{ user.owner_name }}" placeholder="Enter owner name" />
+            </div>
+
+            <div class="form-group">
+                <label for="business_phone_number">Phone Number:</label>
+                <input type="text" id="business_phone_number" name="business_phone_number" value="{{ user.business_phone_number }}" placeholder="Enter business phone number" />
+            </div>
+
+            <div class="form-group">
+                <label for="business_address">Address:</label>
+                <input type="text" id="business_address" name="business_address" value="{{ user.business_address }}" placeholder="Enter business address" />
+            </div>
+
+            <div class="form-group">
+                <label for="district">District:</label>
+                <input type="text" id="district" name="district" value="{{ user.district }}" placeholder="Enter district" />
+            </div>
+
+            <div class="form-group">
+                <label for="place">Place:</label>
+                <input type="text" id="place" name="place" value="{{ user.place }}" placeholder="Enter place" />
+            </div>
+
+            <div class="form-group">
+                <label for="post">Post:</label>
+                <input type="text" id="post" name="post" value="{{ user.post }}" placeholder="Enter post office name" />
+            </div>
+
+            <div class="form-group">
+                <label for="pin">PIN Code:</label>
+                <input type="text" id="pin" name="pin" value="{{ user.pin }}" placeholder="Enter PIN code" />
+            </div>
+
+            <div class="submit-button">
+                <button type="submit">Save Changes</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        <!-- footer-bottom area -->
+        <div class="footer-bottom-area section-bg2" data-background="{%static 'assets/img/gallery/footer-bg.png'%}">
+            <div class="container">
+                <div class="footer-border">
+                    <div class="row d-flex align-items-center">
+                        <div class="col-xl-12">
+                            <div class="footer-copy-right text-center">
+                                <p>
+                                    Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll Up -->
+    <div id="back-top">
+        <a title="Go to Top" href="#"><i class="fas fa-level-up-alt"></i></a>
+    </div>
+
+    <!-- JS here -->
+    <script src="{% static 'assets/js/vendor/modernizr-3.5.0.min.js' %}"></script>
+    <!-- Jquery, Popper, Bootstrap -->
+    <script src="{% static 'assets/js/vendor/jquery-1.12.4.min.js' %}"></script>
+    <script src="{% static 'assets/js/popper.min.js' %}"></script>
+    <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
+    <!-- Jquery Mobile Menu -->
+    <script src="{% static 'assets/js/jquery.slicknav.min.js' %}"></script>
+    <!-- Jquery Slick , Owl-Carousel Plugins -->
+    <script src="{% static 'assets/js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'assets/js/slick.min.js' %}"></script>
+    <!-- One Page, Animated-HeadLine -->
+    <script src="{% static 'assets/js/wow.min.js' %}"></script>
+    <script src="{% static 'assets/js/animated.headline.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.magnific-popup.js' %}"></script>
+    <!-- Date Picker -->
+    <script src="{% static 'assets/js/gijgo.min.js' %}"></script>
+    <!-- Nice-select, sticky -->
+    <script src="{% static 'assets/js/jquery.nice-select.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.sticky.js' %}"></script>
+    <!-- Progress -->
+    <script src="{% static 'assets/js/jquery.barfiller.js' %}"></script>
+    <!-- counter , waypoint,Hover Direction -->
+    <script src="{% static 'assets/js/jquery.counterup.min.js' %}"></script>
+    <script src="{% static 'assets/js/waypoints.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.countdown.min.js' %}"></script>
+    <script src="{% static 'assets/js/hover-direction-snake.min.js' %}"></script>
+    <!-- contact js -->
+    <script src="{% static 'assets/js/contact.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.form.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.validate.min.js' %}"></script>
+    <script src="{% static 'assets/js/mail-script.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.ajaxchimp.min.js' %}"></script>
+    <!-- Jquery Plugins, main Jquery -->
+    <script src="{% static 'assets/js/plugins.js' %}"></script>
+    <script src="{% static 'assets/js/main.js' %}"></script>
+</body>
+</html>

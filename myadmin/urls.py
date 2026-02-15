@@ -1,0 +1,44 @@
+from django.urls import path
+
+import logistics.views
+from . import views
+import logistics
+urlpatterns = [
+    path('',views.index),
+    path('login_return/', views.login_return , name='login_return'),
+    path('login_post/', views.login_post , name='login_post'),
+    path('admin_home/', views.admin_home),
+    path('logout/', views.logout, name='logout'),
+    path('accept/<id>/', views.accept, name='accept'),
+    path('block/<id>/', views.block, name='block'),
+    path('unblock/<id>/', views.unblock, name='unblock'),
+    path('userunblock/<id>/', views.userunblock, name='userunblock'),
+    path('businessunblock/<id>/', views.businessunblock, name='businessunblock'),
+    path('reject/<id>/', views.reject, name='reject'),
+    path('view_logistics/', views.view_logistics, name='view_logistics'),
+    path('view_users/', views.view_users, name='view_users'),
+    path('view_business/', views.view_business, name= 'view_business'),
+    path('pending_deliverymen/', views.view_pending_deliverymen, name='pending_deliverymen'),
+    
+    path("pending-orders/", views.pending_service_orders, name="pending_service_orders"),
+    path("assign-delivery-man/<int:order_id>/", views.assign_delivery_man, name="assign_delivery_man"),
+    path('assigned-orders/', views.assigned_orders, name='assigned_orders'),
+    path('unassign-logistics/<int:order_id>/', views.unassign_logistics, name='unassign_logistics'),
+    path('update-order-status/', views.update_order_status, name='update_order_status'),
+    path('add_plans/', views.create_subscription_plan, name='create_subscription_plan'),
+    path('delete_plan/<int:plan_id>/', views.delete_subscription_plan, name='delete_subscription_plan'),
+    path('plans/', views.list_subscription_plans, name='list_subscription_plans'),
+    path('update-order-status/', views.update_order_status, name='update_order_status'),
+    path('generate-bill/<int:order_id>/', views.generate_bill_view, name='generate_bill'),
+    path('admin/generate-bill/<int:order_id>/', views.admin_generate_bill, name='admin_generate_bill'),
+    path('view-bill/<int:order_id>/', views.view_bill, name='view_bill'),
+    path('bill_detail/<int:payment_id>/', views.bill_detail, name='bill_detail'),
+    path('service_order_report/', views.service_order_report, name='service_order_report'),
+    path('update_bags/', views.update_bags, name='update_bags'),
+    path('feedback/', views.feedback_list, name='feedback_list'),
+    path('feedback/add/', views.add_feedback, name='add_feedback'),
+    path('feedback/reply/<int:feedback_id>/', views.reply_feedback, name='reply_feedback'),
+    path('track_delivery_works/', views.track_delivery_works, name='track_delivery_works')
+
+]
+

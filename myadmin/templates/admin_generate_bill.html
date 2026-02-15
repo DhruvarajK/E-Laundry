@@ -1,0 +1,30 @@
+<h1>Generate Bill for Order #{{ order.id }}</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <table border="1" cellpadding="8">
+        <thead>
+            <tr>
+                <th>Cloth Type</th>
+                <th>Quantity</th>
+                <th>Price per Item ($)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in bill_items %}
+            <tr>
+                <td><input type="text" name="cloth_type[]" value="{{ item.cloth_type }}" required></td>
+                <td><input type="number" name="quantity[]" value="{{ item.quantity }}" min="0" required></td>
+                <td><input type="number" name="price_per_item[]" value="{{ item.price_per_item }}" step="0.01" min="0" required></td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td><input type="text" name="cloth_type[]" placeholder="Cloth Type" required></td>
+                <td><input type="number" name="quantity[]" min="0" required></td>
+                <td><input type="number" name="price_per_item[]" step="0.01" min="0" required></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button type="submit">Generate Bill</button>
+</form>

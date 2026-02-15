@@ -1,0 +1,44 @@
+{% extends 'admin/index.html' %}
+{% block body %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DeliveryMan List</title>
+</head>
+<body>
+<form id="form1" name="form1" method="post" action="">
+  <table class="table text-white">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Photo</th>
+      <th scope="col">Name</th>
+      <th scope="col">Address</th>
+      <th scope="col">Email</th>
+      <th scope="col">Idcard</th>
+      <th scope="col">Phone</th>
+      <th scope="col">&nbsp;</th>
+    </tr>
+    {% for i in data %}
+    <tr>
+      <td>&nbsp;{{ forloop.counter }}</td>
+      <td>&nbsp;<img alt="img" src="{{ i.profile_image.url }}" height="150" width="100"></td>
+      <td>&nbsp;{{ i.first_name }} {{ i.last_name }}</td>
+      <td>&nbsp;{{ i.address.house }},<br>{{ i.address.place }},<br>{{ i.address.post }}</td>
+      <td>&nbsp;{{ i.email }}</td>
+      <td><a href="{{ i.license_image.url }}" class="btn btn-light">view</a></td>
+      <td>&nbsp;{{ i.phone_number }}</td>
+      <td>
+        {% if i.login.usertype == "sketcher" %}
+        <p><a href="/block/{{ i.login.id }}" class="btn btn-success">block</a></p>
+        {% else %}
+        <p><a href="/unblock/{{ i.login.id }}" class="btn btn-danger">unblock</a></p>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</form>
+</body>
+</html>
+{% endblock %}

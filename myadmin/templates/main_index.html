@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    {% block title %}
+    <title>ELaundry</title>
+    {% endblock %}
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ffffff",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#000000",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0px",
+                        "lg": "0px",
+                        "xl": "0px",
+                        "full": "0px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .register-dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark font-display text-black dark:text-white antialiased overflow-x-hidden">
+    <!-- Top Navigation Bar -->
+    <header
+        class="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10 px-6 lg:px-20 h-20 flex items-center justify-between">
+        <a href="/">
+            <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-white text-3xl">waves</span>
+            <h1 class="text-white text-xl font-black tracking-tighter uppercase">ELaundry</h1>
+        </div>
+        </a>
+        <nav class="hidden md:flex items-center gap-10">
+            <a class="text-xs font-bold uppercase tracking-widest text-white/60 hover:text-white transition-colors"
+                href="#">Process</a>
+            <a class="text-xs font-bold uppercase tracking-widest text-white/60 hover:text-white transition-colors"
+                href="#">Partners</a>
+            <a class="text-xs font-bold uppercase tracking-widest text-white/60 hover:text-white transition-colors"
+                href="#">Enterprise</a>
+        </nav>
+        <div class="flex items-center gap-4">
+            <a href="{% url 'login_return' %}">
+                <button
+                class="px-6 py-2 text-xs font-bold uppercase tracking-widest text-white border border-white/20 hover:bg-white hover:text-black transition-all duration-300 rounded-none">
+                Login
+            </button>
+            </a>
+            <!-- Register Dropdown -->
+            <div class="relative register-dropdown group">
+                <button
+                    class="px-6 py-2 text-xs font-bold uppercase tracking-widest bg-white text-black border border-white hover:bg-black hover:text-white transition-all duration-300 rounded-none inline-flex items-center gap-2">
+                    Register
+                    <span class="material-symbols-outlined text-sm">expand_more</span>
+                </button>
+                <div
+                    class="dropdown-menu hidden absolute right-0 top-full w-64 bg-black border border-white/10 pt-2 shadow-2xl">
+                    <a class="block px-6 py-4 text-xs font-bold uppercase tracking-widest text-white/60 hover:text-white hover:bg-white/5 border-b border-white/5"
+                        href="{% url 'register_business' %}">Register as Business</a>
+                    <a class="block px-6 py-4 text-xs font-bold uppercase tracking-widest text-white/60 hover:text-white hover:bg-white/5 border-b border-white/5"
+                        href="{% url 'register_user' %}">Register as User</a>
+                    <a class="block px-6 py-4 text-xs font-bold uppercase tracking-widest text-white/60 hover:text-white hover:bg-white/5"
+                        href="{% url 'register_delivery' %}">Register as Logistics</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main class="pt-20">
+        {% block content %}
+        <!-- Hero Section -->
+        <section class="relative min-h-[90vh] flex items-center px-6 lg:px-20 border-b border-white/10">
+            <div class="grid lg:grid-cols-2 w-full gap-12 items-center">
+                <div class="flex flex-col gap-8">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 border border-white/20 w-fit">
+                        <span class="relative flex h-2 w-2">
+                            <span
+                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                        </span>
+                        <span class="text-[10px] font-bold uppercase tracking-[0.2em]">Live in 12 Cities</span>
+                    </div>
+                    <h1 class="text-6xl md:text-8xl font-black leading-[0.9] tracking-tighter uppercase">
+                        Laundry,<br />Reimagined.
+                    </h1>
+                    <p class="text-lg md:text-xl text-white/60 max-w-lg font-light leading-relaxed">
+                        Seamlessly connecting users, cleaners, and couriers with precision and speed. Experience the
+                        future of garment care through our high-efficiency monochrome workflow.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 pt-4">
+                        <button
+                            class="px-10 py-5 bg-white text-black font-bold uppercase tracking-widest text-sm hover:bg-black hover:text-white border border-white transition-all duration-500 rounded-none">
+                            Get Started Now
+                        </button>
+                        <button
+                            class="px-10 py-5 border border-white/20 text-white font-bold uppercase tracking-widest text-sm hover:bg-white/10 transition-all duration-500 rounded-none">
+                            View Network
+                        </button>
+                    </div>
+                </div>
+                <div class="relative aspect-square bg-white/5 border border-white/10 overflow-hidden hidden lg:block">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-black via-transparent to-transparent z-10">
+                    </div>
+                    <img class="w-full h-full object-cover grayscale opacity-50 contrast-125"
+                        data-alt="Minimalist black and white laundry facility"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBv52pUfptXQrXzQSI4NRtEzx4UFcwtJnOXZR6KONPJjtiB0XU_V1cC10MgOFrPAs-TDJjIedHhZjE8oceQFs7ovpFJkMYuR741vDUbshrmIKJKxi8eOx_wl3gTaDx_a5kgnZbCE3w3_ItYzw8CfoL-BR7tRaF8tMWFwlaztwqcMqz7_HE8YGjpLtiq-U07eU7MPHDD4aXSzdj584q8NDwut2GHveNXHaJVjUIYhxbbJkdEynPVxgrnxg8Pa95eE5NT2R3Ac6rRZ0c6" />
+                </div>
+            </div>
+        </section>
+        <!-- The Ecosystem -->
+        <section class="px-6 lg:px-20 py-24 border-b border-white/10">
+            <div class="flex flex-col gap-4 mb-20">
+                <h2 class="text-xs font-bold uppercase tracking-[0.4em] text-white/40">Our Network</h2>
+                <h3 class="text-4xl md:text-5xl font-black uppercase tracking-tight">The Three Pillars</h3>
+            </div>
+            <div class="grid md:grid-cols-3 gap-1px bg-white/10 border border-white/10">
+                <!-- User Pillar -->
+                <div class="bg-black p-12 flex flex-col gap-8 hover:bg-white/5 transition-colors group">
+                    <span
+                        class="material-symbols-outlined text-5xl text-white/20 group-hover:text-white transition-colors">person</span>
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xl font-bold uppercase tracking-widest">For Users</h4>
+                        <p class="text-white/50 text-sm leading-relaxed">Book premium cleaning services with a single
+                            tap. Real-time tracking, transparent pricing, and doorstep delivery.</p>
+                    </div>
+                    <a class="mt-auto inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all"
+                        href="#">
+                        Learn More <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                    </a>
+                </div>
+                <!-- Business Pillar -->
+                <div class="bg-black p-12 flex flex-col gap-8 hover:bg-white/5 transition-colors group">
+                    <span
+                        class="material-symbols-outlined text-5xl text-white/20 group-hover:text-white transition-colors">storefront</span>
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xl font-bold uppercase tracking-widest">For Businesses</h4>
+                        <p class="text-white/50 text-sm leading-relaxed">Scale your laundry shop with our professional
+                            management tools. Inventory, POS, and automated scheduling.</p>
+                    </div>
+                    <a class="mt-auto inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all"
+                        href="#">
+                        Register Shop <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                    </a>
+                </div>
+                <!-- Logistics Pillar -->
+                <div class="bg-black p-12 flex flex-col gap-8 hover:bg-white/5 transition-colors group">
+                    <span
+                        class="material-symbols-outlined text-5xl text-white/20 group-hover:text-white transition-colors">local_shipping</span>
+                    <div class="flex flex-col gap-4">
+                        <h4 class="text-xl font-bold uppercase tracking-widest">For Logistics</h4>
+                        <p class="text-white/50 text-sm leading-relaxed">Join our high-speed courier network. Flexible
+                            hours, reliable payouts, and optimized delivery routes.</p>
+                    </div>
+                    <a class="mt-auto inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all"
+                        href="#">
+                        Become Partner <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+        <!-- Process Section -->
+        <section class="px-6 lg:px-20 py-24">
+            <div class="grid lg:grid-cols-2 gap-20 items-start">
+                <div class="flex flex-col gap-12">
+                    <div class="flex flex-col gap-4">
+                        <h2 class="text-xs font-bold uppercase tracking-[0.4em] text-white/40">Execution</h2>
+                        <h3 class="text-4xl md:text-5xl font-black uppercase tracking-tight">The Protocol</h3>
+                    </div>
+                    <div class="flex flex-col gap-16">
+                        <div class="flex gap-8 group">
+                            <span
+                                class="text-4xl font-black text-white/10 group-hover:text-white transition-colors duration-500">01</span>
+                            <div class="flex flex-col gap-2">
+                                <h5 class="text-lg font-bold uppercase tracking-widest">Digital Request</h5>
+                                <p class="text-white/50 text-sm max-w-md">Initiate your order through our encrypted
+                                    platform specifying garment type and treatment requirements.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-8 group">
+                            <span
+                                class="text-4xl font-black text-white/10 group-hover:text-white transition-colors duration-500">02</span>
+                            <div class="flex flex-col gap-2">
+                                <h5 class="text-lg font-bold uppercase tracking-widest">Precision Pickup</h5>
+                                <p class="text-white/50 text-sm max-w-md">Our logistics partner arrives within a
+                                    15-minute window for secure transit to a certified facility.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-8 group">
+                            <span
+                                class="text-4xl font-black text-white/10 group-hover:text-white transition-colors duration-500">03</span>
+                            <div class="flex flex-col gap-2">
+                                <h5 class="text-lg font-bold uppercase tracking-widest">Expert Care</h5>
+                                <p class="text-white/50 text-sm max-w-md">Specialized cleaning using eco-friendly
+                                    monochrome-safe detergents and advanced machinery.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="aspect-[3/4] border border-white/10 overflow-hidden">
+                        <img class="w-full h-full object-cover grayscale contrast-125"
+                            data-alt="Close up of clean white folded laundry"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkeBGLOB5ZK42vxcYYAKl1598g_hW_rUsYS9keA2srcggt8-R_04TS0wKOlfBPVnLmLPUXEXwAcZifFJMmf2mUZO_MH0zsb_9IPtl9akedRgcXEiTDiEZaaGAIDYyWqkHRtWHFAy6obnvNqIONSd-3bTJSJZZ2h_c3curOfjo1MVtypFPeBa_JW-NrYRy-JjL978tQXd0MYFRJcf_1nI-mt5yXegzekjy-sI6CqXkd7Cf8K5UIXAjbfXSG9dc6re6zj4ma5j6yiWnY" />
+                    </div>
+                    <div class="aspect-[3/4] border border-white/10 overflow-hidden mt-12">
+                        <img class="w-full h-full object-cover grayscale contrast-125"
+                            data-alt="Interior of modern commercial laundry facility"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBHQdDh0IdQj4IrWUgPwZl05OTr6ngyWNQFg5jNiXy1xbg5iXsTHZ9Jj2coGIi-kWOFVBE3017zPp6HvxIssyQh5U1Jh-Z-chs_ZVBPiBShJwfSojzE1YIaibBVjhwFgDivagGV3vQ6FWxY8kjpQZxdILPDZyd-KbwxUTqxidfrW60TsBbHA324x7N5RMxRONcOUjprBDfj5BVNDlieBiAYl4vOEhgEKDIJy3R1K08T-otuyhgmzmL3DFlfv9bA9_O4xcyW_GpJYCO" />
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Newsletter / Footer-top -->
+        <section
+            class="bg-white text-black px-6 lg:px-20 py-20 flex flex-col md:flex-row items-center justify-between gap-12">
+            <h4 class="text-3xl md:text-4xl font-black uppercase tracking-tight max-w-xl">Ready for a cleaner
+                perspective?</h4>
+            <div class="flex w-full md:w-auto">
+                <input
+                    class="bg-transparent border-b-2 border-black px-4 py-3 text-xs font-bold uppercase tracking-widest focus:outline-none w-full md:w-80 rounded-none placeholder:text-black/30"
+                    placeholder="ENTER EMAIL ADDRESS" type="email" />
+                <button
+                    class="bg-black text-white px-8 py-4 text-xs font-bold uppercase tracking-widest hover:bg-black/80 transition-all rounded-none">Join</button>
+            </div>
+        </section>
+        {% endblock %}
+    </main>
+    <footer class="bg-black border-t border-white/10 px-6 lg:px-20 py-20">
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-12 mb-20">
+            <div class="col-span-2 flex flex-col gap-6">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-white text-2xl">waves</span>
+                    <h1 class="text-white text-lg font-black tracking-tighter uppercase">ELaundry</h1>
+                </div>
+                <p class="text-white/40 text-xs font-medium uppercase tracking-widest leading-relaxed max-w-xs">
+                    Redefining garment care standards through technical precision and network efficiency.
+                </p>
+            </div>
+            <div class="flex flex-col gap-6">
+                <h6 class="text-[10px] font-bold uppercase tracking-[0.3em] text-white/40">Services</h6>
+                <div class="flex flex-col gap-4">
+                    <a class="text-xs font-bold uppercase tracking-widest hover:text-white/60" href="#">Dry Cleaning</a>
+                    <a class="text-xs font-bold uppercase tracking-widest hover:text-white/60" href="#">Express Wash</a>
+                    <a class="text-xs font-bold uppercase tracking-widest hover:text-white/60" href="#">Ironing</a>
+                </div>
+            </div>
+            <div class="flex flex-col gap-6">
+                <h6 class="text-[10px] font-bold uppercase tracking-[0.3em] text-white/40">Company</h6>
+                <div class="flex flex-col gap-4">
+                    <a class="text-xs font-bold uppercase tracking-widest hover:text-white/60" href="#">About Us</a>
+                    <a class="text-xs font-bold uppercase tracking-widest hover:text-white/60" href="#">Network</a>
+                    <a class="text-xs font-bold uppercase tracking-widest hover:text-white/60" href="#">Careers</a>
+                </div>
+            </div>
+            <div class="flex flex-col gap-6">
+                <h6 class="text-[10px] font-bold uppercase tracking-[0.3em] text-white/40">Legal</h6>
+                <div class="flex flex-col gap-4">
+                    <a class="text-xs font-bold uppercase tracking-widest hover:text-white/60" href="#">Privacy
+                        Policy</a>
+                    <a class="text-xs font-bold uppercase tracking-widest hover:text-white/60" href="#">Terms of
+                        Service</a>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-col md:flex-row justify-between items-center pt-10 border-t border-white/5 gap-4">
+            <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/20">© 2024 ELAUNDRY SYSTEMS INC.</p>
+            <div class="flex gap-8">
+                <a class="text-white/20 hover:text-white transition-colors" href="#"><span
+                        class="material-symbols-outlined text-xl">language</span></a>
+                <a class="text-white/20 hover:text-white transition-colors" href="#"><span
+                        class="material-symbols-outlined text-xl">share</span></a>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

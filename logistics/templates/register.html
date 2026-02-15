@@ -1,0 +1,358 @@
+{% extends 'main_index.html' %}
+{% load static %}
+
+{% block title %}
+<title>Register Delivery Man</title>
+{% endblock %}
+{% block head %}
+<style>
+    /* Container for the input field */
+    .profile-image-label {
+        display: inline-block;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    /* Styling for the profile icon */
+    .profile-image-icon {
+        width: 150px;
+        height: 150px;
+        border-radius: 20%;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background-color: #1a1a1a;
+        object-fit: cover;
+        transition: opacity 0.3s ease;
+    }
+
+    /* Styling for the image preview */
+    .profile-image-preview {
+        display: block;
+        margin-top: 15px;
+        max-width: 200px;
+        height: auto;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        object-fit: cover;
+    }
+
+    .profile-image-preview:empty {
+        display: none;
+    }
+
+    .profile-image-input {
+        display: none;
+    }
+
+    .profile-image-icon:hover {
+        opacity: 0.8;
+        border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* File Upload Styles */
+    .file-upload-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        width: 100%;
+        padding: 1rem;
+        border: 1px dashed rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .file-upload-label:hover {
+        border-color: white;
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .file-upload-icon {
+        width: 24px;
+        height: 24px;
+        margin-right: 10px;
+        filter: invert(1);
+        /* Make black SVG white if needed, or assume it's colored */
+    }
+
+    .file-upload-input {
+        display: none;
+    }
+
+    .file-upload-preview {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin-top: 8px;
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="min-h-screen py-24 px-6 lg:px-20 bg-black text-white">
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="mb-12 border-b border-white/10 pb-8 flex justify-between items-end">
+            <div>
+                <h2 class="text-3xl font-black uppercase tracking-tighter">Register Delivery Man</h2>
+                <p class="text-white/40 text-xs font-bold uppercase tracking-widest mt-2">Join our logistics network</p>
+            </div>
+            <!-- Locate Button -->
+            <a class="px-6 py-2 border border-white/20 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all flex items-center gap-2"
+                href="{% url 'get_current_location' %}">
+                Locate <span class="material-symbols-outlined text-sm">location_on</span>
+            </a>
+        </div>
+
+        <form class="flex flex-col gap-12 form-contact" action="{% url 'register_delivery' %}" method="post"
+            enctype="multipart/form-data" id="mainForm">
+            {% csrf_token %}
+
+            <div class="grid md:grid-cols-3 gap-12">
+                <!-- Left Column: Profile & License -->
+                <div class="md:col-span-1 flex flex-col items-center md:items-start gap-8">
+                    <!-- Profile Image -->
+                    <div class="w-full flex flex-col items-center md:items-start gap-4">
+                        <label
+                            class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 w-full text-center md:text-left">Profile
+                            Image</label>
+                        <label for="fileField" class="profile-image-label">
+                            <img id="profile_icon" src="{% static 'assets/profile2.svg' %}" alt="Profile Icon"
+                                class="profile-image-icon">
+                            <input class="profile-image-input" type="file" id="fileField" name="fileField"
+                                accept=".jpg, .jpeg, .png">
+                            <img id="profile_preview" class="profile-image-preview" src="" alt="Profile Preview">
+                            <span class="block mt-2 text-[10px] uppercase tracking-widest text-white/40">Choose
+                                Image</span>
+                        </label>
+                        <div id="profileError"
+                            class="text-red-500 text-[10px] font-bold uppercase tracking-widest hidden">Please upload a
+                            profile picture.</div>
+                    </div>
+
+                    <!-- License Upload -->
+                    <div class="w-full flex flex-col gap-2">
+                        <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Upload License
+                            (PDF)</label>
+                        <label for="textfield13" class="file-upload-label">
+                            <img id="id_card_icon" src="{% static 'assets/files.svg' %}" alt="ID Card Icon"
+                                class="file-upload-icon">
+                            <input class="file-upload-input" type="file" id="textfield13" name="textfield13"
+                                accept=".pdf">
+                            <span id="id_card_preview" class="text-xs uppercase tracking-widest font-bold">Select PDF
+                                File</span>
+                        </label>
+                        <div id="idCardError"
+                            class="text-red-500 text-[10px] font-bold uppercase tracking-widest hidden">Please upload a
+                            License card (PDF).</div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Personal & Address Info -->
+                <div class="md:col-span-2 flex flex-col gap-8">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex flex-col gap-2">
+                            <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">First
+                                Name</label>
+                            <input
+                                class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                                type="text" id="textfield10" name="textfield10" required>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Last
+                                Name</label>
+                            <input
+                                class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                                type="text" id="textfield12" name="textfield12" required>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Email</label>
+                        <input
+                            class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                            type="email" id="textfield5" name="textfield5" required>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Phone
+                            Number</label>
+                        <input
+                            class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                            type="text" id="textfield4" name="textfield4" required>
+                    </div>
+
+                    <!-- Address Section -->
+                    <div class="flex flex-col gap-6 pt-4 border-t border-white/10">
+                        <h4 class="text-xs font-bold uppercase tracking-widest text-white/60">Address Details</h4>
+
+                        <div class="flex flex-col gap-2">
+                            <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">House
+                                Name</label>
+                            <input
+                                class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                                type="text" id="textfield9" name="textfield9" required>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="flex flex-col gap-2">
+                                <label
+                                    class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Place</label>
+                                <input
+                                    class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                                    type="text" id="textfield8" name="textfield8" required>
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <label
+                                    class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">District</label>
+                                <input
+                                    class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                                    type="text" id="textfield88" name="textfield88" required>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="flex flex-col gap-2">
+                                <label
+                                    class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Post</label>
+                                <input
+                                    class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                                    type="text" id="textfield7" name="textfield7" required>
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <label
+                                    class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">PIN</label>
+                                <input
+                                    class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                                    type="text" id="textfield6" name="textfield6" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-2 pt-4 border-t border-white/10">
+                        <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Password</label>
+                        <input
+                            class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                            type="password" id="textfield11" name="textfield11" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hidden Fields -->
+            <input type="hidden" name="latitude" id="latitude">
+            <input type="hidden" name="longitude" id="longitude">
+
+            {% if messages %}
+            <ul class="text-red-500 text-sm font-bold uppercase tracking-widest">
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            <div class="flex justify-start pt-8 border-t border-white/10">
+                <button type="submit"
+                    class="bg-white text-black px-12 py-4 text-xs font-bold uppercase tracking-widest hover:bg-white/90 transition-all rounded-none">
+                    Register
+                </button>
+            </div>
+        </form>
+
+        <!-- Hidden Location Form (from original code structure, though combined above) -->
+        <form id="locationForm" method="POST" style="display:none;">{% csrf_token %}<input type="hidden"
+                name="latitude"><input type="hidden" name="longitude"></form>
+    </div>
+</section>
+
+<script>
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                // Update hidden fields
+                if (document.getElementById('latitude')) document.getElementById('latitude').value = position.coords.latitude;
+                if (document.getElementById('longitude')) document.getElementById('longitude').value = position.coords.longitude;
+                // document.getElementById('locationForm').submit(); 
+            }, function (error) {
+                alert('Unable to retrieve location. Make sure you have allowed location access.');
+            });
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    }
+
+    // Get the form and input elements
+    const form = document.querySelector('.form-contact');
+    const profileImageInput = document.getElementById('fileField');
+    const profilePreview = document.getElementById('profile_preview');
+    const profileIcon = document.getElementById('profile_icon');
+    const profileError = document.getElementById('profileError');
+
+    const idCardInput = document.getElementById('textfield13');
+    const idCardPreview = document.getElementById('id_card_preview');
+    const idCardIcon = document.getElementById('id_card_icon');
+    const idCardError = document.getElementById('idCardError');
+
+    if (profileImageInput) {
+        profileImageInput.addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    profilePreview.src = e.target.result;
+                    profilePreview.style.display = 'block';
+                    profileIcon.style.display = 'none';
+                    profileError.classList.add('hidden');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                profilePreview.src = '';
+                profilePreview.style.display = 'none';
+                profileIcon.style.display = 'block';
+            }
+        });
+    }
+
+    if (idCardInput) {
+        idCardInput.addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (file.type === "application/pdf") {
+                    idCardPreview.textContent = file.name;
+                    idCardIcon.style.display = 'none';
+                    idCardError.classList.add('hidden');
+                } else {
+                    alert('Please upload a valid PDF file.');
+                    idCardPreview.textContent = 'Select PDF File';
+                    idCardIcon.style.display = 'block';
+                    this.value = ''; // Clear input
+                }
+            } else {
+                idCardPreview.textContent = 'Select PDF File';
+                idCardIcon.style.display = 'block';
+            }
+        });
+    }
+
+    if (form) {
+        form.addEventListener('submit', function (event) {
+            const profileImage = profileImageInput ? profileImageInput.files[0] : null;
+            const idCardFile = idCardInput ? idCardInput.files[0] : null;
+
+            let valid = true;
+
+            if (!profileImage) {
+                profileError.classList.remove('hidden');
+                valid = false;
+            }
+
+            if (!idCardFile) {
+                idCardError.classList.remove('hidden');
+                valid = false;
+            }
+
+            if (!valid) {
+                event.preventDefault();
+            }
+        });
+    }
+</script>
+{% endblock %}

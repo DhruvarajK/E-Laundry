@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms and Conditions</title>
+    <style>
+        :root {
+            --primary-color: #4863A0;
+            --secondary-color: #f8f9fa;
+            --text-color: #333;
+            --accent-color: #6a89cc;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #f5f7fa;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: white;
+            box-shadow: var(--box-shadow);
+            border-radius: var(--border-radius);
+        }
+        
+        @media (max-width: 850px) {
+            .container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+        }
+        
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin: 2rem 0 1rem 0;
+            font-size: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        .term-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background-color: white;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--accent-color);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .term-section:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+        
+        .close-button {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 0.8rem 2rem;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+        
+        .close-button:hover {
+            background-color: #3a4f7a;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--secondary-color);
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Terms and Conditions</h1>
+        <p class="subtitle">Please read carefully before proceeding with your subscription</p>
+    </div>
+    
+    <div class="container">
+        <p>Welcome to our subscription service. The following terms outline your rights and obligations as a subscriber.</p>
+        
+        <div class="term-section">
+            <h2>1. Subscription Service</h2>
+            <p>You agree to subscribe to our service for the selected plan duration. Each plan includes specific service limitations, which will be described during the selection process.</p>
+        </div>
+        
+        <div class="term-section">
+            <h2>2. Payment</h2>
+            <p>Payments are processed through Razorpay. By subscribing, you authorize us to initiate the payment on your behalf.</p>
+        </div>
+        
+        <div class="term-section">
+            <h2>3. Service Start</h2>
+            <p>If you subscribe after 10 AM, your service will commence the following day. Subscriptions made before 10 AM will start on the same day.</p>
+        </div>
+        
+        <div class="term-section">
+            <h2>4. Cancellation & Refunds</h2>
+            <p>Refunds are subject to our refund policy. Please contact support for further details.</p>
+        </div>
+        
+        <div class="term-section">
+            <h2>5. Changes to Terms</h2>
+            <p>We may update these terms occasionally. Continued use of the service implies acceptance of any changes.</p>
+        </div>
+        
+        <div style="text-align: center;">
+            <a href="javascript:window.close()" class="close-button">I Understand & Accept</a>
+        </div>
+        
+        <div class="footer">
+            <p>Last updated: April 2025</p>
+        </div>
+    </div>
+</body>
+</html>

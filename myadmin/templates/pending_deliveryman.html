@@ -1,0 +1,106 @@
+{% extends 'admin_home.html' %}
+{% block body %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PENDING LOGISTICS REQUESTS</title>
+    <style>
+        table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 10px;
+    text-align: left;
+    background-color: #6785ff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: none;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #6785ff; /* Dark green */
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+td {
+    background-color: #ffffff;
+    color: #333333;
+}
+
+tr:nth-child(even) td {
+    background-color: #f2f2f2;
+}
+
+tr:hover td {
+    background-color: #c8d3ff;
+    color: #000;
+}
+
+img {
+    max-width: 100px;
+    max-height: 100px;
+    border-radius: 5px;
+}
+
+table caption {
+    margin: 10px 0;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+}
+
+    </style>
+</head>
+<body><div class="row justify-content-center">
+    <div class="col-xl-7 col-lg-8">
+        <div class="section-tittle text-center mb-55">
+            <span class="element">ADMIN DASHBOARD</span>
+            <h2>PENDING LOGISTICS REQUESTS</h2>
+        </div>
+    </div>
+</div>
+   
+    <table border="0" class="table table-striped" >
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Profile Image</th>
+                <th>License Image</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Address</th>
+                <th>Created At</th>
+                <th>Updated At</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for deliveryman in pending_deliverymen %}
+                <tr>
+                    <td>{{ deliveryman.first_name }}</td>
+                    <td>{{ deliveryman.last_name }}</td>
+                    <td><img src="{{ deliveryman.profile_image }}" alt="Profile Image" width="100"></td>
+                    <td><img src="{{ deliveryman.license_image }}" alt="License Image" width="100"></td>
+                    <td>{{ deliveryman.email }}</td>
+                    <td>{{ deliveryman.phone_number }}</td>
+                    <td>{{deliveryman.house }}<br>{{ deliveryman.district }}&nbsp;{{ deliveryman.place }}<br>{{ deliveryman.post }}<br>{{ deliveryman.pin }}</td>
+                    <td>{{ deliveryman.created_at }}</td>
+                    <td>{{ deliveryman.updated_at }}</td>
+                    <td><p><a href="{% url 'accept' deliveryman.LOGIN.id %}" class= "btn btn-success">accept</a></p><br></BR><p><a href="{% url 'reject' deliveryman.LOGIN.id %}" class="btn btn-danger">reject</a></p>
+      </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
+{% endblock %}

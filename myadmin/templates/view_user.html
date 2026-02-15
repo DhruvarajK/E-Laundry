@@ -1,0 +1,236 @@
+{% extends 'admin_home.html' %}
+{% block body %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Users</title>
+
+    <style>
+      /* Overall table styling */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 25px 0;
+        font-size: 14px; /* Increased from 10px */
+        text-align: left;
+        background-color: white;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      /* Header and cell styling */
+      th, td {
+        padding: 12px 15px;
+        border: 1px solid #e0e0e0;
+        vertical-align: middle; /* Ensures vertical alignment */
+      }
+
+      th {
+        background-color: #6785ff;
+        color: white;
+        font-weight: bold;
+        text-transform: uppercase;
+        position: sticky;
+        top: 0;
+      }
+
+      td {
+        background-color: #ffffff;
+        color: #333333;
+      }
+
+      /* Alternating row colors */
+      tr:nth-child(even) td {
+        background-color: #f8f9ff;
+      }
+
+      tr:hover td {
+        background-color: #e6ecff;
+      }
+
+      /* Profile image styling */
+      img {
+        max-width: 70px;
+        max-height: 70px;
+        border-radius: 5px;
+        display: block;
+        margin: 0 auto;
+      }
+
+      /* Action buttons styling */
+      .btn {
+        display: inline-block;
+        padding: 6px 12px;
+        margin: 3px 0;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        width: 100%;
+      }
+
+      .btn-success {
+        background-color: #28a745;
+        color: white;
+      }
+
+      .btn-danger {
+        background-color: #dc3545;
+        color: white;
+      }
+
+      .btn-success:hover {
+        background-color: #218838;
+      }
+
+      .btn-danger:hover {
+        background-color: #c82333;
+      }
+
+      /* Header styling */
+      .section-tittle {
+        text-align: center;
+        margin-bottom: 30px;
+        padding-top: 20px;
+      }
+
+      .element {
+        display: inline-block;
+        color: #6785ff;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+      }
+
+      h2 {
+        color: #333;
+        font-size: 32px;
+        font-weight: 700;
+        margin: 0;
+      }
+
+      /* Container for better spacing */
+      .container {
+        padding: 0 20px;
+        max-width: 100%;
+        overflow-x: auto; /* Enable horizontal scroll if needed */
+      }
+    </style>
+</head>
+<body>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-xl-7 col-lg-8">
+          <div class="section-tittle">
+              <span class="element">ADMIN DASHBOARD</span>
+              <h2>MANAGE USERS</h2>
+          </div>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table>
+          <thead>
+              <tr>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Profile</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>House</th>
+                  <th>District</th>
+                  <th>Place</th>
+                  <th>Post</th>
+                  <th>PIN</th>
+                  <th>Latitude</th>
+                  <th>Longitude</th>
+                  <th>Created</th>
+                  <th>Updated</th>
+                  <th>Action</th>
+              </tr>
+          </thead>
+          <tbody>
+              {% for user in data %}
+                  <tr>
+                      <td>{{user.first_name}}</td>
+                      <td>{{user.last_name}}</td>
+                      <td><img src="{{user.profile_image}}" alt="Profile"></td>
+                      <td>{{user.email}}</td>
+                      <td>{{user.phone_number}}</td>
+                      <td>{{user.house}}</td>
+                      <td>{{user.district}}</td>
+                      <td>{{user.place}}</td>
+                      <td>{{user.post}}</td>
+                      <td>{{user.pin}}</td>
+                      <td>{{user.latitude}}</td>
+                      <td>{{user.longitude}}</td>
+                      <td>{{user.created_at}}</td>
+                      <td>{{user.updated_at}}</td>
+                      <td>
+                          {% if user.LOGIN.usertype != 'block' %}
+                               <a href="{% url 'block' user.LOGIN.id %}" class="btn btn-danger">Block</a>
+                          {% else %}
+                               <a href="{% url 'userunblock' user.LOGIN.id %}" class="btn btn-success">Unblock</a>
+                          {% endif %}
+                      </td>
+                  </tr>
+              {% endfor %}
+          </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add event listeners to all toggle buttons
+      const toggleButtons = document.querySelectorAll('.toggle-status');
+
+      toggleButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+          e.preventDefault();
+
+          const userId = this.getAttribute('data-user-id');
+          const currentStatus = this.getAttribute('data-current-status');
+
+          // Toggle the button appearance and functionality
+          if (currentStatus === 'active') {
+            // User is active, so we're blocking them
+            this.textContent = 'Unblock';
+            this.classList.remove('btn-danger');
+            this.classList.add('btn-success');
+            this.setAttribute('href', `{% url 'userunblock' 0 %}`.replace('0', userId));
+            this.setAttribute('data-current-status', 'blocked');
+          } else {
+            // User is blocked, so we're unblocking them
+            this.textContent = 'Block';
+            this.classList.remove('btn-success');
+            this.classList.add('btn-danger');
+            this.setAttribute('href', `{% url 'block' 0 %}`.replace('0', userId));
+            this.setAttribute('data-current-status', 'active');
+          }
+
+          // Send the request to the server
+          fetch(this.getAttribute('href'))
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.text();
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              alert('An error occurred while processing your request.');
+              // Revert the button to its original state
+              location.reload();
+            });
+        });
+      });
+    });
+  </script>
+</body>
+</html>
+{% endblock %}

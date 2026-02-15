@@ -1,0 +1,252 @@
+{% extends 'main_index.html' %}
+{% load static %}
+
+{% block title %}
+<title>Register Business</title>
+{% endblock %}
+{% block head %}
+<style>
+    /* Container for the input field */
+    .profile-image-label {
+        display: inline-block;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    /* Styling for the profile icon (the file upload option) */
+    .profile-image-icon {
+        width: 150px;
+        height: 150px;
+        border-radius: 20%;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background-color: #1a1a1a;
+        object-fit: cover;
+        transition: opacity 0.3s ease;
+    }
+
+    /* Styling for the image preview */
+    .profile-image-preview {
+        display: block;
+        margin-top: 15px;
+        max-width: 200px;
+        height: auto;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        object-fit: cover;
+    }
+
+    /* Hide preview image when no file is selected */
+    .profile-image-preview:empty {
+        display: none;
+    }
+
+    /* Hide the file input */
+    .profile-image-input {
+        display: none;
+    }
+
+    /* Optional: Add some hover effects */
+    .profile-image-icon:hover {
+        opacity: 0.8;
+        border-color: rgba(255, 255, 255, 0.5);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="min-h-screen py-24 px-6 lg:px-20 bg-black text-white">
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="mb-12 border-b border-white/10 pb-8 flex justify-between items-end">
+            <div>
+                <h2 class="text-3xl font-black uppercase tracking-tighter">Business Register</h2>
+                <p class="text-white/40 text-xs font-bold uppercase tracking-widest mt-2">Create your business account
+                </p>
+            </div>
+            <!-- Locate Button moved here for better UX -->
+            <a class="px-6 py-2 border border-white/20 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all flex items-center gap-2"
+                href="{% url 'get_current_location' %}">
+                Locate <span class="material-symbols-outlined text-sm">location_on</span>
+            </a>
+        </div>
+
+        <form class="flex flex-col gap-12" method="POST" action="{% url 'register_business' %}"
+            enctype="multipart/form-data" id="mainForm">
+            {% csrf_token %}
+
+            <div class="grid md:grid-cols-2 gap-12">
+                <!-- Left Column -->
+                <div class="flex flex-col gap-6">
+                    <div class="flex flex-col gap-2">
+                        <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Business
+                            Name</label>
+                        <input
+                            class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                            type="text" id="business_name" name="business_name" required>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Owner Name</label>
+                        <input
+                            class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                            type="text" id="owner_name" name="owner_name" required>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Business
+                            Email</label>
+                        <input
+                            class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                            type="email" id="business_email" name="business_email" required>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Business
+                            Phone</label>
+                        <input
+                            class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                            type="text" id="business_phone_number" name="business_phone_number" required>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Business
+                            Address</label>
+                        <input
+                            class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                            type="text" id="business_address" name="business_address" required>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex flex-col gap-2">
+                            <label
+                                class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">District</label>
+                            <input
+                                class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                                type="text" id="district" name="district" required>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Place</label>
+                            <input
+                                class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                                type="text" id="place" name="place" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="flex flex-col gap-6">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex flex-col gap-2">
+                            <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Post</label>
+                            <input
+                                class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                                type="text" id="post" name="post" required>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">PIN</label>
+                            <input
+                                class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                                type="text" id="pin" name="pin" required>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Business
+                            Type</label>
+                        <input
+                            class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                            type="text" id="business_type" name="business_type" required>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">No. of
+                            Bags</label>
+                        <input
+                            class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                            type="text" id="num_bags" name="num_bags" required>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Registration
+                            Number</label>
+                        <input
+                            class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                            type="text" id="registration_number" name="registration_number" required>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Password</label>
+                        <input
+                            class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                            type="password" id="password" name="password" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hidden fields for location -->
+            <input type="hidden" name="latitude" value="{{ latitude }}">
+            <input type="hidden" name="longitude" value="{{ longitude }}">
+
+            {% if error %}<p class="text-red-500 text-sm font-bold uppercase tracking-widest">{{ error }}</p>{% endif %}
+
+            <div class="flex justify-start pt-8 border-t border-white/10">
+                <button type="submit"
+                    class="bg-white text-black px-12 py-4 text-xs font-bold uppercase tracking-widest hover:bg-white/90 transition-all rounded-none">
+                    Register Business
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<script>
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                // Update hidden fields if they exist as ids or use specific method
+                if (document.getElementById('latitude')) document.getElementById('latitude').value = position.coords.latitude;
+                if (document.getElementById('longitude')) document.getElementById('longitude').value = position.coords.longitude;
+                // document.getElementById('locationForm').submit(); // locationForm doesn't exist in original properly
+            }, function (error) {
+                alert('Unable to retrieve location. Make sure you have allowed location access.');
+            });
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    }
+
+    const profileImageInput = document.getElementById('profile_image');
+    // Note: profile_image input doesn't exist in original code for Business, only for User? 
+    // Wait, original register_business.html has CSS for profile-image but NO FILE INPUT in the form?
+    // Let me check. The form has enctype="multipart/form-data" but no <input type="file" ...> ?
+    // Checking lines 61-142 of register_business.html...
+    // Input fields: business_name, owner_name, email, phone, business_address, district, place, post, pin, business_type, num_bags, registration_number, password.
+    // NO profile image input.
+    // The CSS for profile-image was likely copy-pasted or unused?
+    // Wait, `user/templates/register_user` HAS custom profile image.
+    // usage of CSS in `register_business` seems redundant.
+    // However, I will preserve the script just in case, but wrap it to avoid errors.
+
+    if (profileImageInput) {
+        const profilePreview = document.getElementById('profile_preview');
+        const profileIcon = document.getElementById('profile_icon');
+
+        profileImageInput.addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    profilePreview.src = e.target.result;
+                    profilePreview.style.display = 'block';
+                    profileIcon.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                profilePreview.src = '';
+                profilePreview.style.display = 'none';
+                profileIcon.style.display = 'block';
+            }
+        });
+    }
+</script>
+{% endblock %}

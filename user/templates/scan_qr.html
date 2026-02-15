@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Scanner</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #3498db;
+      --secondary-color: #2ecc71;
+      --accent-color: #e74c3c;
+      --dark-color: #2c3e50;
+      --light-color: #ecf0f1;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      color: var(--dark-color);
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 600px;
+      background-color: white;
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: var(--box-shadow);
+      text-align: center;
+    }
+    
+    h1 {
+      margin-bottom: 1.5rem;
+      color: var(--dark-color);
+      font-size: 1.8rem;
+    }
+    
+    .subtitle {
+      color: #7f8c8d;
+      margin-bottom: 2rem;
+      font-size: 1rem;
+    }
+    
+    .scan-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 24px;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: var(--box-shadow);
+    }
+    
+    .scan-button:hover {
+      background-color: #2980b9;
+      transform: translateY(-2px);
+    }
+    
+    .scan-button i {
+      margin-right: 10px;
+    }
+    
+    #cameraModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+    }
+    
+    #cameraModal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .scanner-container {
+      position: relative;
+      width: 90%;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    
+    #video {
+      width: 100%;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .scan-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+    
+    .scan-area {
+      width: 70%;
+      height: 70%;
+      border: 2px solid var(--secondary-color);
+      border-radius: 10px;
+      position: relative;
+    }
+    
+    .scan-area:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: var(--secondary-color);
+      animation: scan 2s infinite linear;
+    }
+    
+    @keyframes scan {
+      0% {
+        top: 0;
+      }
+      50% {
+        top: calc(100% - 2px);
+      }
+      100% {
+        top: 0;
+      }
+    }
+    
+    .corner {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-color: var(--secondary-color);
+      border-style: solid;
+      border-width: 2px 0 0 2px;
+    }
+    
+    .corner-top-left {
+      top: -2px;
+      left: -2px;
+      border-top-left-radius: 5px;
+    }
+    
+    .corner-top-right {
+      top: -2px;
+      right: -2px;
+      border-width: 2px 2px 0 0;
+      border-top-right-radius: 5px;
+    }
+    
+    .corner-bottom-left {
+      bottom: -2px;
+      left: -2px;
+      border-width: 0 0 2px 2px;
+      border-bottom-left-radius: 5px;
+    }
+    
+    .corner-bottom-right {
+      bottom: -2px;
+      right: -2px;
+      border-width: 0 2px 2px 0;
+      border-bottom-right-radius: 5px;
+    }
+    
+    .camera-controls {
+      display: flex;
+      justify-content: center;
+      margin-top: 1.5rem;
+      gap: 1rem;
+    }
+    
+    .camera-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .close-button {
+      background-color: var(--accent-color);
+      color: white;
+    }
+    
+    .close-button:hover {
+      background-color: #c0392b;
+    }
+    
+    .switch-camera {
+      background-color: var(--light-color);
+      color: var(--dark-color);
+    }
+    
+    .switch-camera:hover {
+      background-color: #bdc3c7;
+    }
+    
+    .camera-button i {
+      margin-right: 8px;
+    }
+    
+    .scan-status {
+      color: white;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      height: 20px;
+    }
+    
+    @media (max-width: 576px) {
+      .container {
+        padding: 1.5rem;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      .subtitle {
+        font-size: 0.9rem;
+      }
+      
+      .scan-button, .camera-button {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+      }
+      
+      .camera-controls {
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Scan Your Laundry Bag QR Code</h1>
+    <p class="subtitle">Position the QR code within the scanner frame</p>
+    <button class="scan-button" onclick="openCamera()">
+      <i class="fas fa-qrcode"></i> Open Scanner
+    </button>
+  </div>
+  
+  <div id="cameraModal">
+    <div class="scanner-container">
+      <video id="video" autoplay playsinline></video>
+      <div class="scan-overlay">
+        <div class="scan-area">
+          <div class="corner corner-top-left"></div>
+          <div class="corner corner-top-right"></div>
+          <div class="corner corner-bottom-left"></div>
+          <div class="corner corner-bottom-right"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="scan-status" id="scanStatus">Scanning for QR Code...</div>
+    
+    <div class="camera-controls">
+      <button class="camera-button switch-camera" id="switchCamera" style="display: none;">
+        <i class="fas fa-sync-alt"></i> Switch Camera
+      </button>
+      <button class="camera-button close-button" onclick="closeCamera()">
+        <i class="fas fa-times"></i> Close Scanner
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Check if device has multiple cameras
+    navigator.mediaDevices.enumerateDevices()
+      .then(devices => {
+        const videoInputs = devices.filter(device => device.kind === 'videoinput');
+        if (videoInputs.length > 1) {
+          document.getElementById('switchCamera').style.display = 'flex';
+        }
+      });
+    
+    let facingMode = 'environment';
+    let currentStream = null;
+    
+    // Switch between front and back cameras
+    document.getElementById('switchCamera').addEventListener('click', () => {
+      facingMode = facingMode === 'environment' ? 'user' : 'environment';
+      closeCamera();
+      openCamera();
+    });
+
+    // Closes the camera and stops the video stream
+    function closeCamera() {
+      const cameraModal = document.getElementById('cameraModal');
+      const video = document.getElementById('video');
+      const scanStatus = document.getElementById('scanStatus');
+      
+      if (currentStream) {
+        currentStream.getTracks().forEach(track => track.stop());
+        currentStream = null;
+      }
+      
+      cameraModal.classList.remove('active');
+      scanStatus.textContent = 'Scanning for QR Code...';
+      setTimeout(() => {
+        video.srcObject = null;
+      }, 300);
+    }
+
+    // Opens the camera, scans for a QR code, and redirects to the bag details page
+    function openCamera() {
+      const video = document.getElementById('video');
+      const cameraModal = document.getElementById('cameraModal');
+      const scanStatus = document.getElementById('scanStatus');
+      let qrDetected = false;
+      
+      cameraModal.classList.add('active');
+
+      navigator.mediaDevices.getUserMedia({ 
+        video: { 
+          facingMode: facingMode,
+          width: { ideal: 1280 }, 
+          height: { ideal: 720 } 
+        }
+      })
+      .then(stream => {
+        currentStream = stream;
+        video.srcObject = stream;
+        
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        if ('BarcodeDetector' in window) {
+          const detector = new BarcodeDetector({ formats: ['qr_code'] });
+
+          video.addEventListener('playing', () => {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            const scanQRCode = () => {
+              if (!qrDetected && video.srcObject) {
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                detector.detect(canvas)
+                  .then(barcodes => {
+                    if (barcodes.length > 0) {
+                      qrDetected = true;
+                      const qrCode = barcodes[0].rawValue;
+                      scanStatus.textContent = 'QR Code found! Redirecting...';
+                      scanStatus.style.color = '#2ecc71';
+                      
+                      // Add success animation
+                      setTimeout(() => {
+                        // Redirect to bag details page with the scanned QR code
+                        window.location.href = `/bag-details/?qr_code=${encodeURIComponent(qrCode)}`;
+                      }, 800);
+                    } else {
+                      setTimeout(scanQRCode, 200);
+                    }
+                  })
+                  .catch(err => {
+                    console.error('Barcode detection error:', err);
+                    scanStatus.textContent = 'Error detecting barcode. Please try again.';
+                    setTimeout(scanQRCode, 200);
+                  });
+              }
+            };
+            scanQRCode();
+          });
+        } else {
+          scanStatus.textContent = 'QR scanner not supported on this browser';
+          scanStatus.style.color = 'var(--accent-color)';
+        }
+      })
+      .catch(err => {
+        console.error('Error accessing camera:', err);
+        scanStatus.textContent = 'Unable to access camera. Check permissions.';
+        scanStatus.style.color = 'var(--accent-color)';
+      });
+    }
+    
+    // Close modal when clicking Escape key
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeCamera();
+      }
+    });
+  </script>
+</body>
+</html>

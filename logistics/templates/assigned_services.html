@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assigned Services Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #f8f9fa;
+            --text-dark: #212529;
+            --text-muted: #6c757d;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --info: #3498db;
+            --danger: #e74c3c;
+            --border: #dee2e6;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: var(--text-dark);
+            padding: 0;
+            margin: 0;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background-color: var(--primary);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px var(--shadow);
+            margin-bottom: 20px;
+            border-radius: 0 0 10px 10px;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+        }
+        
+        .filter-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px var(--shadow);
+            margin-bottom: 20px;
+        }
+        
+        .filter-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .form-group {
+            flex: 1 1 200px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            font-size: 1rem;
+        }
+        
+        .btn-filter {
+            align-self: flex-end;
+            margin-top: 21px;
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .status-pending {
+            background-color: #ffdddd;
+            color: #a00;
+            padding: 2px 10px;
+            border-radius: 30px;
+            margin-left: 10;
+            display: inline-flex;
+            font-size: 14px;
+          }
+          .status-paid {
+            background-color: #ddffdd;
+            color: #070;
+            padding: 2px 10px;
+            border-radius: 30px;
+            margin-left: 10;
+            display: inline-flex;
+            font-size: 14px;
+          }
+        
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px var(--shadow);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px var(--shadow);
+        }
+        
+        .card-header {
+            background-color: var(--secondary);
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .order-id {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .card-body {
+            padding: 15px;
+        }
+        
+        .info-group {
+            margin-bottom: 15px;
+        }
+        
+        .info-label {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 3px;
+        }
+        
+        .info-value {
+            font-weight: 500;
+        }
+        
+        .address {
+            background-color: var(--secondary);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .status-section {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .status-select {
+            flex: 1;
+            padding: 8px 10px;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .badge {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+            margin-left: 10px;
+        }
+        
+        .badge-assigned {
+            background-color: var(--text-muted);
+        }
+        
+        .badge-pickuped {
+            background-color: var(--warning);
+        }
+        
+        .badge-in_transit {
+            background-color: var(--info);
+        }
+        
+        .badge-delivered {
+            background-color: var(--success);
+        }
+        
+        .dates-section {
+            background-color: var(--secondary);
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .date-group {
+            margin-bottom: 10px;
+        }
+        
+        .date-input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-secondary {
+            flex: 1;
+            background-color: var(--secondary);
+            color: var(--text-dark);
+            border: 1px solid var(--border);
+            padding: 8px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--border);
+        }
+        
+        .btn-update {
+            flex: 1;
+        }
+        
+        .btn-qr {
+            flex: 1;
+            text-decoration: none;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px var(--shadow);
+        }
+        
+        .empty-icon {
+            font-size: 3rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+        
+        .empty-text {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .filter-form {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .form-group {
+                width: 100%;
+            }
+            
+            .btn-filter {
+                width: 100%;
+                margin-top: 10px;
+            }
+            
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            .filter-section {
+                display: flex;
+                flex-direction: column;
+            }
+            .form-group {
+                flex: 1 1 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-truck-loading"></i> Assigned Services</h1>
+    </div>
+    
+    <div class="container">
+        <div class="filter-section">
+            <form class="filter-form" method="get">
+                <div class="form-group">
+                    <label for="date">Date:</label>
+                    <input type="date" id="date" name="date" class="form-control" value="{{ selected_date }}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="status">Status:</label>
+                    <select id="status" name="status" class="form-control">
+                        <option value="">All</option>
+                        <option value="assigned" {% if status_filter == 'assigned' %}selected{% endif %}>Assigned</option>
+                        <option value="pickuped" {% if status_filter == 'pickuped' %}selected{% endif %}>Pickuped</option>
+                        <option value="in_transit" {% if status_filter == 'in_transit' %}selected{% endif %}>In Transit</option>
+                        <option value="delivered" {% if status_filter == 'delivered' %}selected{% endif %}>Delivered</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-filter">
+                    <i class="fas fa-filter"></i> Filter
+                </button>
+            </form>
+        </div>
+        
+        {% if assigned_services %}
+        <div class="cards-container">
+            {% for service in assigned_services %}
+            <div class="card">
+                <div class="card-header">
+                    <span class="order-id">Order #{{ service.service_order.id }}</span>
+                    <span class="badge badge-{{ service.delivery_status }}">{{ service.delivery_status|title }}</span>
+                </div>
+                <div class="card-body">
+                    <div class="info-group">
+                        <div class="info-label">Customer {% if service.service_order.BUSINESS.owner_name %}(business){% endif %}</div>
+                        <div class="info-value">{{ service.service_order.USER.first_name }} {{ service.service_order.USER.last_name }}{{ service.service_order.BUSINESS.owner_name }} {{ service.service_order.BUSINESS.business_name }} {% if service.service_order.BUSINESS.owner_name %}( {{ service.service_order.BUSINESS.business_type }} ){% endif %}</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">Contact</div>
+                        <div class="info-value">{{ service.service_order.USER.phone_number }}{{ service.service_order.BUSINESS.business_phone_number }}</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">No. of Bag</div>
+                        <div class="info-value">{{ service.service_order.USER.num_bags }}{{ service.service_order.BUSINESS.num_bags }}</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">Order Date</div>
+                        <div class="info-value">{{ service.service_order.order_date }}</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">Service Type</div>
+                        <div class="info-value">{{ service.service_order.service_type }}</div>
+                    </div>
+                    <div class="price-tags" style="display: flex;justify-content: flex-start;gap: 15px;">
+
+                        <div class="info-group">
+                            <div class="info-label">Price</div>
+                            <div class="info-value">{{ service.service_order.payment.total_price }}</div>
+                        </div>
+                        <div class="info-group">
+                            <div class="info-label"><font style="color: transparent;">_</font></div>
+                            <div class="info-value
+                                {% if service.service_order.payment.payment_status == 'pending' %}
+                                  status-pending
+                                {% elif service.service_order.payment.payment_status == 'paid' %}
+                                  status-paid
+                                {% endif %}
+                              ">
+                              {{ service.service_order.payment.payment_status|capfirst }}
+                            </div>
+                        </div>
+                        
+                          
+                          {% if service.service_order.payment.payment_status != 'paid' %}
+                            <div class="info-group">
+                              <div class="info-label"><font style="color: transparent;">_</font></div>
+                              <div class="info-value">
+                                <a 
+                                  href="{% url 'mark_as_paid' service.service_order.payment.id %}"
+                                  onclick="return confirm('Are you sure you want to mark this payment as PAID?');"
+                                >
+                                  Mark As Paid
+                                </a>
+                              </div>
+                            </div>
+                          {% endif %}
+                          
+                          
+                    </div>
+                    
+                    <div class="address">
+                        <div class="info-label">Address</div>
+                        <div class="info-value">
+                            {% if service.service_order.USER.house %}
+                            {{ service.service_order.USER.house }}, {{ service.service_order.USER.place }}, {{ service.service_order.USER.district }}  {{ service.service_order.USER.post }}  {{ service.service_order.USER.pin }}{% endif %}
+                            {% if service.service_order.BUSINESS.business_address %}
+                            {{ service.service_order.BUSINESS.business_address }}, {{ service.service_order.BUSINESS.place }}, {{ service.service_order.BUSINESS.district }} {{ service.service_order.BUSINESS.post }}  {{ service.service_order.BUSINESS.pin }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="status-section">
+                        <select class="status-select" onchange="updateStatus({{ service.id }}, this)">
+                            <option value="assigned" {% if service.delivery_status == 'assigned' %}selected{% endif %}>Assigned</option>
+                            <option value="pickuped" {% if service.delivery_status == 'pickuped' %}selected{% endif %}>Pickuped</option>
+                            <option value="in_transit" {% if service.delivery_status == 'in_transit' %}selected{% endif %}>In Transit</option>
+                            <option value="delivered" {% if service.delivery_status == 'delivered' %}selected{% endif %}>Delivered</option>
+                        </select>
+                    </div>
+                    
+                    <div class="dates-section">
+                        <div class="date-group">
+                            <div class="info-label">Pickup Date & Time</div>
+                            <input type="datetime-local" id="pickup_date_{{ service.id }}" class="date-input" 
+                                   value="{{ service.service_order.pickup_date|date:'Y-m-d\\TH:i' }}">
+                        </div>
+                        
+                        <div class="date-group">
+                            <div class="info-label">Delivery Date & Time</div>
+                            <input type="datetime-local" id="delivery_date_{{ service.id }}" class="date-input" 
+                                   value="{{ service.service_order.delivery_date|date:'Y-m-d\\TH:i' }}">
+                        </div>
+                    </div>
+                    
+                    <div class="actions">
+                        <button class="btn btn-update" onclick="updateDates({{ service.id }})">
+                            <i class="fas fa-calendar-check"></i> Update Dates
+                        </button>
+                        
+                        <a href="{% url 'check_assign_bags' service.service_order.id %}" class="btn-secondary btn-qr">
+                            <i class="fas fa-qrcode"></i> Update Bag
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-search"></i>
+            </div>
+            <p class="empty-text">No services found for the selected filters.</p>
+        </div>
+        {% endif %}
+    </div>
+    
+    <script>
+        // Existing function to update status
+        function updateStatus(assignmentId, selectElement) {
+            const newStatus = selectElement.value;
+            fetch(`/update_pickup_status/${assignmentId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ status: newStatus })
+            })
+            .then(response => response.json())
+            .then(data => {
+                showToast(data.message);
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('An error occurred while updating the status.', 'error');
+            });
+        }
+
+        // New function to update pickup_date and delivery_date
+        function updateDates(assignmentId) {
+            const pickupDate = document.getElementById(`pickup_date_${assignmentId}`).value;
+            const deliveryDate = document.getElementById(`delivery_date_${assignmentId}`).value;
+
+            fetch(`/update_dates/${assignmentId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ pickup_date: pickupDate, delivery_date: deliveryDate })
+            })
+            .then(response => response.json())
+            .then(data => {
+                showToast(data.message);
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('An error occurred while updating the dates.', 'error');
+            });
+        }
+
+        // Toast notification function instead of alert
+        function showToast(message, type = 'success') {
+            // Create toast container if it doesn't exist
+            let toastContainer = document.getElementById('toast-container');
+            if (!toastContainer) {
+                toastContainer = document.createElement('div');
+                toastContainer.id = 'toast-container';
+                toastContainer.style.position = 'fixed';
+                toastContainer.style.bottom = '20px';
+                toastContainer.style.right = '20px';
+                toastContainer.style.zIndex = '9999';
+                document.body.appendChild(toastContainer);
+            }
+            
+            // Create toast element
+            const toast = document.createElement('div');
+            toast.style.minWidth = '250px';
+            toast.style.margin = '10px';
+            toast.style.padding = '15px';
+            toast.style.borderRadius = '5px';
+            toast.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+            toast.style.color = 'white';
+            toast.style.fontWeight = '500';
+            toast.style.opacity = '0';
+            toast.style.transition = 'opacity 0.3s ease-in-out';
+            
+            if (type === 'success') {
+                toast.style.backgroundColor = '#2ecc71';
+            } else {
+                toast.style.backgroundColor = '#e74c3c';
+            }
+            
+            toast.textContent = message;
+            
+            // Add toast to container
+            toastContainer.appendChild(toast);
+            
+            // Show toast
+            setTimeout(() => {
+                toast.style.opacity = '1';
+            }, 100);
+            
+            // Hide and remove toast
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    toastContainer.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

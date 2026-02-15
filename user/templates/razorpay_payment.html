@@ -1,0 +1,39 @@
+<h1>Razorpay Payment</h1>
+<p>Amount to pay: ₹{{ amount_display }}</p>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+    var options = {
+        "key": "{{ razorpay_key }}", // Razorpay Key from context
+        "amount": "{{ total_price }}", // In paise (already calculated)
+        "currency": "INR",
+        "name": "E laundry",
+        "description": "Payment for Order #{{ order.id }}",
+        "order_id": "{{ razorpay_order_id }}", // Correct Razorpay Order ID
+        "handler": function (response) {
+            window.location.href = "{% url 'payment_success' order.id %}";
+        },
+        "prefill": {
+            "name": "{{ request.user.get_full_name }}",
+            "email": "{{ request.user.email }}",
+            "contact": "{{ request.user.profile.contact }}"
+        },
+        "theme": {
+            "color": "#3399cc"
+        },
+        "modal": {
+            "backdropclose": false,
+            "ondismiss": function(){
+                window.history.back(); // Go back on cancel
+            }
+        }
+    };
+
+    var rzp1 = new Razorpay(options);
+
+    // Open Razorpay on page load
+    window.onload = function() {
+        rzp1.open();
+    };
+</script>

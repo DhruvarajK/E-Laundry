@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete Subscription Plan</title>
+</head>
+<body>
+    <h1>Delete Subscription Plan</h1>
+    <p>Are you sure you want to delete the plan: "{{ plan.name }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Confirm Delete</button>
+        <a href="{% url 'list_subscription_plans' %}">Cancel</a>
+    </form>
+</body>
+</html>

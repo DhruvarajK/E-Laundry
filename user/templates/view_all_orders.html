@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Orders</title>
+  <style>
+    :root {
+      --primary-color: #4a6de5;
+      --secondary-color: #f8f9fa;
+      --accent-color: #6c757d;
+      --danger-color: #dc3545;
+      --success-color: #28a745;
+      --warning-color: #ffc107;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --border-radius: 8px;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: #f5f7fa;
+      color: #333;
+      line-height: 1.6;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      color: var(--primary-color);
+      margin-bottom: 20px;
+      font-size: 28px;
+      border-bottom: 2px solid var(--primary-color);
+      padding-bottom: 10px;
+    }
+    
+    form {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: inline-block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    
+    select {
+      padding: 10px;
+      border-radius: var(--border-radius);
+      border: 1px solid #ddd;
+      background-color: white;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+    }
+    
+    select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+      background: white;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+    }
+    
+    th, td {
+      padding: 15px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    
+    th {
+      background-color: var(--primary-color);
+      color: white;
+      font-weight: 600;
+    }
+    
+    tr:hover {
+      background-color: var(--secondary-color);
+    }
+    
+    .alert {
+      color: var(--danger-color);
+      font-weight: bold;
+      background-color: rgba(220, 53, 69, 0.1);
+      padding: 10px;
+      border-radius: var(--border-radius);
+      margin: 10px 0;
+      border-left: 4px solid var(--danger-color);
+    }
+    
+    button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: var(--border-radius);
+      background-color: var(--primary-color);
+      color: white;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.3s ease;
+      box-shadow: var(--shadow);
+    }
+    
+    button:hover {
+      background-color: #3959c7;
+    }
+    
+    button[type="submit"] {
+      width: 100%;
+    }
+    
+    a {
+      display: inline-block;
+      margin-top: 10px;
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+    
+    a:hover {
+      color: #3959c7;
+      text-decoration: underline;
+    }
+    
+    .go-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 20px;
+      padding: 8px 16px;
+      background-color: var(--accent-color);
+      color: white;
+      border-radius: var(--border-radius);
+      text-decoration: none;
+      box-shadow: var(--shadow);
+    }
+    
+    .go-back:hover {
+      background-color: #5a6268;
+      text-decoration: none;
+      color: white;
+    }
+    
+    .status-pill {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    .status-pending {
+      background-color: var(--warning-color);
+      color: #212529;
+    }
+    
+    .status-in-progress {
+      background-color: #17a2b8;
+      color: white;
+    }
+    
+    .status-completed {
+      background-color: var(--success-color);
+      color: white;
+    }
+    
+    .status-canceled {
+      background-color: var(--danger-color);
+      color: white;
+    }
+    
+    .payment-paid {
+      color: var(--success-color);
+      font-weight: 500;
+    }
+    
+    .payment-unpaid {
+      color: var(--danger-color);
+      font-weight: 500;
+    }
+    
+    .payment-partial {
+      color: var(--warning-color);
+      font-weight: 500;
+    }
+    
+    .cancel-button {
+      background-color: var(--danger-color);
+    }
+    
+    .cancel-button:hover {
+      background-color: #bd2130;
+    }
+    
+    .view-button {
+      background-color: var(--accent-color);
+    }
+    
+    .view-button:hover {
+      background-color: #5a6268;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+    }
+    
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      
+      h1 {
+        font-size: 24px;
+      }
+      
+      table {
+        display: block;
+        overflow-x: auto;
+      }
+      
+      th, td {
+        padding: 10px;
+      }
+      
+      .responsive-table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+      }
+      
+      /* Convert table to cards on mobile */
+      @media (max-width: 576px) {
+        table, thead, tbody, th, td, tr {
+          display: block;
+        }
+        
+        thead tr {
+          position: absolute;
+          top: -9999px;
+          left: -9999px;
+        }
+        
+        tr {
+          margin-bottom: 15px;
+          border: 1px solid #ddd;
+          border-radius: var(--border-radius);
+          background-color: white;
+          box-shadow: var(--shadow);
+        }
+        
+        td {
+          position: relative;
+          padding-left: 50%;
+          text-align: right;
+          border-bottom: 1px solid #eee;
+        }
+        
+        td:last-child {
+          border-bottom: none;
+        }
+        
+        td:before {
+          position: absolute;
+          left: 10px;
+          width: 45%;
+          padding-right: 10px;
+          white-space: nowrap;
+          font-weight: 600;
+          text-align: left;
+        }
+        
+        /* Add labels for each td on mobile */
+        td:nth-of-type(1):before { content: "Order ID:"; }
+        td:nth-of-type(2):before { content: "Service Type:"; }
+        td:nth-of-type(3):before { content: "Status:"; }
+        td:nth-of-type(4):before { content: "Payment Status:"; }
+        td:nth-of-type(5):before { content: "Action:"; }
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Your Orders</h1>
+
+  <!-- Filter orders by status -->
+  <form method="get">
+    <label for="status">Filter by Status:</label>
+    <select name="status" id="status" onchange="this.form.submit()">
+      <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All</option>
+      <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+      <option value="in progress" {% if status_filter == 'in progress' %}selected{% endif %}>In Progress</option>
+      <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Completed</option>
+      <option value="canceled" {% if status_filter == 'canceled' %}selected{% endif %}>Cancelled</option>
+    </select>
+  </form>
+
+  {% if orders %}
+    <div class="responsive-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Service Type</th>
+            <th>Status</th>
+            <th>Payment Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orders %}
+            <tr>
+              <td>{{ order.id }}</td>
+              <td>{{ order.service_type }}</td>
+              <td>
+                <span class="status-pill status-{{ order.status|slugify }}">
+                  {{ order.status|title }}
+                </span>
+              </td>
+              <td class="payment-{{ order.payment.payment_status|slugify }}">
+                {{ order.payment.payment_status|title }}
+              </td>
+              <td>
+                {% if order.status == 'in progress' %}
+                  {% if order.payment.bill_items.all|length == 0 %}
+                    <span class="alert">Bill has not been generated yet.</span>
+                  {% else %}
+                    <form action="{% url 'view_bill' order.id %}" method="get">
+                      <button type="submit" class="view-button">View Payment</button>
+                    </form>
+                  {% endif %}
+                {% endif %}
+                <!-- Only show the "Cancel" button if the order is pending -->
+                {% if order.status == 'pending' %}
+                  <form action="{% url 'cancel_order' order_id=order.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="cancel-button">Cancel Order</button>
+                  </form>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <p>No orders found for the selected status.</p>
+    </div>
+  {% endif %}
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+  
+  <a href="javascript:history.go(-1)" class="go-back">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/>
+    </svg>
+    Go Back
+  </a>
+</body>
+</html>

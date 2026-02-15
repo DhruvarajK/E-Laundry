@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assigned Orders</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-top: 0;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border: none;
+        }
+
+        th {
+            background-color: #34495e;
+            color: white;
+            font-weight: 500;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tr:hover {
+            background-color: #f1f4f8;
+        }
+
+        td {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 15px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        .status-cell {
+            font-weight: 500;
+        }
+
+        .button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #c0392b;
+        }
+
+        @media (max-width: 768px) {
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            th, td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% block content %}
+        <h1>Assigned Orders</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>User</th>
+                    <th>Delivery Man</th>
+                    <th>Order Status</th>
+                    <th>Logistics Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for assignment in assignments %}
+                <tr>
+                    <td>#{{ assignment.service_order.id }}</td>
+                    <td>{{ assignment.service_order.USER.first_name }} {{ assignment.service_order.USER.last_name }}</td>
+                    <td>{{ assignment.pickup_or_delivery_man.first_name }} {{ assignment.pickup_or_delivery_man.last_name }}</td>
+                    <td class="status-cell">{{ assignment.service_order.status }}</td>
+                    <td class="status-cell">{{ assignment.delivery_status }}</td>
+                    <td>
+                        <form method="post" action="{% url 'unassign_logistics' assignment.service_order.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="button">Unassign</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="empty-message">No assigned orders found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endblock %}
+    </div>
+</body>
+</html>

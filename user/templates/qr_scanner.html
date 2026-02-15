@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+    <meta name="csrf-token" content="{% csrf_token %}" >
+    <title>QR Code Scanner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        video, img {
+            width: 80%;
+            margin: 20px auto;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #008cba;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        .redbutton {
+            padding: 10px 20px;
+            background-color: #ff1c1c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        button:hover {
+            background-color: #005f75;
+        }
+        #cameraModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+    
+    
+
+    <form id="qrForm" method="POST" action="{% url 'check_assign_bags' %}" >
+        {% csrf_token %}
+        <input type="text" id="qr_code" name="qr_code"><br>
+        <label for="service_type">Service Type:</label>
+        <select name="service_type" required>
+            <option value="hand wash">Hand Wash</option>
+            <option value="machine wash">Machine Wash</option>
+            <option value="dry clean">Dry Clean</option>
+            <option value="Ironing">Ironing</option>
+        </select>
+        <button type="submit">Assign Bag</button>
+    </form>
+    <button onclick="openCamera()">Open Camera</button>
+    <div id="cameraModal" style="display: none;">
+        <video id="video" autoplay></video>
+        <button class="redbutton" onclick="closeCamera()">Close</button>
+    </div>
+    <img id="processedImage" style="display: none;" />
+
+    <script>
+         function getCSRFToken() {
+            return document.querySelector('[name=csrf-token]').getAttribute('content');
+        }
+        function closeCamera() {
+            const cameraModal = document.getElementById('cameraModal');
+            const video = document.getElementById('video');
+
+            // Stop the camera stream
+            if (video.srcObject) {
+                const stream = video.srcObject;
+                const tracks = stream.getTracks();
+                tracks.forEach(track => track.stop());
+            }
+
+            // Hide the camera modal
+            cameraModal.style.display = 'none';
+        }
+
+        function openCamera() {
+            const video = document.getElementById('video');
+            const cameraModal = document.getElementById('cameraModal');
+            const processedImage = document.getElementById('processedImage');
+            let qrDetected = false; 
+
+            cameraModal.style.display = 'flex';
+
+            navigator.mediaDevices.getUserMedia({ 
+                video: { facingMode: 'environment', width: { ideal: 640 }, height: { ideal: 480 } }
+            })
+            .then(stream => {
+                video.srcObject = stream;
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const detector = new BarcodeDetector({ formats: ['qr_code'] });
+
+                video.addEventListener('playing', () => {
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+
+                    const scanQRCode = () => {
+                        if (!qrDetected && video.srcObject) {
+                            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                            detector.detect(canvas)
+                                .then(barcodes => {
+                                    if (barcodes.length > 0) {
+                                        qrDetected = true;
+                                        const qrCode = barcodes[0];
+                                        const image = canvas.toDataURL('image/png').split(',')[1];
+
+                                        fetch('/camera/', {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Content-Type': 'application/json',
+                                                    'X-CSRFToken': getCSRFToken() // Ensure this is correctly set
+                                                },
+                                                body: JSON.stringify({ image })
+                                            })
+
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            if (data.content) {
+                                                alert(data.content);
+                                                stream.getTracks().forEach(track => track.stop());
+                                                document.getElementById('qr_code').value = code.data;
+                                                cameraModal.style.display = 'none';
+                                            } else {
+                                                alert(data.error || 'Failed to process QR code.');
+                                            }
+                                        })
+                                        .catch(err => {
+                                            console.error('Error:', err);
+                                            alert('Failed to process QR code.');
+                                        });
+                                    } else {
+                                        if (!qrDetected) setTimeout(scanQRCode, 700);
+                                    }
+                                })
+                                .catch(err => {
+                                    console.error('Barcode detection error:', err);
+                                    if (!qrDetected) setTimeout(scanQRCode, 700);
+                                });
+                        }
+                    };
+
+                    scanQRCode();
+                });
+            })
+            .catch(err => {
+                console.error('Error accessing camera:', err);
+                alert('Unable to access camera. Check permissions.');
+                cameraModal.style.display = 'none';
+            });
+        }
+    </script>
+</body>
+</html>

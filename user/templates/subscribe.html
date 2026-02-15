@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscribe to {{ plan.name }}</title>
+    <style>
+        :root {
+            --primary-color: #4863A0;
+            --secondary-color: #f8f9fa;
+            --accent-color: #6a89cc;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --text-color: #333;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #f5f7fa;
+            padding: 0;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .subscription-container {
+            max-width: 600px;
+            width: 90%;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            margin: 2rem;
+        }
+        
+        .subscription-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .subscription-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: white;
+            border: none;
+        }
+        
+        .price-tag {
+            display: inline-block;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+        
+        .subscription-body {
+            padding: 2rem;
+        }
+        
+        .plan-description {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background-color: var(--secondary-color);
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .form-container {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .payment-btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .payment-btn:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .error-message {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--danger-color);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--danger-color);
+            margin: 1.5rem 0;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 576px) {
+            .subscription-container {
+                width: 95%;
+                margin: 1rem;
+            }
+            
+            .subscription-header {
+                padding: 1.5rem;
+            }
+            
+            .subscription-body {
+                padding: 1.5rem;
+            }
+            
+            .price-tag {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="subscription-container">
+        <div class="subscription-header">
+            <h2>Subscribe to {{ plan.name }}</h2>
+            <div class="price-tag">₹{{ plan.price }}</div>
+        </div>
+        
+        <div class="subscription-body">
+            <div class="plan-description">
+                {{ plan.description }}
+            </div>
+            
+            {% if not active_subscription %}
+                <div class="form-container">
+                    <form method="post" action="{% url 'subscribe' plan.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="payment-btn">Proceed to Payment</button>
+                    </form>
+                </div>
+            {% else %}
+                <div class="error-message">
+                    You already have an active subscription. Please wait until it expires before purchasing a new one.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

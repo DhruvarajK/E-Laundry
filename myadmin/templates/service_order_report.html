@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <title>Service Order Report</title>
+  <style>
+    :root {
+      --primary-color: #3498db;
+      --primary-dark: #2980b9;
+      --secondary-color: #f9f9f9;
+      --text-color: #333;
+      --border-color: #ddd;
+      --success-color: #2ecc71;
+      --warning-color: #f39c12;
+      --danger-color: #e74c3c;
+      --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      --border-radius: 8px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f5f7fa;
+      color: var(--text-color);
+      line-height: 1.6;
+    }
+
+    .report-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    h1 {
+      color: var(--primary-dark);
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 2rem;
+      position: relative;
+      padding-bottom: 1rem;
+    }
+
+    h1:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background-color: var(--primary-color);
+      border-radius: 2px;
+    }
+
+    h2 {
+      color: var(--primary-dark);
+      margin: 1.5rem 0;
+      font-size: 1.5rem;
+    }
+
+    .filter-form {
+      background-color: white;
+      padding: 1.5rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: flex-end;
+    }
+
+    .filter-form div {
+      flex: 1 1 200px;
+    }
+
+    .filter-form label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .filter-form input,
+    .filter-form select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+    }
+
+    .filter-form button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .filter-form button:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .report-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .report-summary p {
+      background-color: white;
+      padding: 1.25rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      text-align: center;
+      font-size: 1.1rem;
+    }
+
+    .report-summary strong {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--primary-dark);
+    }
+
+    .orders-table-container {
+      overflow-x: auto;
+      margin-bottom: 2rem;
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+    }
+
+    .orders-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+    }
+
+    .orders-table th,
+    .orders-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .orders-table th {
+      background-color: var(--secondary-color);
+      font-weight: 600;
+      color: var(--primary-dark);
+      position: sticky;
+      top: 0;
+    }
+
+    .orders-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .orders-table tr:hover {
+      background-color: rgba(52, 152, 219, 0.05);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .status-completed {
+      background-color: rgba(46, 204, 113, 0.2);
+      color: var(--success-color);
+    }
+
+    .status-pending {
+      background-color: rgba(243, 156, 18, 0.2);
+      color: var(--warning-color);
+    }
+
+    .status-cancelled {
+      background-color: rgba(231, 76, 60, 0.2);
+      color: var(--danger-color);
+    }
+
+    .payment-paid {
+      background-color: rgba(46, 204, 113, 0.2);
+      color: var(--success-color);
+    }
+
+    .payment-pending {
+      background-color: rgba(243, 156, 18, 0.2);
+      color: var(--warning-color);
+    }
+
+    .payment-failed {
+      background-color: rgba(231, 76, 60, 0.2);
+      color: var(--danger-color);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="report-container">
+    <h1>Service Order Report</h1>
+
+    <!-- Filter Form -->
+    <form method="get" class="filter-form">
+      <div>
+        <label for="date">Select Date:</label>
+        <input type="date" name="date" id="date" value="{{ filter_date }}">
+      </div>
+      <div>
+        <label for="service_for">Service For:</label>
+        <select name="service_for" id="service_for">
+          <option value="all" {% if service_for_filter == "all" %}selected{% endif %}>All</option>
+          <option value="user" {% if service_for_filter == "user" %}selected{% endif %}>User</option>
+          <option value="business" {% if service_for_filter == "business" %}selected{% endif %}>Business</option>
+        </select>
+      </div>
+      <button type="submit">Filter</button>
+    </form>
+
+    {% if filter_date or service_for_filter != "all" %}
+      <h2>Filtered Report</h2>
+    {% else %}
+      <h2>All Orders</h2>
+    {% endif %}
+
+    <!-- Visual Summary Charts -->
+    <div class="bg-white p-4 rounded-lg shadow mb-6">
+      <h2 class="text-lg font-semibold text-center mb-4 text-blue-800">Visual Summary</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 justify-items-center">
+        <div class="w-[300px] h-[300px]">
+          <canvas id="serviceChart" width="300" height="300"></canvas>
+        </div>
+        <div class="w-[300px] h-[300px]">
+          <canvas id="revenueChart" width="300" height="300"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Report Summary -->
+    <div class="report-summary">
+      <p><strong>Total Orders</strong> {{ total_orders }}</p>
+      <p><strong>User Services</strong> {{ user_service_count }}</p>
+      <p><strong>Business Services</strong> {{ business_service_count }}</p>
+      <p><strong>Total Revenue(WoS)</strong> ₹{{ total_revenue }}</p>
+    </div>
+    <div class="report-summary">
+      <p><strong>Revenue From<br>User Subscriptions</strong> ₹{{ user_total }}</p>
+      <p><strong>Revenue From<br>Business Subscriptions</strong> ₹{{ business_total }}</p>
+      <p><strong>Total Revenue<br>(From Subscriptions)</strong> ₹{{ grand_total }}</p>
+    </div>
+
+    <!-- Orders Table -->
+    <div class="orders-table-container">
+      <table class="orders-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Service For</th>
+            <th>Service Type</th>
+            <th>Order Date</th>
+            <th>Status</th>
+            <th>Payment Status</th>
+            <th>Total Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orders %}
+          <tr>
+            <td>{{ order.id }}</td>
+            <td>{{ order.get_service_for_display }}</td>
+            <td>{{ order.service_type }}</td>
+            <td>{{ order.order_date|date:"Y-m-d H:i" }}</td>
+            <td>
+              <span class="status-badge {% if order.status == 'completed' %}status-completed{% elif order.status == 'pending' %}status-pending{% else %}status-cancelled{% endif %}">
+                {{ order.get_status_display }}
+              </span>
+            </td>
+            <td>
+              {% if order.payment %}
+              <span class="status-badge {% if order.payment.payment_status == 'paid' %}payment-paid{% elif order.payment.payment_status == 'pending' %}payment-pending{% else %}payment-failed{% endif %}">
+                {{ order.payment.get_payment_status_display }}
+              </span>
+              {% else %}
+              <span>N/A</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if order.subscription %}
+              (WiS)
+              {% elif order.payment %}
+              ₹{{ order.payment.total_price }}
+              {% else %}
+              N/A
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7">
+              <div class="empty-state">
+                No orders found with these filters.
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div style="background-color: #c6e8ff; padding: 10px; border-radius: 12px; border-left: #3498db 3px solid;">
+      WoS - Without subscription , WiS - With subscription
+    </div>
+  </div>
+
+  <script>
+    const serviceCtx = document.getElementById('serviceChart').getContext('2d');
+    const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+
+    new Chart(serviceCtx, {
+      type: 'pie',
+      data: {
+        labels: ['User Services', 'Business Services'],
+        datasets: [{
+          label: 'Service Orders',
+          data: [{{ user_service_count }}, {{ business_service_count }}],
+          backgroundColor: ['#3498db', '#f39c12'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        animation: false,
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom'
+          }
+        }
+      }
+    });
+
+    new Chart(revenueCtx, {
+      type: 'bar',
+      data: {
+        labels: ['WoS Revenue', 'User Subscriptions', 'Business Subscriptions'],
+        datasets: [{
+          label: 'Revenue (₹)',
+          data: [{{ total_revenue }}, {{ user_total }}, {{ business_total }}],
+          backgroundColor: ['#2ecc71', '#9b59b6', '#e67e22']
+        }]
+      },
+      options: {
+        animation: false,
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: value => '₹' + value
+            }
+          }
+        },
+        plugins: {
+          legend: { display: false }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,256 @@
+{% extends 'main_index.html' %}
+{% load static %}
+{% block title %}
+<title>Register User</title>
+{% endblock %}
+{% block head %}
+<style>
+    /* Container for the input field */
+    .profile-image-label {
+        display: inline-block;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    /* Styling for the profile icon (the file upload option) */
+    .profile-image-icon {
+        width: 150px;
+        height: 150px;
+        border-radius: 20%;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background-color: #1a1a1a;
+        object-fit: cover;
+        transition: opacity 0.3s ease;
+    }
+
+    /* Styling for the image preview */
+    .profile-image-preview {
+        display: block;
+        margin-top: 15px;
+        max-width: 200px;
+        height: auto;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        object-fit: cover;
+    }
+
+    /* Hide preview image when no file is selected */
+    .profile-image-preview:empty {
+        display: none;
+    }
+
+    /* Hide the file input */
+    .profile-image-input {
+        display: none;
+    }
+
+    /* Optional: Add some hover effects */
+    .profile-image-icon:hover {
+        opacity: 0.8;
+        border-color: rgba(255, 255, 255, 0.5);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="min-h-screen py-24 px-6 lg:px-20 bg-black text-white">
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <div class="mb-12 border-b border-white/10 pb-8 flex justify-between items-end">
+            <div>
+                <h2 class="text-3xl font-black uppercase tracking-tighter">Individual Register</h2>
+                <p class="text-white/40 text-xs font-bold uppercase tracking-widest mt-2">Create your personal account
+                </p>
+            </div>
+            <!-- Locate Button -->
+            <a class="px-6 py-2 border border-white/20 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all flex items-center gap-2"
+                href="{% url 'get_current_location' %}">
+                Locate <span class="material-symbols-outlined text-sm">location_on</span>
+            </a>
+        </div>
+
+        <form class="flex flex-col gap-12" method="POST" action="{% url 'register_user' %}"
+            enctype="multipart/form-data" id="mainForm">
+            {% csrf_token %}
+
+            <div class="grid md:grid-cols-3 gap-12">
+                <!-- Left Column: Profile Image -->
+                <div class="md:col-span-1 flex flex-col items-center md:items-start gap-4">
+                    <label
+                        class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 w-full text-center md:text-left">Profile
+                        Image</label>
+                    <label for="profile_image" class="profile-image-label">
+                        <img id="profile_icon" src="{% static 'assets/profile2.svg' %}" alt="Profile Icon"
+                            class="profile-image-icon">
+                        <input class="profile-image-input" type="file" id="profile_image" name="profile_image"
+                            accept=".jpg, .jpeg, .png" required>
+                        <img id="profile_preview" class="profile-image-preview" src="" alt="Profile Preview">
+                    </label>
+                </div>
+
+                <!-- Right Column: Fields (Spanning 2 cols) -->
+                <div class="md:col-span-2 flex flex-col gap-8">
+                    <!-- Personal Info -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex flex-col gap-2">
+                            <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">First
+                                Name</label>
+                            <input
+                                class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                                type="text" id="first_name" name="first_name" required>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Last
+                                Name</label>
+                            <input
+                                class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                                type="text" id="last_name" name="last_name" required>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Email</label>
+                        <input
+                            class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                            type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex flex-col gap-2">
+                            <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Number of
+                                Bags</label>
+                            <input
+                                class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                                type="text" id="num_bags" name="num_bags" required>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Phone
+                                Number</label>
+                            <input
+                                class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                                type="text" id="phone_number" name="phone_number" required>
+                        </div>
+                    </div>
+
+                    <!-- Address Section -->
+                    <div class="flex flex-col gap-6 pt-4 border-t border-white/10">
+                        <h4 class="text-xs font-bold uppercase tracking-widest text-white/60">Address Details</h4>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="flex flex-col gap-2">
+                                <label
+                                    class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">House</label>
+                                <input
+                                    class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                                    type="text" id="house" name="house" required>
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <label
+                                    class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Post</label>
+                                <input
+                                    class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                                    type="text" id="post" name="post" required>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="flex flex-col gap-2">
+                                <label
+                                    class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Place</label>
+                                <input
+                                    class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                                    type="text" id="place" name="place" value="{{ place }}" required>
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <label
+                                    class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">District</label>
+                                <input
+                                    class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                                    type="text" id="district" name="district" value="{{ district }}" required>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="flex flex-col gap-2">
+                                <label
+                                    class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">State</label>
+                                <input
+                                    class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                                    type="text" id="state" name="state" value="{{ state }}" required>
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <label
+                                    class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">PIN</label>
+                                <input
+                                    class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                                    type="text" id="pin" name="pin" value="{{ pin }}" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-2 pt-4 border-t border-white/10">
+                        <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Password</label>
+                        <input
+                            class="bg-transparent border-b border-white/20 py-2 text-sm text-white font-medium placeholder:text-white/20 focus:border-white focus:outline-none transition-colors rounded-none w-full"
+                            type="password" id="password" name="password" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hidden Fields -->
+            <input class="hidden" type="text" id="full_address" name="full_address" value="{{ full_address }}">
+            <input type="hidden" name="latitude" value="{{ latitude }}">
+            <input type="hidden" name="longitude" value="{{ longitude }}">
+
+            {% if error %}<p class="text-red-500 text-sm font-bold uppercase tracking-widest">{{ error }}</p>{% endif %}
+
+            <div class="flex justify-start pt-8 border-t border-white/10">
+                <button type="submit"
+                    class="bg-white text-black px-12 py-4 text-xs font-bold uppercase tracking-widest hover:bg-white/90 transition-all rounded-none">
+                    Register User
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<script>
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                // Update hidden fields
+                if (document.getElementById('latitude')) document.getElementById('latitude').value = position.coords.latitude;
+                if (document.getElementById('longitude')) document.getElementById('longitude').value = position.coords.longitude;
+                // document.getElementById('locationForm').submit(); 
+            }, function (error) {
+                alert('Unable to retrieve location. Make sure you have allowed location access.');
+            });
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    }
+
+    const profileImageInput = document.getElementById('profile_image');
+    if (profileImageInput) {
+        const profilePreview = document.getElementById('profile_preview');
+        const profileIcon = document.getElementById('profile_icon');
+
+        profileImageInput.addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    profilePreview.src = e.target.result;
+                    profilePreview.style.display = 'block';
+                    profileIcon.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                profilePreview.src = '';
+                profilePreview.style.display = 'none';
+                profileIcon.style.display = 'block';
+            }
+        });
+    }
+</script>
+{% endblock %}
