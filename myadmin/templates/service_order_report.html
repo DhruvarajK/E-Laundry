@@ -1,393 +1,304 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Font Awesome CDN -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% extends 'admin_home.html' %}
+{% block title %}Service Order Report{% endblock %}
+{% block body %}
+<div class="flex flex-col gap-6 h-full">
+  <!-- Header & Filter -->
+  <div class="flex flex-col gap-6 bg-surface border border-white/10 p-6 rounded-none">
+    <div class="flex justify-between items-center">
+      <h3 class="text-sm font-bold uppercase tracking-widest text-white">Service Order Report</h3>
+    </div>
 
-  <title>Service Order Report</title>
-  <style>
-    :root {
-      --primary-color: #3498db;
-      --primary-dark: #2980b9;
-      --secondary-color: #f9f9f9;
-      --text-color: #333;
-      --border-color: #ddd;
-      --success-color: #2ecc71;
-      --warning-color: #f39c12;
-      --danger-color: #e74c3c;
-      --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      --border-radius: 8px;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-      background-color: #f5f7fa;
-      color: var(--text-color);
-      line-height: 1.6;
-    }
-
-    .report-container {
-      max-width: 1200px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-    }
-
-    h1 {
-      color: var(--primary-dark);
-      text-align: center;
-      margin-bottom: 2rem;
-      font-size: 2rem;
-      position: relative;
-      padding-bottom: 1rem;
-    }
-
-    h1:after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100px;
-      height: 4px;
-      background-color: var(--primary-color);
-      border-radius: 2px;
-    }
-
-    h2 {
-      color: var(--primary-dark);
-      margin: 1.5rem 0;
-      font-size: 1.5rem;
-    }
-
-    .filter-form {
-      background-color: white;
-      padding: 1.5rem;
-      border-radius: var(--border-radius);
-      box-shadow: var(--shadow);
-      margin-bottom: 2rem;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      align-items: flex-end;
-    }
-
-    .filter-form div {
-      flex: 1 1 200px;
-    }
-
-    .filter-form label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-    }
-
-    .filter-form input,
-    .filter-form select {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid var(--border-color);
-      border-radius: var(--border-radius);
-      font-size: 1rem;
-    }
-
-    .filter-form button {
-      background-color: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 0.75rem 1.5rem;
-      border-radius: var(--border-radius);
-      cursor: pointer;
-      font-weight: 600;
-    }
-
-    .filter-form button:hover {
-      background-color: var(--primary-dark);
-    }
-
-    .report-summary {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-
-    .report-summary p {
-      background-color: white;
-      padding: 1.25rem;
-      border-radius: var(--border-radius);
-      box-shadow: var(--shadow);
-      text-align: center;
-      font-size: 1.1rem;
-    }
-
-    .report-summary strong {
-      display: block;
-      margin-bottom: 0.5rem;
-      color: var(--primary-dark);
-    }
-
-    .orders-table-container {
-      overflow-x: auto;
-      margin-bottom: 2rem;
-      background-color: white;
-      border-radius: var(--border-radius);
-      box-shadow: var(--shadow);
-    }
-
-    .orders-table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 600px;
-    }
-
-    .orders-table th,
-    .orders-table td {
-      padding: 1rem;
-      text-align: left;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .orders-table th {
-      background-color: var(--secondary-color);
-      font-weight: 600;
-      color: var(--primary-dark);
-      position: sticky;
-      top: 0;
-    }
-
-    .orders-table tr:last-child td {
-      border-bottom: none;
-    }
-
-    .orders-table tr:hover {
-      background-color: rgba(52, 152, 219, 0.05);
-    }
-
-    .status-badge {
-      display: inline-block;
-      padding: 0.25rem 0.75rem;
-      border-radius: 50px;
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-
-    .status-completed {
-      background-color: rgba(46, 204, 113, 0.2);
-      color: var(--success-color);
-    }
-
-    .status-pending {
-      background-color: rgba(243, 156, 18, 0.2);
-      color: var(--warning-color);
-    }
-
-    .status-cancelled {
-      background-color: rgba(231, 76, 60, 0.2);
-      color: var(--danger-color);
-    }
-
-    .payment-paid {
-      background-color: rgba(46, 204, 113, 0.2);
-      color: var(--success-color);
-    }
-
-    .payment-pending {
-      background-color: rgba(243, 156, 18, 0.2);
-      color: var(--warning-color);
-    }
-
-    .payment-failed {
-      background-color: rgba(231, 76, 60, 0.2);
-      color: var(--danger-color);
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: 3rem 1rem;
-      color: #888;
-    }
-  </style>
-</head>
-<body>
-  <div class="report-container">
-    <h1>Service Order Report</h1>
-
-    <!-- Filter Form -->
-    <form method="get" class="filter-form">
-      <div>
-        <label for="date">Select Date:</label>
-        <input type="date" name="date" id="date" value="{{ filter_date }}">
+    <form method="get" class="flex flex-wrap items-end gap-4">
+      <div class="flex flex-col gap-2">
+        <label for="date" class="text-[10px] font-bold uppercase tracking-widest text-white/60">Select Date</label>
+        <input type="date" name="date" id="date" value="{{ filter_date }}"
+          class="bg-black/20 border border-white/10 text-white text-xs font-bold uppercase tracking-widest py-2 px-3 focus:ring-1 focus:ring-white/20 focus:border-white/20 outline-none transition-all">
       </div>
-      <div>
-        <label for="service_for">Service For:</label>
-        <select name="service_for" id="service_for">
-          <option value="all" {% if service_for_filter == "all" %}selected{% endif %}>All</option>
-          <option value="user" {% if service_for_filter == "user" %}selected{% endif %}>User</option>
-          <option value="business" {% if service_for_filter == "business" %}selected{% endif %}>Business</option>
+
+      <div class="flex flex-col gap-2">
+        <label for="service_for" class="text-[10px] font-bold uppercase tracking-widest text-white/60">Service
+          For</label>
+        <select name="service_for" id="service_for"
+          class="bg-black/20 border border-white/10 text-white text-xs font-bold uppercase tracking-widest py-2 px-3 focus:ring-1 focus:ring-white/20 focus:border-white/20 outline-none transition-all min-w-[150px]">
+          <option value="all" {% if service_for_filter == "all" %}selected{% endif %} class="bg-surface text-white">All
+          </option>
+          <option value="user" {% if service_for_filter == "user" %}selected{% endif %} class="bg-surface text-white">User
+          </option>
+          <option value="business" {% if service_for_filter == "business" %}selected{% endif %}
+            class="bg-surface text-white">Business</option>
         </select>
       </div>
-      <button type="submit">Filter</button>
+
+      <button type="submit"
+        class="px-6 py-2 bg-blue-600 hover:bg-blue-500 text-white text-[10px] font-bold uppercase tracking-widest transition-colors border border-blue-500/50 h-[34px]">
+        Filter Report
+      </button>
     </form>
+  </div>
 
-    {% if filter_date or service_for_filter != "all" %}
-      <h2>Filtered Report</h2>
-    {% else %}
-      <h2>All Orders</h2>
-    {% endif %}
-
-    <!-- Visual Summary Charts -->
-    <div class="bg-white p-4 rounded-lg shadow mb-6">
-      <h2 class="text-lg font-semibold text-center mb-4 text-blue-800">Visual Summary</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 justify-items-center">
-        <div class="w-[300px] h-[300px]">
-          <canvas id="serviceChart" width="300" height="300"></canvas>
-        </div>
-        <div class="w-[300px] h-[300px]">
-          <canvas id="revenueChart" width="300" height="300"></canvas>
-        </div>
+  <!-- Charts Section -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Service Distribution -->
+    <div class="bg-surface border border-white/10 p-6 flex flex-col items-center">
+      <h4 class="text-xs font-bold uppercase tracking-widest text-white/80 mb-6 text-center">Service Distribution</h4>
+      <div class="w-full max-w-[300px] aspect-square relative">
+        <canvas id="serviceChart"></canvas>
       </div>
     </div>
 
-    <!-- Report Summary -->
-    <div class="report-summary">
-      <p><strong>Total Orders</strong> {{ total_orders }}</p>
-      <p><strong>User Services</strong> {{ user_service_count }}</p>
-      <p><strong>Business Services</strong> {{ business_service_count }}</p>
-      <p><strong>Total Revenue(WoS)</strong> ₹{{ total_revenue }}</p>
+    <!-- Revenue Breakdown -->
+    <div class="bg-surface border border-white/10 p-6 flex flex-col items-center">
+      <h4 class="text-xs font-bold uppercase tracking-widest text-white/80 mb-6 text-center">Revenue Breakdown</h4>
+      <div class="w-full h-[300px] relative">
+        <canvas id="revenueChart"></canvas>
+      </div>
     </div>
-    <div class="report-summary">
-      <p><strong>Revenue From<br>User Subscriptions</strong> ₹{{ user_total }}</p>
-      <p><strong>Revenue From<br>Business Subscriptions</strong> ₹{{ business_total }}</p>
-      <p><strong>Total Revenue<br>(From Subscriptions)</strong> ₹{{ grand_total }}</p>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <!-- Core Stats -->
+    <div class="bg-surface border border-white/10 p-4">
+      <span class="block text-[10px] font-bold uppercase tracking-widest text-white/40 mb-1">Total Orders</span>
+      <span class="text-xl font-bold text-white">{{ total_orders }}</span>
+    </div>
+    <div class="bg-surface border border-white/10 p-4">
+      <span class="block text-[10px] font-bold uppercase tracking-widest text-white/40 mb-1">User Services</span>
+      <span class="text-xl font-bold text-blue-400">{{ user_service_count }}</span>
+    </div>
+    <div class="bg-surface border border-white/10 p-4">
+      <span class="block text-[10px] font-bold uppercase tracking-widest text-white/40 mb-1">Business Services</span>
+      <span class="text-xl font-bold text-yellow-400">{{ business_service_count }}</span>
+    </div>
+    <div class="bg-surface border border-white/10 p-4">
+      <span class="block text-[10px] font-bold uppercase tracking-widest text-white/40 mb-1">WoS Revenue</span>
+      <span class="text-xl font-bold text-green-400">₹{{ total_revenue }}</span>
     </div>
 
-    <!-- Orders Table -->
-    <div class="orders-table-container">
-      <table class="orders-table">
+    <!-- Subscription Revenue Stats -->
+    <div class="bg-surface border border-white/10 p-4">
+      <span class="block text-[10px] font-bold uppercase tracking-widest text-white/40 mb-1">User Sub. Revenue</span>
+      <span class="text-xl font-bold text-purple-400">₹{{ user_total }}</span>
+    </div>
+    <div class="bg-surface border border-white/10 p-4">
+      <span class="block text-[10px] font-bold uppercase tracking-widest text-white/40 mb-1">Business Sub.
+        Revenue</span>
+      <span class="text-xl font-bold text-orange-400">₹{{ business_total }}</span>
+    </div>
+    <div class="col-span-2 bg-gradient-to-r from-blue-900/40 to-purple-900/40 border border-white/10 p-4">
+      <span class="block text-[10px] font-bold uppercase tracking-widest text-white/60 mb-1">Grand Total Revenue (inc.
+        Subscriptions)</span>
+      <span class="text-2xl font-bold text-white">₹{{ grand_total }}</span>
+    </div>
+  </div>
+
+  <!-- Orders Table -->
+  <div class="bg-surface border border-white/10 overflow-hidden mt-2">
+    <div class="px-6 py-4 border-b border-white/10 flex justify-between items-center">
+      <h4 class="text-xs font-bold uppercase tracking-widest text-white">
+        {% if filter_date or service_for_filter != "all" %}Filtered Orders{% else %}All Orders{% endif %}
+      </h4>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left">
         <thead>
-          <tr>
-            <th>Order ID</th>
-            <th>Service For</th>
-            <th>Service Type</th>
-            <th>Order Date</th>
-            <th>Status</th>
-            <th>Payment Status</th>
-            <th>Total Price</th>
+          <tr class="border-b border-white/10 bg-white/5">
+            <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Order ID</th>
+            <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Service For</th>
+            <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Type</th>
+            <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Date</th>
+            <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Status</th>
+            <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Payment</th>
+            <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40 text-right">Total</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="divide-y divide-white/5">
           {% for order in orders %}
-          <tr>
-            <td>{{ order.id }}</td>
-            <td>{{ order.get_service_for_display }}</td>
-            <td>{{ order.service_type }}</td>
-            <td>{{ order.order_date|date:"Y-m-d H:i" }}</td>
-            <td>
-              <span class="status-badge {% if order.status == 'completed' %}status-completed{% elif order.status == 'pending' %}status-pending{% else %}status-cancelled{% endif %}">
-                {{ order.get_status_display }}
+          <tr class="hover:bg-white/5 transition-colors group">
+            <td class="px-6 py-4">
+              <span class="font-mono text-xs text-white/60">#{{ order.id }}</span>
+            </td>
+            <td class="px-6 py-4">
+              <span class="text-xs font-bold text-white">{{ order.get_service_for_display }}</span>
+            </td>
+            <td class="px-6 py-4">
+              <span
+                class="inline-block px-2 py-1 bg-white/5 text-white/80 text-[10px] font-bold uppercase tracking-widest border border-white/10">
+                {{ order.service_type }}
               </span>
             </td>
-            <td>
+            <td class="px-6 py-4">
+              <span class="text-xs text-white/60">{{ order.order_date|date:"M d, Y H:i" }}</span>
+            </td>
+            <td class="px-6 py-4">
+              {% if order.status == 'completed' %}
+              <span
+                class="inline-block px-2 py-1 bg-green-500/10 text-green-500 text-[10px] font-bold uppercase tracking-widest border border-green-500/20">
+                {{ order.get_status_display }}
+              </span>
+              {% elif order.status == 'cancelled' %}
+              <span
+                class="inline-block px-2 py-1 bg-red-500/10 text-red-500 text-[10px] font-bold uppercase tracking-widest border border-red-500/20">
+                {{ order.get_status_display }}
+              </span>
+              {% else %}
+              <span
+                class="inline-block px-2 py-1 bg-yellow-500/10 text-yellow-500 text-[10px] font-bold uppercase tracking-widest border border-yellow-500/20">
+                {{ order.get_status_display }}
+              </span>
+              {% endif %}
+            </td>
+            <td class="px-6 py-4">
               {% if order.payment %}
-              <span class="status-badge {% if order.payment.payment_status == 'paid' %}payment-paid{% elif order.payment.payment_status == 'pending' %}payment-pending{% else %}payment-failed{% endif %}">
+              {% if order.payment.payment_status == 'paid' %}
+              <span
+                class="inline-block px-2 py-1 bg-green-500/10 text-green-500 text-[10px] font-bold uppercase tracking-widest border border-green-500/20">
+                {{ order.payment.get_payment_status_display }}
+              </span>
+              {% elif order.payment.payment_status == 'pending' %}
+              <span
+                class="inline-block px-2 py-1 bg-yellow-500/10 text-yellow-500 text-[10px] font-bold uppercase tracking-widest border border-yellow-500/20">
                 {{ order.payment.get_payment_status_display }}
               </span>
               {% else %}
-              <span>N/A</span>
+              <span
+                class="inline-block px-2 py-1 bg-red-500/10 text-red-500 text-[10px] font-bold uppercase tracking-widest border border-red-500/20">
+                {{ order.payment.get_payment_status_display }}
+              </span>
+              {% endif %}
+              {% else %}
+              <span class="text-[10px] text-white/40 uppercase font-bold tracking-widest">N/A</span>
               {% endif %}
             </td>
-            <td>
+            <td class="px-6 py-4 text-right font-mono text-xs text-white">
               {% if order.subscription %}
-              (WiS)
+              <span class="text-blue-400 font-bold" title="With Subscription">WiS</span>
               {% elif order.payment %}
               ₹{{ order.payment.total_price }}
               {% else %}
-              N/A
+              <span class="text-white/40">-</span>
               {% endif %}
             </td>
           </tr>
           {% empty %}
           <tr>
-            <td colspan="7">
-              <div class="empty-state">
-                No orders found with these filters.
-              </div>
+            <td colspan="7" class="px-6 py-12 text-center text-white/40 text-xs uppercase font-bold tracking-widest">
+              No orders found
             </td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
-
-    <div style="background-color: #c6e8ff; padding: 10px; border-radius: 12px; border-left: #3498db 3px solid;">
-      WoS - Without subscription , WiS - With subscription
-    </div>
   </div>
 
-  <script>
-    const serviceCtx = document.getElementById('serviceChart').getContext('2d');
-    const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+  <!-- Legend -->
+  <div
+    class="px-4 py-3 bg-blue-500/10 border border-blue-500/20 rounded-none text-blue-400 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
+    <span class="material-symbols-outlined text-sm">info</span>
+    <span>WoS: Without Subscription • WiS: With Subscription</span>
+  </div>
+</div>
 
-    new Chart(serviceCtx, {
-      type: 'pie',
-      data: {
-        labels: ['User Services', 'Business Services'],
-        datasets: [{
-          label: 'Service Orders',
-          data: [{{ user_service_count }}, {{ business_service_count }}],
-          backgroundColor: ['#3498db', '#f39c12'],
-          borderWidth: 1
-        }]
-      },
-      options: {
-        animation: false,
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            position: 'bottom'
-          }
-        }
-      }
-    });
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Global Chart Defaults for Dark Theme
+  Chart.defaults.color = '#9ca3af';
+  Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.1)';
+  Chart.defaults.font.family = "'Segoe UI', 'Roboto', sans-serif";
+  Chart.defaults.font.size = 10;
+  Chart.defaults.plugins.tooltip.backgroundColor = '#18181b';
+  Chart.defaults.plugins.tooltip.titleColor = '#fff';
+  Chart.defaults.plugins.tooltip.bodyColor = '#a1a1aa';
+  Chart.defaults.plugins.tooltip.borderColor = 'rgba(255, 255, 255, 0.1)';
+  Chart.defaults.plugins.tooltip.borderWidth = 1;
+  Chart.defaults.plugins.tooltip.padding = 10;
+  Chart.defaults.plugins.tooltip.displayColors = true;
 
-    new Chart(revenueCtx, {
-      type: 'bar',
-      data: {
-        labels: ['WoS Revenue', 'User Subscriptions', 'Business Subscriptions'],
-        datasets: [{
-          label: 'Revenue (₹)',
-          data: [{{ total_revenue }}, {{ user_total }}, {{ business_total }}],
-          backgroundColor: ['#2ecc71', '#9b59b6', '#e67e22']
-        }]
-      },
-      options: {
-        animation: false,
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              callback: value => '₹' + value
-            }
-          }
+  const serviceCtx = document.getElementById('serviceChart').getContext('2d');
+  const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+
+  new Chart(serviceCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['User Services', 'Business Services'],
+      datasets: [{
+        data: [{{ user_service_count }}, {{ business_service_count }}],
+    backgroundColor: [
+      'rgba(59, 130, 246, 0.8)', // Blue-500
+      'rgba(234, 179, 8, 0.8)'   // Yellow-500
+    ],
+    borderColor: 'rgba(24, 24, 27, 1)', // match bg-surface
+    borderWidth: 2,
+    hoverOffset: 4
+  }]
         },
-        plugins: {
-          legend: { display: false }
+    options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: '60%',
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          padding: 20,
+          usePointStyle: true,
+          pointStyle: 'circle'
         }
       }
+    }
+  }
     });
-  </script>
-</body>
-</html>
+
+  new Chart(revenueCtx, {
+    type: 'bar',
+    data: {
+      labels: ['WoS Revenue', 'User Sub.', 'Business Sub.'],
+      datasets: [{
+        label: 'Revenue',
+        data: [{{ total_revenue }}, {{ user_total }}, {{ business_total }}],
+    backgroundColor: [
+    'rgba(34, 197, 94, 0.8)',  // Green-500
+    'rgba(168, 85, 247, 0.8)', // Purple-500
+    'rgba(249, 115, 22, 0.8)'  // Orange-500
+  ],
+    borderRadius: 2,
+    borderSkipped: false
+            }]
+        },
+    options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: 'rgba(255, 255, 255, 0.05)',
+          borderDash: [5, 5]
+        },
+        ticks: {
+          callback: value => '₹' + value,
+          font: { weight: 'bold' }
+        },
+        border: { display: false }
+      },
+      x: {
+        grid: { display: false },
+        border: { display: false },
+        ticks: { font: { weight: 'bold' } }
+      }
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: function (context) {
+            return 'Revenue: ₹' + context.formattedValue;
+          }
+        }
+      }
+    }
+  }
+    });
+</script>
+{% endblock %}
