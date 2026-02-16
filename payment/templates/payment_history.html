@@ -88,7 +88,7 @@
                 </div>
                 <div>
                     <span class="text-[10px] uppercase tracking-widest text-white/40 block">Total Spent</span>
-                    <span class="text-xl font-bold text-white">${{ combined_total }}</span>
+                    <span class="text-xl font-bold text-white">₹{{ combined_total }}</span>
                 </div>
             </div>
             <div class="h-1 w-full bg-white/10">
@@ -104,7 +104,7 @@
                 </div>
                 <div>
                     <span class="text-[10px] uppercase tracking-widest text-white/40 block">Subscription Total</span>
-                    <span class="text-xl font-bold text-white">${{ subscription_total }}</span>
+                    <span class="text-xl font-bold text-white">₹{{ subscription_total }}</span>
                 </div>
             </div>
             <div class="h-1 w-full bg-white/10">
@@ -177,7 +177,7 @@
                             {% if payment.service_order.subscription %}
                             <span class="text-white/60 uppercase tracking-widest text-[10px]">Subscription</span>
                             {% else %}
-                            ${{ payment.total_price }}
+                            ₹{{ payment.total_price }}
                             {% endif %}
                         </td>
                         <td class="p-6">
