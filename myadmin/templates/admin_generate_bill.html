@@ -1,30 +1,146 @@
-<h1>Generate Bill for Order #{{ order.id }}</h1>
+{% extends 'admin_home.html' %}
+{% block title %}Generate Bill{% endblock %}
+{% block body %}
+<div class="flex flex-col gap-6 h-full max-w-5xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center bg-surface border border-white/10 p-6 rounded-none">
+        <div>
+            <h1 class="text-xl font-black uppercase tracking-widest text-white">Generate Bill</h1>
+            <p class="text-xs text-zinc-500 font-bold uppercase tracking-widest mt-1">Order #{{ order.id }}</p>
+        </div>
+        <a href="{% url 'pending_service_orders' %}"
+            class="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-bold uppercase tracking-widest transition-colors border border-white/10 flex items-center gap-2">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            Back
+        </a>
+    </div>
 
-<form method="POST">
-    {% csrf_token %}
-    <table border="1" cellpadding="8">
-        <thead>
-            <tr>
-                <th>Cloth Type</th>
-                <th>Quantity</th>
-                <th>Price per Item ($)</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in bill_items %}
-            <tr>
-                <td><input type="text" name="cloth_type[]" value="{{ item.cloth_type }}" required></td>
-                <td><input type="number" name="quantity[]" value="{{ item.quantity }}" min="0" required></td>
-                <td><input type="number" name="price_per_item[]" value="{{ item.price_per_item }}" step="0.01" min="0" required></td>
-            </tr>
-            {% endfor %}
-            <tr>
-                <td><input type="text" name="cloth_type[]" placeholder="Cloth Type" required></td>
-                <td><input type="number" name="quantity[]" min="0" required></td>
-                <td><input type="number" name="price_per_item[]" step="0.01" min="0" required></td>
-            </tr>
-        </tbody>
-    </table>
+    <!-- Bill Form -->
+    <div class="bg-surface border border-white/10 p-6 rounded-none">
+        <form method="POST" id="billForm">
+            {% csrf_token %}
 
-    <button type="submit">Generate Bill</button>
-</form>
+            <div class="overflow-x-auto mb-6">
+                <table class="w-full text-left border-collapse" id="billTable">
+                    <thead>
+                        <tr class="border-b border-white/10 bg-white/5">
+                            <th class="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-zinc-400 w-1/2">
+                                Cloth Type</th>
+                            <th class="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-zinc-400 w-1/4">
+                                Quantity</th>
+                            <th class="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-zinc-400 w-1/4">
+                                Price ($)</th>
+                            <th class="px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-zinc-400 w-10">
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/5" id="billTableBody">
+                        {% for item in bill_items %}
+                        <tr class="group hover:bg-white/5 transition-colors">
+                            <td class="px-4 py-3">
+                                <input type="text" name="cloth_type[]" value="{{ item.cloth_type }}" required
+                                    placeholder="e.g. Shirt, Trousers"
+                                    class="w-full bg-black/20 border border-white/10 text-white text-sm px-3 py-2 focus:ring-1 focus:ring-white/20 focus:border-white/20 outline-none transition-all placeholder-zinc-700">
+                            </td>
+                            <td class="px-4 py-3">
+                                <input type="number" name="quantity[]" value="{{ item.quantity }}" min="1" required
+                                    placeholder="0"
+                                    class="w-full bg-black/20 border border-white/10 text-white text-sm px-3 py-2 focus:ring-1 focus:ring-white/20 focus:border-white/20 outline-none transition-all placeholder-zinc-700 text-center">
+                            </td>
+                            <td class="px-4 py-3">
+                                <input type="number" name="price_per_item[]" value="{{ item.price_per_item }}"
+                                    step="0.01" min="0" required placeholder="0.00"
+                                    class="w-full bg-black/20 border border-white/10 text-white text-sm px-3 py-2 focus:ring-1 focus:ring-white/20 focus:border-white/20 outline-none transition-all placeholder-zinc-700 text-right">
+                            </td>
+                            <td class="px-4 py-3 text-center">
+                                <button type="button" onclick="removeRow(this)"
+                                    class="text-zinc-600 hover:text-red-500 transition-colors p-1">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                        <!-- Default Empty Row -->
+                        <tr class="group hover:bg-white/5 transition-colors">
+                            <td class="px-4 py-3">
+                                <input type="text" name="cloth_type[]" placeholder="e.g. Shirt, Trousers" required
+                                    class="w-full bg-black/20 border border-white/10 text-white text-sm px-3 py-2 focus:ring-1 focus:ring-white/20 focus:border-white/20 outline-none transition-all placeholder-zinc-700">
+                            </td>
+                            <td class="px-4 py-3">
+                                <input type="number" name="quantity[]" min="1" required placeholder="1"
+                                    class="w-full bg-black/20 border border-white/10 text-white text-sm px-3 py-2 focus:ring-1 focus:ring-white/20 focus:border-white/20 outline-none transition-all placeholder-zinc-700 text-center">
+                            </td>
+                            <td class="px-4 py-3">
+                                <input type="number" name="price_per_item[]" step="0.01" min="0" required
+                                    placeholder="0.00"
+                                    class="w-full bg-black/20 border border-white/10 text-white text-sm px-3 py-2 focus:ring-1 focus:ring-white/20 focus:border-white/20 outline-none transition-all placeholder-zinc-700 text-right">
+                            </td>
+                            <td class="px-4 py-3 text-center">
+                                <button type="button" onclick="removeRow(this)"
+                                    class="text-zinc-600 hover:text-red-500 transition-colors p-1">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="flex justify-between items-center">
+                <button type="button" onclick="addRow()"
+                    class="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-bold uppercase tracking-widest transition-colors border border-white/10 flex items-center gap-2">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    Add Item
+                </button>
+
+                <button type="submit"
+                    class="px-8 py-2 bg-white hover:bg-zinc-200 text-black text-xs font-bold uppercase tracking-widest transition-colors flex items-center gap-2">
+                    <i data-lucide="save" class="w-4 h-4"></i>
+                    Generate Bill
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function addRow() {
+        const tableBody = document.getElementById('billTableBody');
+        const newRow = document.createElement('tr');
+        newRow.className = 'group hover:bg-white/5 transition-colors';
+        newRow.innerHTML = `
+            <td class="px-4 py-3">
+                <input type="text" name="cloth_type[]" placeholder="e.g. Shirt, Trousers" required
+                    class="w-full bg-black/20 border border-white/10 text-white text-sm px-3 py-2 focus:ring-1 focus:ring-white/20 focus:border-white/20 outline-none transition-all placeholder-zinc-700">
+            </td>
+            <td class="px-4 py-3">
+                <input type="number" name="quantity[]" min="1" value="1" required placeholder="0"
+                    class="w-full bg-black/20 border border-white/10 text-white text-sm px-3 py-2 focus:ring-1 focus:ring-white/20 focus:border-white/20 outline-none transition-all placeholder-zinc-700 text-center">
+            </td>
+            <td class="px-4 py-3">
+                <input type="number" name="price_per_item[]" step="0.01" min="0" required placeholder="0.00"
+                    class="w-full bg-black/20 border border-white/10 text-white text-sm px-3 py-2 focus:ring-1 focus:ring-white/20 focus:border-white/20 outline-none transition-all placeholder-zinc-700 text-right">
+            </td>
+            <td class="px-4 py-3 text-center">
+                <button type="button" onclick="removeRow(this)" class="text-zinc-600 hover:text-red-500 transition-colors p-1">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+            </td>
+        `;
+        tableBody.appendChild(newRow);
+        lucide.createIcons();
+    }
+
+    function removeRow(button) {
+        const tableBody = document.getElementById('billTableBody');
+        if (tableBody.rows.length > 1) {
+            button.closest('tr').remove();
+        } else {
+            // Optional: Clear inputs instead of removing if it's the last row
+            const row = button.closest('tr');
+            row.querySelectorAll('input').forEach(input => input.value = '');
+        }
+    }
+</script>
+{% endblock %}

@@ -9,8 +9,9 @@
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap"
         rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
         rel="stylesheet" />
     <script id="tailwind-config">
         tailwind.config = {
@@ -38,106 +39,149 @@
         }
     </script>
     <style>
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background-color: #e4e4e7; border-radius: 0; }
-        .dark ::-webkit-scrollbar-thumb { background-color: #22222569; }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #e4e4e7;
+            border-radius: 0;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background-color: #22222569;
+        }
 
         .chart-grid {
             background-image: linear-gradient(to right, #333 1px, transparent 1px),
                 linear-gradient(to bottom, #333 1px, transparent 1px);
             background-size: 40px 40px;
         }
+
+        /* Mobile Sidebar Transition */
+        #sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .sidebar-open {
+            transform: translateX(0);
+        }
+
+        .sidebar-closed {
+            transform: translateX(-100%);
+        }
+
+        @media (min-width: 1024px) {
+            #sidebar {
+                transform: translateX(0) !important;
+            }
+        }
     </style>
 </head>
 
 <body class="bg-background-dark font-display text-white antialiased overflow-hidden h-screen flex">
-    <aside class="w-64 border-r border-white/10 flex flex-col h-full bg-black shrink-0">
-        <div class="h-20 flex items-center gap-2 px-6 border-b border-white/10">
-            <span class="material-symbols-outlined text-white text-2xl">waves</span>
-            <h1 class="text-white text-lg font-black tracking-tighter uppercase">ELaundry</h1>
+    <!-- Mobile Backdrop -->
+    <div id="backdrop" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar"
+        class="fixed inset-y-0 left-0 z-50 w-64 border-r border-white/10 flex flex-col h-full bg-black shrink-0 sidebar-closed lg:relative lg:sidebar-open">
+        <div class="h-20 flex items-center justify-between px-6 border-b border-white/10">
+            <div class="flex items-center gap-2">
+                <i data-lucide="waves" class="text-white w-6 h-6"></i>
+                <h1 class="text-white text-lg font-black tracking-tighter uppercase">ELaundry</h1>
+            </div>
+            <!-- Close Button (Mobile) -->
+            <button class="lg:hidden text-white/60 hover:text-white" onclick="toggleSidebar()">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
         </div>
         <nav class="flex-1 py-8 px-4 flex flex-col gap-2 overflow-y-auto">
-            <a class="flex items-center gap-4 px-4 py-3 bg-white text-black font-bold text-xs uppercase tracking-widest hover:bg-white/90 transition-colors"
+            <a class="flex items-center gap-4 px-4 py-3 font-bold text-xs uppercase tracking-widest transition-colors {% if request.resolver_match.url_name == 'admin_home' %}bg-white text-black{% else %}text-white/60 hover:text-white hover:bg-white/5{% endif %}"
                 href="{% url 'admin_home' %}">
-                <span class="material-symbols-outlined text-lg">dashboard</span>
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                 Dashboard
             </a>
 
             <!-- Manage Section -->
             <span class="px-4 text-[10px] uppercase font-bold text-white/40 mt-4 mb-2">Manage Users</span>
-            <a class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 font-bold text-xs uppercase tracking-widest transition-colors"
+            <a class="flex items-center gap-4 px-4 py-3 font-bold text-xs uppercase tracking-widest transition-colors {% if request.resolver_match.url_name == 'view_users' %}bg-white text-black{% else %}text-white/60 hover:text-white hover:bg-white/5{% endif %}"
                 href="{% url 'view_users' %}">
-                <span class="material-symbols-outlined text-lg">person</span>
+                <i data-lucide="users" class="w-5 h-5"></i>
                 Users
             </a>
-            <a class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 font-bold text-xs uppercase tracking-widest transition-colors"
+            <a class="flex items-center gap-4 px-4 py-3 font-bold text-xs uppercase tracking-widest transition-colors {% if request.resolver_match.url_name == 'view_business' %}bg-white text-black{% else %}text-white/60 hover:text-white hover:bg-white/5{% endif %}"
                 href="{% url 'view_business' %}">
-                <span class="material-symbols-outlined text-lg">store</span>
+                <i data-lucide="store" class="w-5 h-5"></i>
                 Businesses
             </a>
-            <a class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 font-bold text-xs uppercase tracking-widest transition-colors"
+            <a class="flex items-center gap-4 px-4 py-3 font-bold text-xs uppercase tracking-widest transition-colors {% if request.resolver_match.url_name == 'view_logistics' %}bg-white text-black{% else %}text-white/60 hover:text-white hover:bg-white/5{% endif %}"
                 href="{% url 'view_logistics' %}">
-                <span class="material-symbols-outlined text-lg">local_shipping</span>
+                <i data-lucide="truck" class="w-5 h-5"></i>
                 Logistics
             </a>
 
             <!-- Service & Orders -->
             <span class="px-4 text-[10px] uppercase font-bold text-white/40 mt-4 mb-2">Operations</span>
-            <a class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 font-bold text-xs uppercase tracking-widest transition-colors"
+            <a class="flex items-center gap-4 px-4 py-3 font-bold text-xs uppercase tracking-widest transition-colors {% if request.resolver_match.url_name == 'pending_service_orders' %}bg-white text-black{% else %}text-white/60 hover:text-white hover:bg-white/5{% endif %}"
                 href="{% url 'pending_service_orders' %}">
-                <span class="material-symbols-outlined text-lg">receipt_long</span>
+                <i data-lucide="receipt" class="w-5 h-5"></i>
                 Pending Orders
             </a>
-            <a class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 font-bold text-xs uppercase tracking-widest transition-colors"
+            <a class="flex items-center gap-4 px-4 py-3 font-bold text-xs uppercase tracking-widest transition-colors {% if request.resolver_match.url_name == 'assigned_orders' %}bg-white text-black{% else %}text-white/60 hover:text-white hover:bg-white/5{% endif %}"
                 href="{% url 'assigned_orders' %}">
-                <span class="material-symbols-outlined text-lg">assignment_turned_in</span>
+                <i data-lucide="clipboard-check" class="w-5 h-5"></i>
                 Assigned Orders
             </a>
-            <a class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 font-bold text-xs uppercase tracking-widest transition-colors"
+            <a class="flex items-center gap-4 px-4 py-3 font-bold text-xs uppercase tracking-widest transition-colors {% if request.resolver_match.url_name == 'update_order_status' %}bg-white text-black{% else %}text-white/60 hover:text-white hover:bg-white/5{% endif %}"
                 href="{% url 'update_order_status' %}">
-                <span class="material-symbols-outlined text-lg">edit_note</span>
+                <i data-lucide="file-edit" class="w-5 h-5"></i>
                 Update Status
             </a>
 
             <!-- Subscriptions -->
             <span class="px-4 text-[10px] uppercase font-bold text-white/40 mt-4 mb-2">Planning</span>
-            <a class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 font-bold text-xs uppercase tracking-widest transition-colors"
+            <a class="flex items-center gap-4 px-4 py-3 font-bold text-xs uppercase tracking-widest transition-colors {% if request.resolver_match.url_name == 'list_subscription_plans' %}bg-white text-black{% else %}text-white/60 hover:text-white hover:bg-white/5{% endif %}"
                 href="{% url 'list_subscription_plans' %}">
-                <span class="material-symbols-outlined text-lg">card_membership</span>
+                <i data-lucide="credit-card" class="w-5 h-5"></i>
                 Plans
             </a>
-            <a class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 font-bold text-xs uppercase tracking-widest transition-colors"
+            <a class="flex items-center gap-4 px-4 py-3 font-bold text-xs uppercase tracking-widest transition-colors {% if request.resolver_match.url_name == 'create_subscription_plan' %}bg-white text-black{% else %}text-white/60 hover:text-white hover:bg-white/5{% endif %}"
                 href="{% url 'create_subscription_plan' %}">
-                <span class="material-symbols-outlined text-lg">add_card</span>
+                <i data-lucide="plus-circle" class="w-5 h-5"></i>
                 Add Plan
             </a>
 
             <!-- Reports & Feedback -->
             <span class="px-4 text-[10px] uppercase font-bold text-white/40 mt-4 mb-2">Insights</span>
-            <a class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 font-bold text-xs uppercase tracking-widest transition-colors"
+            <a class="flex items-center gap-4 px-4 py-3 font-bold text-xs uppercase tracking-widest transition-colors {% if request.resolver_match.url_name == 'service_order_report' %}bg-white text-black{% else %}text-white/60 hover:text-white hover:bg-white/5{% endif %}"
                 href="{% url 'service_order_report' %}">
-                <span class="material-symbols-outlined text-lg">analytics</span>
+                <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
                 Reports
             </a>
-            <a class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 font-bold text-xs uppercase tracking-widest transition-colors"
+            <a class="flex items-center gap-4 px-4 py-3 font-bold text-xs uppercase tracking-widest transition-colors {% if request.resolver_match.url_name == 'feedback_list' %}bg-white text-black{% else %}text-white/60 hover:text-white hover:bg-white/5{% endif %}"
                 href="{% url 'feedback_list' %}">
-                <span class="material-symbols-outlined text-lg">feedback</span>
+                <i data-lucide="message-square" class="w-5 h-5"></i>
                 Feedback
             </a>
 
             <div class="mt-auto border-t border-white/10 pt-4">
                 <a class="flex items-center gap-4 px-4 py-3 text-red-500 hover:bg-red-500/10 font-bold text-xs uppercase tracking-widest transition-colors"
                     href="{% url 'logout' %}">
-                    <span class="material-symbols-outlined text-lg">logout</span>
+                    <i data-lucide="log-out" class="w-5 h-5"></i>
                     Logout
                 </a>
             </div>
         </nav>
         <div class="p-6 border-t border-white/10">
             <div class="flex items-center gap-3">
-                <div class="w-8 h-8 bg-white/10 flex items-center justify-center">
-                    <span class="material-symbols-outlined text-sm">admin_panel_settings</span>
+                <div class="w-8 h-8 bg-white/10 flex items-center justify-center rounded">
+                    <i data-lucide="shield" class="w-4 h-4 text-white"></i>
                 </div>
                 <div class="flex flex-col">
                     <span class="text-xs font-bold uppercase">Administrator</span>
@@ -146,13 +190,19 @@
             </div>
         </div>
     </aside>
-    <main class="flex-1 flex flex-col h-full overflow-hidden bg-black relative">
+
+    <main class="flex-1 flex flex-col h-full overflow-hidden bg-black relative w-full">
         <header class="h-20 border-b border-white/10 flex items-center justify-between px-8 bg-black shrink-0">
-            <h2 class="text-xl font-black uppercase tracking-widest">
-                {% block title %}Dashboard Overview{% endblock %}
-            </h2>
+            <div class="flex items-center gap-4">
+                <button class="lg:hidden text-white/60 hover:text-white" onclick="toggleSidebar()">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+                <h2 class="text-xl font-black uppercase tracking-widest">
+                    {% block title %}Dashboard Overview{% endblock %}
+                </h2>
+            </div>
             <div class="flex items-center gap-6">
-                <div class="flex items-center gap-2 px-3 py-1 border border-white/20">
+                <div class="hidden md:flex items-center gap-2 px-3 py-1 border border-white/20">
                     <span class="relative flex h-2 w-2">
                         <span
                             class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
@@ -161,22 +211,22 @@
                     <span class="text-[10px] font-bold uppercase tracking-widest text-green-500">System Online</span>
                 </div>
                 <button class="text-white/60 hover:text-white">
-                    <span class="material-symbols-outlined">notifications</span>
+                    <i data-lucide="bell" class="w-5 h-5"></i>
                 </button>
             </div>
         </header>
-        <div class="flex-1 overflow-y-auto p-8">
+        <div class="flex-1 overflow-y-auto p-4 md:p-8">
             {% block body %}
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
                 <!-- Total Revenue -->
                 <div class="bg-surface border border-white/10 p-6 hover:border-white/30 transition-colors">
                     <div class="flex justify-between items-start mb-4">
                         <span class="text-[10px] font-bold uppercase tracking-widest text-white/40">Total Revenue</span>
-                        <span class="material-symbols-outlined text-white/20">payments</span>
+                        <i data-lucide="dollar-sign" class="text-white/20 w-5 h-5"></i>
                     </div>
                     <div class="text-3xl font-black mb-1">${{ total_revenue|floatformat:2 }}</div>
                     <div class="text-xs text-green-500 font-medium flex items-center gap-1">
-                        <span class="material-symbols-outlined text-sm">trending_up</span> Lifetime
+                        <i data-lucide="trending-up" class="w-3 h-3"></i> Lifetime
                     </div>
                 </div>
 
@@ -184,7 +234,7 @@
                 <div class="bg-surface border border-white/10 p-6 hover:border-white/30 transition-colors">
                     <div class="flex justify-between items-start mb-4">
                         <span class="text-[10px] font-bold uppercase tracking-widest text-white/40">Active Jobs</span>
-                        <span class="material-symbols-outlined text-white/20">local_laundry_service</span>
+                        <i data-lucide="shirt" class="text-white/20 w-5 h-5"></i>
                     </div>
                     <div class="text-3xl font-black mb-1">{{ active_jobs_count }}</div>
                     <div class="text-xs text-white/40 font-medium">{{ pending_pickup_count }} pending pickup</div>
@@ -194,7 +244,7 @@
                 <div class="bg-surface border border-white/10 p-6 hover:border-white/30 transition-colors">
                     <div class="flex justify-between items-start mb-4">
                         <span class="text-[10px] font-bold uppercase tracking-widest text-white/40">Load Capacity</span>
-                        <span class="material-symbols-outlined text-white/20">speed</span>
+                        <i data-lucide="gauge" class="text-white/20 w-5 h-5"></i>
                     </div>
                     <div class="text-3xl font-black mb-1">{{ machine_usage_percent }}%</div>
                     <div class="w-full h-1 bg-white/10 mt-2">
@@ -207,7 +257,7 @@
                 <div class="bg-surface border border-white/10 p-6 hover:border-white/30 transition-colors">
                     <div class="flex justify-between items-start mb-4">
                         <span class="text-[10px] font-bold uppercase tracking-widest text-white/40">Logistics</span>
-                        <span class="material-symbols-outlined text-white/20">local_shipping</span>
+                        <i data-lucide="truck" class="text-white/20 w-5 h-5"></i>
                     </div>
                     <div class="text-3xl font-black mb-1">{{ logistics_count }}</div>
                     <div class="text-xs text-white/40 font-medium">{{ couriers_en_route }} en route</div>
@@ -299,8 +349,8 @@
                                 </span>
                             </div>
                             <div class="flex items-center gap-3 mb-3">
-                                <div class="w-8 h-8 bg-white/10 flex items-center justify-center">
-                                    <span class="material-symbols-outlined text-sm">local_laundry_service</span>
+                                <div class="w-8 h-8 bg-white/10 flex items-center justify-center rounded">
+                                    <i data-lucide="shirt" class="w-4 h-4 text-white"></i>
                                 </div>
                                 <div class="flex flex-col">
                                     <span class="text-xs text-white/80">{{ job.service_type }}</span>
@@ -331,6 +381,24 @@
             {% endblock %}
         </div>
     </main>
+    <script>
+        lucide.createIcons();
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('backdrop');
+
+            if (sidebar.classList.contains('sidebar-closed')) {
+                sidebar.classList.remove('sidebar-closed');
+                sidebar.classList.add('sidebar-open');
+                backdrop.classList.remove('hidden');
+            } else {
+                sidebar.classList.remove('sidebar-open');
+                sidebar.classList.add('sidebar-closed');
+                backdrop.classList.add('hidden');
+            }
+        }
+    </script>
 </body>
 
 </html>

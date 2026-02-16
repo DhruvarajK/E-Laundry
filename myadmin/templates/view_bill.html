@@ -1,321 +1,190 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Bill</title>
+    <title>Order Bill #{{ order.id }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #4678e5;
-            --secondary-color: #f5f5f5;
-            --success-color: #10b981;
-            --border-color: #e5e7eb;
-            --text-dark: #1f2937;
-            --text-light: #6b7280;
-        }
-        
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
         body {
-            background-color: #f9fafb;
-            color: var(--text-dark);
-            line-height: 1.5;
-            padding: 20px;
-        }
-        
-        .bill-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-        
-        .bill-header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .bill-header h1 {
-            font-size: 1.5rem;
-            margin: 0;
-        }
-        
-        .bill-body {
-            padding: 20px;
-        }
-        
-        .bill-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        
-        .bill-table th {
-            background-color: var(--secondary-color);
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-            color: var(--text-dark);
-            border-bottom: 2px solid var(--border-color);
-        }
-        
-        .bill-table td {
-            padding: 12px;
-            border-bottom: 1px solid var(--border-color);
-            color: var(--text-dark);
-        }
-        
-        .bill-table tr:last-child td {
-            border-top: 2px solid var(--border-color);
-            border-bottom: none;
-            font-weight: 700;
-            color: var(--primary-color);
-        }
-        
-        .total-price {
-            text-align: right;
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: var(--primary-color);
-        }
-        
-        .payment-options {
-            background-color: var(--secondary-color);
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        
-        .payment-status {
-            background-color: rgba(16, 185, 129, 0.1);
-            color: var(--success-color);
-            padding: 15px;
-            border-radius: 8px;
-            font-weight: 600;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        
-        .payment-status svg {
-            width: 20px;
-            height: 20px;
-        }
-        
-        .option-group {
-            margin-bottom: 15px;
-        }
-        
-        .radio-option {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
-        
-        .radio-option input {
-            display: none;
-        }
-        
-        .radio-control {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border: 2px solid var(--primary-color);
-            margin-right: 10px;
-            position: relative;
-        }
-        
-        .radio-option input:checked + .radio-control:after {
-            content: '';
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background-color: var(--primary-color);
-        }
-        
-        .payment-button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            font-size: 1rem;
-            transition: background-color 0.2s;
-        }
-        
-        .payment-button:hover {
-            background-color: #4338ca;
-        }
-        
-        .rupee-symbol {
-            font-family: Arial, sans-serif;
+            font-family: 'Inter', sans-serif;
         }
 
-        /* Mobile view is hidden by default */
-        .mobile-view {
-            display: none;
-        }
-
-        @media (max-width: 768px) {
+        @media print {
             body {
-                padding: 10px;
+                background-color: white !important;
+                color: black !important;
             }
-            
-            .bill-header h1 {
-                font-size: 1.2rem;
+
+            .bg-surface {
+                background-color: white !important;
+                border: none !important;
+                box-shadow: none !important;
             }
-            
-            /* Hide desktop table on mobile */
-            .bill-table {
-                display: none;
+
+            .text-zinc-400,
+            .text-zinc-500 {
+                color: #666 !important;
             }
-            
-            /* Show mobile view on mobile */
-            .mobile-view {
-                display: block;
+
+            .text-white {
+                color: black !important;
             }
-            
-            .responsive-row {
-                display: block;
-                margin-bottom: 15px;
-                border: 1px solid var(--border-color);
-                border-radius: 6px;
-                padding: 10px;
+
+            .border-white\/10 {
+                border-color: #ddd !important;
             }
-            
-            .responsive-row:last-child {
-                border-top: 2px solid var(--primary-color);
+
+            .no-print {
+                display: none !important;
             }
-            
-            .responsive-row div {
-                display: flex;
-                justify-content: space-between;
-                border: none;
-                padding: 8px 0;
-            }
-            
-            .responsive-row div:before {
-                content: attr(data-label);
-                font-weight: 600;
-            }
-            
-            .grand-total-row div {
-                font-weight: 700;
-                color: var(--primary-color);
+
+            .print-border {
+                border: 1px solid #ddd !important;
             }
         }
     </style>
 </head>
-<body>
-    <div class="bill-container">
-        <div class="bill-header">
-            <h1>Bill for Order #{{ order.id }}</h1>
+
+<body class="bg-black text-zinc-200 min-h-screen p-4 md:p-8 flex items-center justify-center">
+
+    <div class="w-full max-w-3xl bg-zinc-900 border border-white/10 shadow-2xl overflow-hidden bg-surface print-border">
+        <!-- Header -->
+        <div class="p-8 border-b border-white/10 flex justify-between items-start">
+            <div>
+                <h1 class="text-2xl font-bold text-white uppercase tracking-tight mb-1">Invoice</h1>
+                <p class="text-sm text-zinc-500 font-mono">#ORD-{{ order.id }}</p>
+            </div>
+            <div class="text-right">
+                <div class="flex items-center gap-2 justify-end mb-1">
+                    <i data-lucide="waves" class="w-5 h-5 text-white"></i>
+                    <span class="font-bold text-white uppercase tracking-widest">ELaundry</span>
+                </div>
+                <p class="text-xs text-zinc-500">{{ order.order_date|date:"M d, Y" }}</p>
+            </div>
         </div>
-        
-        <div class="bill-body">
-            <!-- Desktop Table View -->
-            <table class="bill-table">
-                <thead>
-                    <tr>
-                        <th>Item</th>
-                        <th>Quantity</th>
-                        <th>Price per Item</th>
-                        <th>Total Price</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in bill_items %}
-                    <tr>
-                        <td>{{ item.item_type }}</td>
-                        <td>{{ item.quantity }}</td>
-                        <td><span class="rupee-symbol">₹</span>{{ item.price_per_item }}</td>
-                        <td><span class="rupee-symbol">₹</span>{{ item.total_price }}</td>  
-                    </tr>
-                    {% endfor %}
-                    <tr>
-                        <td colspan="3"><strong>Grand Total:</strong></td>
-                        <td><strong><span class="rupee-symbol">₹</span>{{ total_price }}</strong></td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <!-- Mobile Responsive View (will only display on small screens) -->
-            <div class="mobile-view">
+
+        <!-- Bill Body -->
+        <div class="p-8">
+            <!-- Desktop Table -->
+            <div class="hidden md:block overflow-hidden rounded border border-white/10 mb-8">
+                <table class="w-full text-left text-sm">
+                    <thead
+                        class="bg-white/5 border-b border-white/10 text-xs font-bold uppercase tracking-widest text-zinc-400">
+                        <tr>
+                            <th class="px-6 py-3">Item Detail</th>
+                            <th class="px-6 py-3 text-center">Qty</th>
+                            <th class="px-6 py-3 text-right">Price</th>
+                            <th class="px-6 py-3 text-right">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/5">
+                        {% for item in bill_items %}
+                        <tr class="hover:bg-white/5 transition-colors">
+                            <td class="px-6 py-4 font-medium text-white">{{ item.item_type }}</td>
+                            <td class="px-6 py-4 text-center text-zinc-400">{{ item.quantity }}</td>
+                            <td class="px-6 py-4 text-right text-zinc-400">₹{{ item.price_per_item }}</td>
+                            <td class="px-6 py-4 text-right font-bold text-white">₹{{ item.total_price }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div
+                    class="px-6 py-4 bg-white/5 border-t border-white/10 flex justify-end gap-x-8 items-center border-l border-r border-b">
+                    <span class="text-xs font-bold uppercase tracking-widest text-zinc-400">Grand Total</span>
+                    <span class="text-xl font-black text-white">₹{{ total_price }}</span>
+                </div>
+            </div>
+
+            <!-- Mobile View -->
+            <div class="md:hidden space-y-4 mb-8">
                 {% for item in bill_items %}
-                <div class="responsive-row">
-                    <div data-label="Item">{{ item.item_type }}</div>
-                    <div data-label="Quantity">{{ item.quantity }}</div>
-                    <div data-label="Price per Item">₹ {{ item.price_per_item }}</div>
-                    <div data-label="Total Price">₹ {{ item.total_price }}</div>
+                <div class="p-4 border border-white/10 rounded bg-white/5">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="font-bold text-white">{{ item.item_type }}</span>
+                        <span class="font-mono text-white font-bold">₹{{ item.total_price }}</span>
+                    </div>
+                    <div class="flex justify-between text-xs text-zinc-400">
+                        <span>Qty: {{ item.quantity }}</span>
+                        <span>Rate: ₹{{ item.price_per_item }}</span>
+                    </div>
                 </div>
                 {% endfor %}
-                
-                <div class="responsive-row grand-total-row">
-                    <div data-label="Grand Total">₹ {{ total_price }}</div>
+                <div class="p-4 border border-white/10 rounded bg-zinc-800 flex justify-between items-center">
+                    <span class="font-bold uppercase tracking-widest text-sm text-zinc-300">Total</span>
+                    <span class="text-xl font-black text-white">₹{{ total_price }}</span>
                 </div>
             </div>
-            
-            <div class="total-price">
-                Total Amount: ₹ {{ total_price }}
-            </div>
-            
-            {% if order.payment.payment_status != "paid" %}
-            {% if login_instance and login_instance.usertype != "admin" %}
-            <div class="payment-options">
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="option-group">
-                        <label class="radio-option">
-                            <input type="radio" name="payment_option" value="pay_now" checked>
-                            <span class="radio-control"></span>
-                            Pay Now (Razorpay)
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="payment_option" value="cod">
-                            <span class="radio-control"></span>
-                            Cash on Delivery
-                        </label>
-                    </div>
-                    <button type="submit" class="payment-button">Confirm Order</button>
-                </form>
-            </div>
-            {% else %}
-                <!-- Payment options hidden for admin users -->
-                <div class="payment-status">
-                    Payment option is hidden for admin users.
-                </div>
-            {% endif %}
-        {% else %}
-            <div class="payment-status">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                </svg>
-                Payment Status: Paid
-            </div>
-        {% endif %}
 
+            <!-- Payment Handling -->
+            <div class="no-print">
+                {% if order.payment.payment_status != "paid" %}
+                {% if login_instance and login_instance.usertype != "admin" %}
+                <div class="bg-zinc-800/50 border border-white/10 p-6 rounded">
+                    <h3 class="text-sm font-bold uppercase tracking-widest text-white mb-4">Select Payment Method</h3>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="space-y-3 mb-6">
+                            <label
+                                class="flex items-center justify-between p-4 border border-white/10 rounded cursor-pointer hover:bg-white/5 transition-colors group">
+                                <div class="flex items-center gap-3">
+                                    <input type="radio" name="payment_option" value="pay_now" checked
+                                        class="text-black focus:ring-white bg-zinc-800 border-white/20">
+                                    <span class="font-medium text-white">Online Payment (Razorpay)</span>
+                                </div>
+                                <i data-lucide="credit-card"
+                                    class="w-5 h-5 text-zinc-500 group-hover:text-white transition-colors"></i>
+                            </label>
+
+                            <label
+                                class="flex items-center justify-between p-4 border border-white/10 rounded cursor-pointer hover:bg-white/5 transition-colors group">
+                                <div class="flex items-center gap-3">
+                                    <input type="radio" name="payment_option" value="cod"
+                                        class="text-black focus:ring-white bg-zinc-800 border-white/20">
+                                    <span class="font-medium text-white">Cash on Delivery</span>
+                                </div>
+                                <i data-lucide="banknote"
+                                    class="w-5 h-5 text-zinc-500 group-hover:text-white transition-colors"></i>
+                            </label>
+                        </div>
+                        <button type="submit"
+                            class="w-full py-4 bg-white text-black font-black uppercase tracking-widest hover:bg-zinc-200 transition-colors flex items-center justify-center gap-2">
+                            <span>Confirm & Pay</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </form>
+                </div>
+                {% else %}
+                <div class="flex items-center gap-2 p-4 bg-zinc-800/50 border border-white/10 rounded text-zinc-400">
+                    <i data-lucide="shield-alert" class="w-5 h-5"></i>
+                    <span class="text-sm font-medium">Payment actions are restricted to users.</span>
+                </div>
+                {% endif %}
+                {% else %}
+                <div
+                    class="flex flex-col items-center justify-center p-8 bg-green-500/10 border border-green-500/20 rounded">
+                    <div class="w-12 h-12 bg-green-500 flex items-center justify-center rounded-full mb-3">
+                        <i data-lucide="check" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-green-400 uppercase tracking-widest">Payment Complete</h3>
+                    <p class="text-sm text-green-500/60 mt-1">Transaction verified successfully</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="bg-zinc-950 p-6 border-t border-white/10 text-center">
+            <p class="text-xs text-zinc-600">Thank you for choosing ELaundry services.</p>
         </div>
     </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
+
 </html>
