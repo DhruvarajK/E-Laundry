@@ -1,266 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subscription Plans</title>
-    <style>
-        :root {
-            --primary: #4A6FDC;
-            --primary-color: #6a8ae3;
-            --primary-hover: #3a5abe;
-            --secondary-color: #f3f4f6;
-            --text-color: #1f2937;
-            --light-gray: #e5e7eb;
-            --white: #ffffff;
-            --danger: #ef4444;
-            --danger-hover: #dc2626;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --border-radius: 0.5rem;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: #f9fafb;
-            color: var(--text-color);
-            line-height: 1.6;
-            padding: 1rem;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 2rem auto;
-            background-color: var(--white);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            padding: 2rem;
-        }
-
-        h1 {
-            color: var(--primary-color);
-            margin-bottom: 1.5rem;
-            font-size: 1.75rem;
-            text-align: center;
-        }
-
-        .table-container {
-            overflow-x: auto;
-            margin-bottom: 1.5rem;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            margin-bottom: 1rem;
-        }
-
-        th {
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 0.75rem 1rem;
-            font-weight: 600;
-        }
-
-        td {
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid var(--light-gray);
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        tr:nth-child(even) {
-            background-color: var(--secondary-color);
-        }
-
-        .empty-message {
-            text-align: center;
-            padding: 2rem;
-            color: #6b7280;
-            font-style: italic;
-        }
-
-        .btn {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: var(--white);
-            border: none;
-            border-radius: var(--border-radius);
-            padding: 0.75rem 1.5rem;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            text-decoration: none;
-        }
-
-        .btn:hover {
-            background-color: var(--primary-hover);
-        }
-
-        .btn-delete {
-            background-color: var(--danger);
-            padding: 0.5rem 1rem;
-            font-size: 0.875rem;
-        }
-
-        .btn-delete:hover {
-            background-color: var(--danger-hover);
-        }
-
-        .actions-container {
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        /* Card view for mobile */
-        .cards-container {
-            display: none;
-        }
-
-        .card {
-            background-color: var(--white);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--primary-color);
-        }
-
-        .card-price {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-
-        .card-detail {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--light-gray);
-        }
-
-        .card-detail-label {
-            font-weight: 600;
-            color: #6b7280;
-        }
-
-        .card-actions {
-            margin-top: 1rem;
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .container {
-                padding: 1.5rem;
-                margin: 1rem auto;
-            }
-            
-            h1 {
-                font-size: 1.5rem;
-            }
-            
-            .table-container {
-                display: none;
-            }
-            
-            .cards-container {
-                display: block;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Subscription Plans</h1>
-        
-        <!-- Table view (desktop) -->
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Price</th>
-                        <th>Duration (Days)</th>
-                        <th>Max Services</th>
-                        <th>Description</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for plan in plans %}
-                    <tr>
-                        <td>{{ plan.name }}</td>
-                        <td>${{ plan.price }}</td>
-                        <td>{{ plan.duration_days }}</td>
-                        <td>{{ plan.max_services }}</td>
-                        <td>{{ plan.description }}</td>
-                        <td>
-                            <a href="{% url 'delete_subscription_plan' plan.id %}" class="btn btn-delete">Delete</a>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="6" class="empty-message">No subscription plans available.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        
-        <!-- Card view (mobile) -->
-        <div class="cards-container">
-            {% for plan in plans %}
-            <div class="card">
-                <div class="card-title">{{ plan.name }}</div>
-                <div class="card-price">${{ plan.price }}</div>
-                
-                <div class="card-detail">
-                    <span class="card-detail-label">Duration:</span>
-                    <span>{{ plan.duration_days }} days</span>
-                </div>
-                
-                <div class="card-detail">
-                    <span class="card-detail-label">Max Services:</span>
-                    <span>{{ plan.max_services }}</span>
-                </div>
-                
-                {% if plan.description %}
-                <div class="card-detail">
-                    <span class="card-detail-label">Description:</span>
-                    <span>{{ plan.description }}</span>
-                </div>
-                {% endif %}
-                
-                <div class="card-actions">
-                    <a href="{% url 'delete_subscription_plan' plan.id %}" class="btn btn-delete">Delete</a>
-                </div>
-            </div>
-            {% empty %}
-            <div class="empty-message">No subscription plans available.</div>
-            {% endfor %}
-        </div>
-        
-        <div class="actions-container">
-            <a href="{% url 'create_subscription_plan' %}" class="btn">Create New Plan</a>
-        </div>
+{% extends 'admin_home.html' %}
+{% block title %}Subscription Plans{% endblock %}
+{% block body %}
+<div class="flex flex-col h-full bg-surface border border-white/10">
+    <div class="p-6 border-b border-white/10 flex justify-between items-center">
+        <h3 class="text-sm font-bold uppercase tracking-widest text-white">Subscription Plans</h3>
+        <a href="{% url 'create_subscription_plan' %}"
+            class="inline-block px-4 py-2 bg-white hover:bg-gray-100 text-black text-[10px] font-bold uppercase tracking-widest transition-colors">
+            Create New Plan
+        </a>
     </div>
-</body>
-</html>
+
+    <div class="overflow-x-auto">
+        <table class="w-full text-left">
+            <thead>
+                <tr class="border-b border-white/10 bg-white/5">
+                    <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Name</th>
+                    <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Price</th>
+                    <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Duration</th>
+                    <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Max Services
+                    </th>
+                    <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Description</th>
+                    <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40 text-right">
+                        Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5">
+                {% for plan in plans %}
+                <tr class="hover:bg-white/5 transition-colors group">
+                    <td class="px-6 py-4">
+                        <span class="text-sm font-bold text-white">{{ plan.name }}</span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="font-mono text-xs text-green-400">${{ plan.price }}</span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="text-xs text-white/60">{{ plan.duration_days }} Days</span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="text-xs text-white/60">{{ plan.max_services }}</span>
+                    </td>
+                    <td class="px-6 py-4 max-w-xs">
+                        <p class="text-xs text-white/40 truncate">{{ plan.description }}</p>
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                        <a href="{% url 'delete_subscription_plan' plan.id %}"
+                            class="inline-block px-3 py-1 bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500 hover:text-white text-[10px] font-bold uppercase tracking-widest transition-colors">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% if not plans %}
+                <tr>
+                    <td colspan="6"
+                        class="px-6 py-12 text-center text-white/40 text-xs uppercase font-bold tracking-widest">
+                        No subscription plans available
+                    </td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

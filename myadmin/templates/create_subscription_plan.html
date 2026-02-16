@@ -1,185 +1,70 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Subscription Plan</title>
-    <style>
-        :root {
-            --primary: #4A6FDC;
-            --primary-color: #6a8ae3;
-            --primary-hover: #3a5abe;
-            --secondary-color: #f3f4f6;
-            --text-color: #1f2937;
-            --light-gray: #e5e7eb;
-            --white: #ffffff;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --border-radius: 0.5rem;
-        }
+{% extends 'admin_home.html' %}
+{% block title %}Create Subscription Plan{% endblock %}
+{% block body %}
+<div class="max-w-2xl mx-auto h-full flex flex-col justify-center">
+    <div class="bg-surface border border-white/10 p-8 shadow-2xl">
+        <h3 class="text-lg font-bold uppercase tracking-widest text-white mb-8 border-b border-white/10 pb-4">Create New
+            Plan</h3>
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: #f9fafb;
-            color: var(--text-color);
-            line-height: 1.6;
-            padding: 1rem;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 2rem auto;
-            background-color: var(--white);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            padding: 2rem;
-        }
-
-        h1 {
-            color: var(--primary-color);
-            margin-bottom: 1.5rem;
-            font-size: 1.75rem;
-            text-align: center;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--text-color);
-        }
-
-        input, textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--light-gray);
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
-        }
-
-        textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        .btn {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: var(--white);
-            border: none;
-            border-radius: var(--border-radius);
-            padding: 0.75rem 1.5rem;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            width: 100%;
-        }
-
-        .btn:hover {
-            background-color: var(--primary-hover);
-        }
-
-        .link {
-            display: block;
-            text-align: center;
-            margin-top: 1.5rem;
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .link:hover {
-            text-decoration: underline;
-        }
-
-        /* Price input with currency symbol */
-        .price-input {
-            position: relative;
-        }
-
-        .price-input input {
-            padding-left: 2rem;
-        }
-
-        .price-input::before {
-            content: "$";
-            position: absolute;
-            left: 0.75rem;
-            top: 0.75rem;
-            color: var(--text-color);
-            font-weight: 600;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 640px) {
-            .container {
-                padding: 1.5rem;
-                margin: 1rem auto;
-            }
-            
-            h1 {
-                font-size: 1.5rem;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Create a New Subscription Plan</h1>
-        <form method="post">
+        <form method="post" class="space-y-6">
             {% csrf_token %}
-            
-            <div class="form-group">
-                <label for="name">Plan Name</label>
-                <input type="text" id="name" name="name" required placeholder="e.g. Basic, Premium, Pro">
-            </div>
-            
-            <div class="form-group">
-                <label for="price">Price</label>
-                <div class="price-input">
-                    <input type="number" step="0.01" id="price" name="price" required placeholder="0.00">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label for="name" class="text-xs font-bold uppercase tracking-widest text-white/60">Plan
+                        Name</label>
+                    <input type="text" id="name" name="name" required placeholder="e.g. Premium"
+                        class="w-full bg-black/20 border border-white/10 text-white text-sm py-3 px-4 focus:ring-1 focus:ring-white/20 focus:border-white/20 outline-none placeholder-white/20 transition-all">
+                </div>
+
+                <div class="space-y-2">
+                    <label for="price" class="text-xs font-bold uppercase tracking-widest text-white/60">Price
+                        ($)</label>
+                    <input type="number" step="0.01" id="price" name="price" required placeholder="0.00"
+                        class="w-full bg-black/20 border border-white/10 text-white text-sm py-3 px-4 focus:ring-1 focus:ring-white/20 focus:border-white/20 outline-none placeholder-white/20 transition-all">
+                </div>
+
+                <div class="space-y-2">
+                    <label for="duration_days"
+                        class="text-xs font-bold uppercase tracking-widest text-white/60">Duration (Days)</label>
+                    <input type="number" id="duration_days" name="duration_days" required placeholder="e.g. 30"
+                        class="w-full bg-black/20 border border-white/10 text-white text-sm py-3 px-4 focus:ring-1 focus:ring-white/20 focus:border-white/20 outline-none placeholder-white/20 transition-all">
+                </div>
+
+                <div class="space-y-2">
+                    <label for="max_services" class="text-xs font-bold uppercase tracking-widest text-white/60">Max
+                        Services</label>
+                    <input type="number" id="max_services" name="max_services" required placeholder="e.g. 10"
+                        class="w-full bg-black/20 border border-white/10 text-white text-sm py-3 px-4 focus:ring-1 focus:ring-white/20 focus:border-white/20 outline-none placeholder-white/20 transition-all">
                 </div>
             </div>
-            
-            <div class="form-group">
-                <label for="duration_days">Duration (Days)</label>
-                <input type="number" id="duration_days" name="duration_days" required placeholder="e.g. 30, 90, 365">
+
+            <div class="space-y-2">
+                <label for="service_type" class="text-xs font-bold uppercase tracking-widest text-white/60">Service
+                    Type</label>
+                <input type="text" id="service_type" name="service_type" required
+                    placeholder="e.g. dry clean, washing (comma separated)"
+                    class="w-full bg-black/20 border border-white/10 text-white text-sm py-3 px-4 focus:ring-1 focus:ring-white/20 focus:border-white/20 outline-none placeholder-white/20 transition-all">
             </div>
-            
-            <div class="form-group">
-                <label for="max_services">Maximum Services</label>
-                <input type="number" id="max_services" name="max_services" required placeholder="e.g. 5, 10, unlimited">
+
+            <div class="space-y-2">
+                <label for="description"
+                    class="text-xs font-bold uppercase tracking-widest text-white/60">Description</label>
+                <textarea id="description" name="description" placeholder="Describe the plan benefits..." rows="4"
+                    class="w-full bg-black/20 border border-white/10 text-white text-sm py-3 px-4 focus:ring-1 focus:ring-white/20 focus:border-white/20 outline-none placeholder-white/20 transition-all resize-none"></textarea>
             </div>
-            <div class="form-group">
-                <label for="max_services">Service Type</label>
-                <input type="text" id="service_type" name="service_type" required placeholder="e.g. dry clean,washing">
+
+            <div class="pt-4 flex items-center justify-between">
+                <a href="{% url 'list_subscription_plans' %}"
+                    class="text-xs font-bold uppercase tracking-widest text-white/40 hover:text-white transition-colors">
+                    Cancel
+                </a>
+                <button type="submit"
+                    class="px-8 py-3 bg-white hover:bg-gray-100 text-black text-xs font-bold uppercase tracking-widest transition-colors shadow-lg shadow-blue-900/20">
+                    Create Plan
+                </button>
             </div>
-            
-            <div class="form-group">
-                <label for="description">Description</label>
-                <textarea id="description" name="description" placeholder="Describe the features and benefits of this plan"></textarea>
-            </div>
-            
-            <button type="submit" class="btn">Create Plan</button>
         </form>
-        <a href="{% url 'list_subscription_plans' %}" class="link">View all subscription plans</a>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

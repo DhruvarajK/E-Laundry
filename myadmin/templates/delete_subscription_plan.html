@@ -1,15 +1,29 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Delete Subscription Plan</title>
-</head>
-<body>
-    <h1>Delete Subscription Plan</h1>
-    <p>Are you sure you want to delete the plan: "{{ plan.name }}"?</p>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit">Confirm Delete</button>
-        <a href="{% url 'list_subscription_plans' %}">Cancel</a>
-    </form>
-</body>
-</html>
+{% extends 'admin_home.html' %}
+{% block title %}Delete Subscription Plan{% endblock %}
+{% block body %}
+<div class="h-full flex flex-col justify-center items-center">
+    <div class="bg-surface border border-white/10 p-8 shadow-2xl max-w-md w-full text-center">
+        <div class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+            <span class="material-symbols-outlined text-red-500 text-3xl">warning</span>
+        </div>
+
+        <h3 class="text-xl font-bold uppercase tracking-widest text-white mb-2">Delete Plan?</h3>
+        <p class="text-white/60 text-sm mb-8">
+            Are you sure you want to delete the plan <span class="text-white font-bold">"{{ plan.name }}"</span>? This
+            action cannot be undone.
+        </p>
+
+        <form method="post" class="flex flex-col gap-3">
+            {% csrf_token %}
+            <button type="submit"
+                class="w-full py-3 bg-red-600 hover:bg-red-500 text-white text-xs font-bold uppercase tracking-widest transition-colors shadow-lg shadow-red-900/20">
+                Confirm Delete
+            </button>
+            <a href="{% url 'list_subscription_plans' %}"
+                class="w-full py-3 bg-transparent hover:bg-white/5 border border-white/10 text-white text-xs font-bold uppercase tracking-widest transition-colors">
+                Cancel
+            </a>
+        </form>
+    </div>
+</div>
+{% endblock %}
