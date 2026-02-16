@@ -51,7 +51,7 @@
     class="bg-background-light dark:bg-black font-display text-black dark:text-white antialiased overflow-hidden h-screen flex">
 
     <!-- Sidebar -->
-    <aside class="w-20 lg:w-64 bg-black border-r border-white/10 flex flex-col justify-between z-50 shrink-0">
+    <aside class="w-64 bg-black border-r border-white/10 flex-col hidden lg:flex h-full z-50 shrink-0">
         <div>
             <div class="h-20 flex items-center justify-center lg:justify-start lg:px-6 border-b border-white/10">
                 <div class="flex items-center gap-3">
@@ -133,9 +133,14 @@
     <main class="flex-1 flex flex-col h-full overflow-hidden bg-black relative">
         <!-- Header -->
         <header class="h-20 border-b border-white/10 flex items-center justify-between px-8 bg-black shrink-0">
-            <div>
-                <h2 class="text-xl font-bold uppercase tracking-widest">Dashboard</h2>
-                <p class="text-[10px] text-white/40 uppercase tracking-[0.2em] mt-1">{% now "l, M d • H:i" %}</p>
+            <div class="flex items-center gap-4">
+                <button class="lg:hidden text-white" onclick="toggleMobileMenu()">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+                <div>
+                    <h2 class="text-xl font-bold uppercase tracking-widest">Dashboard</h2>
+                    <p class="text-[10px] text-white/40 uppercase tracking-[0.2em] mt-1">{% now "l, M d • H:i" %}</p>
+                </div>
             </div>
             <div class="flex items-center gap-6">
                 <div class="flex items-center gap-2 px-3 py-1 border border-green-500/20 bg-green-500/10">
@@ -308,8 +313,74 @@
             </div>
     </main>
 
+    <div id="mobile-menu-overlay"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 hidden transition-opacity duration-300 opacity-0"
+        onclick="toggleMobileMenu()"></div>
+    <aside id="mobile-sidebar"
+        class="fixed inset-y-0 left-0 w-64 bg-black border-r border-white/10 z-50 transform -translate-x-full transition-transform duration-300 ease-in-out lg:hidden flex flex-col">
+        <div class="h-20 flex items-center px-8 border-b border-white/10">
+            <div class="flex items-center gap-3">
+                <i data-lucide="truck" class="text-white w-8 h-8"></i>
+                <h1 class="text-white text-lg font-black tracking-tighter uppercase">ELaundry <span
+                        class="text-white/40 font-medium text-xs block tracking-widest">Logistics</span></h1>
+            </div>
+        </div>
+        <nav class="flex flex-col mt-8 gap-1 flex-1 overflow-y-auto">
+            <a class="h-14 flex items-center px-6 {% if request.resolver_match.url_name == 'view_assigned_services' %}bg-white text-black border-l-4 border-white{% else %}text-white/50 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20{% endif %} transition-all"
+                href="{% url 'view_assigned_services' %}"><i data-lucide="map" class="w-5 h-5"></i><span
+                    class="ml-4 text-xs font-bold uppercase tracking-widest">Routes</span></a>
+            <a class="h-14 flex items-center px-6 {% if request.resolver_match.url_name == 'update_bags' %}bg-white text-black border-l-4 border-white{% else %}text-white/50 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20{% endif %} transition-all"
+                href="{% url 'update_bags' %}"><i data-lucide="package" class="w-5 h-5"></i><span
+                    class="ml-4 text-xs font-bold uppercase tracking-widest">Update Bags</span></a>
+            <a class="h-14 flex items-center px-6 text-white/50 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20 transition-all"
+                href="#"><i data-lucide="banknote" class="w-5 h-5"></i><span
+                    class="ml-4 text-xs font-bold uppercase tracking-widest">Earnings</span></a>
+            <a class="h-14 flex items-center px-6 {% if request.resolver_match.url_name == 'deliveryman_pending_orders' %}bg-white text-black border-l-4 border-white{% else %}text-white/50 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20{% endif %} transition-all"
+                href="{% url 'deliveryman_pending_orders' %}"><i data-lucide="shopping-bag" class="w-5 h-5"></i><span
+                    class="ml-4 text-xs font-bold uppercase tracking-widest">Pending Orders</span></a>
+            <a class="h-14 flex items-center px-6 {% if request.resolver_match.url_name == 'scan_qr_page' %}bg-white text-black border-l-4 border-white{% else %}text-white/50 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20{% endif %} transition-all"
+                href="{% url 'scan_qr_page' %}"><i data-lucide="scan-line" class="w-5 h-5"></i><span
+                    class="ml-4 text-xs font-bold uppercase tracking-widest">QR Scan</span></a>
+            <a class="h-14 flex items-center px-6 {% if request.resolver_match.url_name == 'profile_view' %}bg-white text-black border-l-4 border-white{% else %}text-white/50 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20{% endif %} transition-all"
+                href="{% url 'profile_view' %}"><i data-lucide="user" class="w-5 h-5"></i><span
+                    class="ml-4 text-xs font-bold uppercase tracking-widest">Profile</span></a>
+            <a class="h-14 flex items-center px-6 {% if request.resolver_match.url_name == 'profile_update' %}bg-white text-black border-l-4 border-white{% else %}text-white/50 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20{% endif %} transition-all"
+                href="{% url 'profile_update' %}"><i data-lucide="settings" class="w-5 h-5"></i><span
+                    class="ml-4 text-xs font-bold uppercase tracking-widest">Update Profile</span></a>
+            <a class="h-14 flex items-center px-6 {% if request.resolver_match.url_name == 'feedback_list' %}bg-white text-black border-l-4 border-white{% else %}text-white/50 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20{% endif %} transition-all"
+                href="{% url 'feedback_list' %}"><i data-lucide="message-square" class="w-5 h-5"></i><span
+                    class="ml-4 text-xs font-bold uppercase tracking-widest">Feedback</span></a>
+        </nav>
+        <div class="p-6 border-t border-white/10">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-white/10 flex items-center justify-center text-xs font-bold rounded-full">{% if user.first_name %}{{ user.first_name|slice:":1" }}{% else %}U{% endif %}</div>
+                <div>
+                    <p class="text-xs font-bold uppercase">{% if user.is_authenticated %}{{ user.first_name }}
+                        {{user.last_name }}{% else %}Guest{% endif %}</p>
+                    <p class="text-[10px] text-white/40 uppercase tracking-wider">ID: {{ user.id }}-LOG</p>
+                </div>
+                <a href="{% url 'logout' %}" class="ml-auto text-white/40 hover:text-white" title="Logout"><i
+                        data-lucide="log-out" class="w-5 h-5"></i></a>
+            </div>
+        </div>
+    </aside>
+
     <!-- Init Lucide Icons -->
     <script>
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('mobile-sidebar');
+            const overlay = document.getElementById('mobile-menu-overlay');
+            const isHidden = sidebar.classList.contains('-translate-x-full');
+            if (isHidden) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+                setTimeout(() => overlay.classList.add('opacity-100'), 10);
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.remove('opacity-100');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+            }
+        }
         lucide.createIcons();
     </script>
     {% block scripts %}{% endblock %}
