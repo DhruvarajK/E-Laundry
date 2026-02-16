@@ -1,2 +1,4 @@
 razorpay
 django-crontab
+Django>=5.0
+gunicorn
