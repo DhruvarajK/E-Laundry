@@ -1,14 +1,14 @@
 {% extends 'admin_home.html' %}
 {% block title %}Service Order Report{% endblock %}
 {% block body %}
-<div class="flex flex-col gap-6 h-full">
+<div class="flex flex-col gap-2 ">
   <!-- Header & Filter -->
-  <div class="flex flex-col gap-6 bg-surface border border-white/10 p-6 rounded-none">
+  <div class="flex flex-col gap-2 bg-surface border border-white/10 p-6 rounded-none">
     <div class="flex justify-between items-center">
       <h3 class="text-sm font-bold uppercase tracking-widest text-white">Service Order Report</h3>
     </div>
 
-    <form method="get" class="flex flex-wrap items-end gap-4">
+    <form method="get" class="flex flex-wrap items-end gap-2">
       <div class="flex flex-col gap-2">
         <label for="date" class="text-[10px] font-bold uppercase tracking-widest text-white/60">Select Date</label>
         <input type="date" name="date" id="date" value="{{ filter_date }}"
@@ -30,14 +30,14 @@
       </div>
 
       <button type="submit"
-        class="px-6 py-2 bg-blue-600 hover:bg-blue-500 text-white text-[10px] font-bold uppercase tracking-widest transition-colors border border-blue-500/50 h-[34px]">
+        class="px-6 py-2 bg-white hover:bg-zinc-200 text-black text-[10px] font-bold uppercase tracking-widest transition-colors border border-white/10 h-[34px]">
         Filter Report
       </button>
     </form>
   </div>
 
   <!-- Charts Section -->
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
     <!-- Service Distribution -->
     <div class="bg-surface border border-white/10 p-6 flex flex-col items-center">
       <h4 class="text-xs font-bold uppercase tracking-widest text-white/80 mb-6 text-center">Service Distribution</h4>
@@ -56,44 +56,44 @@
   </div>
 
   <!-- Stats Grid -->
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
     <!-- Core Stats -->
     <div class="bg-surface border border-white/10 p-4">
-      <span class="block text-[10px] font-bold uppercase tracking-widest text-white/40 mb-1">Total Orders</span>
+      <span class="block text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-1">Total Orders</span>
       <span class="text-xl font-bold text-white">{{ total_orders }}</span>
     </div>
     <div class="bg-surface border border-white/10 p-4">
-      <span class="block text-[10px] font-bold uppercase tracking-widest text-white/40 mb-1">User Services</span>
-      <span class="text-xl font-bold text-blue-400">{{ user_service_count }}</span>
+      <span class="block text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-1">User Services</span>
+      <span class="text-xl font-bold text-white">{{ user_service_count }}</span>
     </div>
     <div class="bg-surface border border-white/10 p-4">
-      <span class="block text-[10px] font-bold uppercase tracking-widest text-white/40 mb-1">Business Services</span>
-      <span class="text-xl font-bold text-yellow-400">{{ business_service_count }}</span>
+      <span class="block text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-1">Business Services</span>
+      <span class="text-xl font-bold text-zinc-200">{{ business_service_count }}</span>
     </div>
     <div class="bg-surface border border-white/10 p-4">
-      <span class="block text-[10px] font-bold uppercase tracking-widest text-white/40 mb-1">WoS Revenue</span>
-      <span class="text-xl font-bold text-green-400">₹{{ total_revenue }}</span>
+      <span class="block text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-1">WoS Revenue</span>
+      <span class="text-xl font-bold text-white">₹{{ total_revenue }}</span>
     </div>
 
     <!-- Subscription Revenue Stats -->
     <div class="bg-surface border border-white/10 p-4">
-      <span class="block text-[10px] font-bold uppercase tracking-widest text-white/40 mb-1">User Sub. Revenue</span>
-      <span class="text-xl font-bold text-purple-400">₹{{ user_total }}</span>
+      <span class="block text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-1">User Sub. Revenue</span>
+      <span class="text-xl font-bold text-zinc-200">₹{{ user_total }}</span>
     </div>
     <div class="bg-surface border border-white/10 p-4">
-      <span class="block text-[10px] font-bold uppercase tracking-widest text-white/40 mb-1">Business Sub.
+      <span class="block text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-1">Business Sub.
         Revenue</span>
-      <span class="text-xl font-bold text-orange-400">₹{{ business_total }}</span>
+      <span class="text-xl font-bold text-white">₹{{ business_total }}</span>
     </div>
-    <div class="col-span-2 bg-gradient-to-r from-blue-900/40 to-purple-900/40 border border-white/10 p-4">
-      <span class="block text-[10px] font-bold uppercase tracking-widest text-white/60 mb-1">Grand Total Revenue (inc.
+    <div class="col-span-2 bg-zinc-900 border border-white/10 p-4">
+      <span class="block text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-1">Grand Total Revenue (inc.
         Subscriptions)</span>
       <span class="text-2xl font-bold text-white">₹{{ grand_total }}</span>
     </div>
   </div>
 
   <!-- Orders Table -->
-  <div class="bg-surface border border-white/10 overflow-hidden mt-2">
+  <div class="bg-surface border border-white/10 overflow-hidden">
     <div class="px-6 py-4 border-b border-white/10 flex justify-between items-center">
       <h4 class="text-xs font-bold uppercase tracking-widest text-white">
         {% if filter_date or service_for_filter != "all" %}Filtered Orders{% else %}All Orders{% endif %}
@@ -133,17 +133,17 @@
             <td class="px-6 py-4">
               {% if order.status == 'completed' %}
               <span
-                class="inline-block px-2 py-1 bg-green-500/10 text-green-500 text-[10px] font-bold uppercase tracking-widest border border-green-500/20">
+                class="inline-block px-2 py-1 bg-zinc-100 text-black text-[10px] font-bold uppercase tracking-widest border border-white/20">
                 {{ order.get_status_display }}
               </span>
               {% elif order.status == 'cancelled' %}
               <span
-                class="inline-block px-2 py-1 bg-red-500/10 text-red-500 text-[10px] font-bold uppercase tracking-widest border border-red-500/20">
+                class="inline-block px-2 py-1 bg-zinc-900 text-zinc-500 text-[10px] font-bold uppercase tracking-widest border border-zinc-800">
                 {{ order.get_status_display }}
               </span>
               {% else %}
               <span
-                class="inline-block px-2 py-1 bg-yellow-500/10 text-yellow-500 text-[10px] font-bold uppercase tracking-widest border border-yellow-500/20">
+                class="inline-block px-2 py-1 bg-zinc-800 text-white text-[10px] font-bold uppercase tracking-widest border border-zinc-700">
                 {{ order.get_status_display }}
               </span>
               {% endif %}
@@ -152,17 +152,17 @@
               {% if order.payment %}
               {% if order.payment.payment_status == 'paid' %}
               <span
-                class="inline-block px-2 py-1 bg-green-500/10 text-green-500 text-[10px] font-bold uppercase tracking-widest border border-green-500/20">
+                class="inline-block px-2 py-1 bg-zinc-100 text-black text-[10px] font-bold uppercase tracking-widest border border-white/20">
                 {{ order.payment.get_payment_status_display }}
               </span>
               {% elif order.payment.payment_status == 'pending' %}
               <span
-                class="inline-block px-2 py-1 bg-yellow-500/10 text-yellow-500 text-[10px] font-bold uppercase tracking-widest border border-yellow-500/20">
+                class="inline-block px-2 py-1 bg-zinc-800 text-white text-[10px] font-bold uppercase tracking-widest border border-zinc-700">
                 {{ order.payment.get_payment_status_display }}
               </span>
               {% else %}
               <span
-                class="inline-block px-2 py-1 bg-red-500/10 text-red-500 text-[10px] font-bold uppercase tracking-widest border border-red-500/20">
+                class="inline-block px-2 py-1 bg-zinc-900 text-zinc-500 text-[10px] font-bold uppercase tracking-widest border border-zinc-800">
                 {{ order.payment.get_payment_status_display }}
               </span>
               {% endif %}
@@ -172,7 +172,7 @@
             </td>
             <td class="px-6 py-4 text-right font-mono text-xs text-white">
               {% if order.subscription %}
-              <span class="text-blue-400 font-bold" title="With Subscription">WiS</span>
+              <span class="text-zinc-400 font-bold" title="With Subscription">WiS</span>
               {% elif order.payment %}
               ₹{{ order.payment.total_price }}
               {% else %}
@@ -194,7 +194,7 @@
 
   <!-- Legend -->
   <div
-    class="px-4 py-3 bg-blue-500/10 border border-blue-500/20 rounded-none text-blue-400 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
+    class="px-4 py-3 bg-zinc-900 border border-white/10 rounded-none text-zinc-400 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
     <span class="material-symbols-outlined text-sm">info</span>
     <span>WoS: Without Subscription • WiS: With Subscription</span>
   </div>
@@ -203,13 +203,13 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
   // Global Chart Defaults for Dark Theme
-  Chart.defaults.color = '#9ca3af';
+  Chart.defaults.color = '#a1a1aa'; // zinc-400
   Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.1)';
   Chart.defaults.font.family = "'Segoe UI', 'Roboto', sans-serif";
   Chart.defaults.font.size = 10;
-  Chart.defaults.plugins.tooltip.backgroundColor = '#18181b';
+  Chart.defaults.plugins.tooltip.backgroundColor = '#18181b'; // zinc-900
   Chart.defaults.plugins.tooltip.titleColor = '#fff';
-  Chart.defaults.plugins.tooltip.bodyColor = '#a1a1aa';
+  Chart.defaults.plugins.tooltip.bodyColor = '#e4e4e7'; // zinc-200
   Chart.defaults.plugins.tooltip.borderColor = 'rgba(255, 255, 255, 0.1)';
   Chart.defaults.plugins.tooltip.borderWidth = 1;
   Chart.defaults.plugins.tooltip.padding = 10;
@@ -225,10 +225,10 @@
       datasets: [{
         data: [{{ user_service_count }}, {{ business_service_count }}],
     backgroundColor: [
-      'rgba(59, 130, 246, 0.8)', // Blue-500
-      'rgba(234, 179, 8, 0.8)'   // Yellow-500
+      '#e4e4e7', // zinc-200 (white-ish)
+      '#52525b'  // zinc-600 (darker grey)
     ],
-    borderColor: 'rgba(24, 24, 27, 1)', // match bg-surface
+    borderColor: '#18181b', // match bg-surface
     borderWidth: 2,
     hoverOffset: 4
   }]
@@ -243,7 +243,8 @@
         labels: {
           padding: 20,
           usePointStyle: true,
-          pointStyle: 'circle'
+          pointStyle: 'circle',
+          color: '#d4d4d8' // zinc-300
         }
       }
     }
@@ -258,11 +259,11 @@
         label: 'Revenue',
         data: [{{ total_revenue }}, {{ user_total }}, {{ business_total }}],
     backgroundColor: [
-    'rgba(34, 197, 94, 0.8)',  // Green-500
-    'rgba(168, 85, 247, 0.8)', // Purple-500
-    'rgba(249, 115, 22, 0.8)'  // Orange-500
+    '#d4d4d8', // zinc-300
+    '#71717a', // zinc-500
+    '#3f3f46'  // zinc-700
   ],
-    borderRadius: 2,
+    borderRadius: 0,
     borderSkipped: false
             }]
         },
