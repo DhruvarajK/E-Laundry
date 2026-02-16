@@ -12,42 +12,20 @@
         text-align: center;
     }
 
-    /* Styling for the profile icon (the file upload option) */
-    .profile-image-icon {
-        width: 150px;
-        height: 150px;
-        border-radius: 20%;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        background-color: #1a1a1a;
-        object-fit: cover;
-        transition: opacity 0.3s ease;
-    }
-
     /* Styling for the image preview */
     .profile-image-preview {
         display: block;
         margin-top: 15px;
-        max-width: 200px;
-        height: auto;
-        border-radius: 8px;
+        width: 160px;
+        height: 160px;
+        border-radius: 1rem;
         border: 1px solid rgba(255, 255, 255, 0.2);
         object-fit: cover;
-    }
-
-    /* Hide preview image when no file is selected */
-    .profile-image-preview:empty {
-        display: none;
     }
 
     /* Hide the file input */
     .profile-image-input {
         display: none;
-    }
-
-    /* Optional: Add some hover effects */
-    .profile-image-icon:hover {
-        opacity: 0.8;
-        border-color: rgba(255, 255, 255, 0.5);
     }
 </style>
 {% endblock %}
@@ -80,11 +58,20 @@
                         class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 w-full text-center md:text-left">Profile
                         Image</label>
                     <label for="profile_image" class="profile-image-label">
-                        <img id="profile_icon" src="{% static 'assets/profile2.svg' %}" alt="Profile Icon"
-                            class="profile-image-icon">
+                        <div id="profile_placeholder"
+                            class="w-40 h-40 rounded-2xl border-2 border-dashed border-white/10 flex flex-col items-center justify-center gap-3 hover:border-white/30 hover:bg-white/[0.02] transition-all group">
+                            <div
+                                class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <span
+                                    class="material-symbols-outlined text-white/40 group-hover:text-white/70">add_a_photo</span>
+                            </div>
+                            <span
+                                class="text-[10px] font-bold uppercase tracking-widest text-white/40 group-hover:text-white/70">Upload
+                                Photo</span>
+                        </div>
                         <input class="profile-image-input" type="file" id="profile_image" name="profile_image"
                             accept=".jpg, .jpeg, .png" required>
-                        <img id="profile_preview" class="profile-image-preview" src="" alt="Profile Preview">
+                        <img id="profile_preview" class="profile-image-preview hidden" src="" alt="Profile Preview">
                     </label>
                 </div>
 
@@ -218,10 +205,8 @@
     function getLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
-                // Update hidden fields
                 if (document.getElementById('latitude')) document.getElementById('latitude').value = position.coords.latitude;
                 if (document.getElementById('longitude')) document.getElementById('longitude').value = position.coords.longitude;
-                // document.getElementById('locationForm').submit(); 
             }, function (error) {
                 alert('Unable to retrieve location. Make sure you have allowed location access.');
             });
@@ -233,7 +218,7 @@
     const profileImageInput = document.getElementById('profile_image');
     if (profileImageInput) {
         const profilePreview = document.getElementById('profile_preview');
-        const profileIcon = document.getElementById('profile_icon');
+        const profilePlaceholder = document.getElementById('profile_placeholder');
 
         profileImageInput.addEventListener('change', function (event) {
             const file = event.target.files[0];
@@ -241,14 +226,14 @@
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     profilePreview.src = e.target.result;
-                    profilePreview.style.display = 'block';
-                    profileIcon.style.display = 'none';
+                    profilePreview.classList.remove('hidden');
+                    profilePlaceholder.classList.add('hidden');
                 };
                 reader.readAsDataURL(file);
             } else {
                 profilePreview.src = '';
-                profilePreview.style.display = 'none';
-                profileIcon.style.display = 'block';
+                profilePreview.classList.add('hidden');
+                profilePlaceholder.classList.remove('hidden');
             }
         });
     }

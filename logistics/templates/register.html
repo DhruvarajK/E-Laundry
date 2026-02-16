@@ -13,39 +13,19 @@
         text-align: center;
     }
 
-    /* Styling for the profile icon */
-    .profile-image-icon {
-        width: 150px;
-        height: 150px;
-        border-radius: 20%;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        background-color: #1a1a1a;
-        object-fit: cover;
-        transition: opacity 0.3s ease;
-    }
-
     /* Styling for the image preview */
     .profile-image-preview {
         display: block;
         margin-top: 15px;
-        max-width: 200px;
-        height: auto;
-        border-radius: 8px;
+        width: 160px;
+        height: 160px;
+        border-radius: 1rem;
         border: 1px solid rgba(255, 255, 255, 0.2);
         object-fit: cover;
     }
 
-    .profile-image-preview:empty {
-        display: none;
-    }
-
     .profile-image-input {
         display: none;
-    }
-
-    .profile-image-icon:hover {
-        opacity: 0.8;
-        border-color: rgba(255, 255, 255, 0.5);
     }
 
     /* File Upload Styles */
@@ -55,34 +35,20 @@
         justify-content: center;
         cursor: pointer;
         width: 100%;
-        padding: 1rem;
-        border: 1px dashed rgba(255, 255, 255, 0.3);
-        background: rgba(255, 255, 255, 0.05);
+        padding: 1.5rem;
+        border: 2px dashed rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 1rem;
         transition: all 0.3s ease;
     }
 
     .file-upload-label:hover {
-        border-color: white;
-        background: rgba(255, 255, 255, 0.1);
-    }
-
-    .file-upload-icon {
-        width: 24px;
-        height: 24px;
-        margin-right: 10px;
-        filter: invert(1);
-        /* Make black SVG white if needed, or assume it's colored */
+        border-color: rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.05);
     }
 
     .file-upload-input {
         display: none;
-    }
-
-    .file-upload-preview {
-        font-size: 0.8rem;
-        color: rgba(255, 255, 255, 0.7);
-        margin-top: 8px;
-        text-align: center;
     }
 </style>
 {% endblock %}
@@ -116,34 +82,47 @@
                             class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40 w-full text-center md:text-left">Profile
                             Image</label>
                         <label for="fileField" class="profile-image-label">
-                            <img id="profile_icon" src="{% static 'assets/profile2.svg' %}" alt="Profile Icon"
-                                class="profile-image-icon">
+                            <div id="profile_placeholder"
+                                class="w-40 h-40 rounded-2xl border-2 border-dashed border-white/10 flex flex-col items-center justify-center gap-3 hover:border-white/30 hover:bg-white/[0.02] transition-all group">
+                                <div
+                                    class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                    <span
+                                        class="material-symbols-outlined text-white/40 group-hover:text-white/70">add_a_photo</span>
+                                </div>
+                                <span
+                                    class="text-[10px] font-bold uppercase tracking-widest text-white/40 group-hover:text-white/70">Upload
+                                    Photo</span>
+                            </div>
                             <input class="profile-image-input" type="file" id="fileField" name="fileField"
                                 accept=".jpg, .jpeg, .png">
-                            <img id="profile_preview" class="profile-image-preview" src="" alt="Profile Preview">
-                            <span class="block mt-2 text-[10px] uppercase tracking-widest text-white/40">Choose
-                                Image</span>
+                            <img id="profile_preview" class="profile-image-preview hidden" src="" alt="Profile Preview">
                         </label>
                         <div id="profileError"
-                            class="text-red-500 text-[10px] font-bold uppercase tracking-widest hidden">Please upload a
-                            profile picture.</div>
+                            class="text-red-500 text-[10px] font-bold uppercase tracking-widest hidden text-center md:text-left">
+                            Please upload a profile picture.</div>
                     </div>
 
                     <!-- License Upload -->
                     <div class="w-full flex flex-col gap-2">
                         <label class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/40">Upload License
                             (PDF)</label>
-                        <label for="textfield13" class="file-upload-label">
-                            <img id="id_card_icon" src="{% static 'assets/files.svg' %}" alt="ID Card Icon"
-                                class="file-upload-icon">
+                        <label for="textfield13" class="file-upload-label group">
+                            <div class="flex flex-col items-center gap-2">
+                                <div id="id_card_icon_container"
+                                    class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+                                    <span
+                                        class="material-symbols-outlined text-white/40 group-hover:text-white/70">picture_as_pdf</span>
+                                </div>
+                                <span id="id_card_preview"
+                                    class="text-[10px] uppercase tracking-widest font-bold text-white/40 group-hover:text-white/70">Select
+                                    PDF File</span>
+                            </div>
                             <input class="file-upload-input" type="file" id="textfield13" name="textfield13"
                                 accept=".pdf">
-                            <span id="id_card_preview" class="text-xs uppercase tracking-widest font-bold">Select PDF
-                                File</span>
                         </label>
                         <div id="idCardError"
-                            class="text-red-500 text-[10px] font-bold uppercase tracking-widest hidden">Please upload a
-                            License card (PDF).</div>
+                            class="text-red-500 text-[10px] font-bold uppercase tracking-widest hidden text-center md:text-left">
+                            Please upload a License card (PDF).</div>
                     </div>
                 </div>
 
@@ -257,7 +236,6 @@
             </div>
         </form>
 
-        <!-- Hidden Location Form (from original code structure, though combined above) -->
         <form id="locationForm" method="POST" style="display:none;">{% csrf_token %}<input type="hidden"
                 name="latitude"><input type="hidden" name="longitude"></form>
     </div>
@@ -267,10 +245,8 @@
     function getLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
-                // Update hidden fields
                 if (document.getElementById('latitude')) document.getElementById('latitude').value = position.coords.latitude;
                 if (document.getElementById('longitude')) document.getElementById('longitude').value = position.coords.longitude;
-                // document.getElementById('locationForm').submit(); 
             }, function (error) {
                 alert('Unable to retrieve location. Make sure you have allowed location access.');
             });
@@ -279,16 +255,15 @@
         }
     }
 
-    // Get the form and input elements
     const form = document.querySelector('.form-contact');
     const profileImageInput = document.getElementById('fileField');
     const profilePreview = document.getElementById('profile_preview');
-    const profileIcon = document.getElementById('profile_icon');
+    const profilePlaceholder = document.getElementById('profile_placeholder');
     const profileError = document.getElementById('profileError');
 
     const idCardInput = document.getElementById('textfield13');
     const idCardPreview = document.getElementById('id_card_preview');
-    const idCardIcon = document.getElementById('id_card_icon');
+    const idCardIconContainer = document.getElementById('id_card_icon_container');
     const idCardError = document.getElementById('idCardError');
 
     if (profileImageInput) {
@@ -298,15 +273,15 @@
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     profilePreview.src = e.target.result;
-                    profilePreview.style.display = 'block';
-                    profileIcon.style.display = 'none';
+                    profilePreview.classList.remove('hidden');
+                    profilePlaceholder.classList.add('hidden');
                     profileError.classList.add('hidden');
                 };
                 reader.readAsDataURL(file);
             } else {
                 profilePreview.src = '';
-                profilePreview.style.display = 'none';
-                profileIcon.style.display = 'block';
+                profilePreview.classList.add('hidden');
+                profilePlaceholder.classList.remove('hidden');
             }
         });
     }
@@ -317,17 +292,20 @@
             if (file) {
                 if (file.type === "application/pdf") {
                     idCardPreview.textContent = file.name;
-                    idCardIcon.style.display = 'none';
+                    idCardPreview.classList.remove('text-white/40');
+                    idCardPreview.classList.add('text-white');
                     idCardError.classList.add('hidden');
                 } else {
                     alert('Please upload a valid PDF file.');
                     idCardPreview.textContent = 'Select PDF File';
-                    idCardIcon.style.display = 'block';
-                    this.value = ''; // Clear input
+                    idCardPreview.classList.add('text-white/40');
+                    idCardPreview.classList.remove('text-white');
+                    this.value = '';
                 }
             } else {
                 idCardPreview.textContent = 'Select PDF File';
-                idCardIcon.style.display = 'block';
+                idCardPreview.classList.add('text-white/40');
+                idCardPreview.classList.remove('text-white');
             }
         });
     }
@@ -336,19 +314,16 @@
         form.addEventListener('submit', function (event) {
             const profileImage = profileImageInput ? profileImageInput.files[0] : null;
             const idCardFile = idCardInput ? idCardInput.files[0] : null;
-
             let valid = true;
 
             if (!profileImage) {
                 profileError.classList.remove('hidden');
                 valid = false;
             }
-
             if (!idCardFile) {
                 idCardError.classList.remove('hidden');
                 valid = false;
             }
-
             if (!valid) {
                 event.preventDefault();
             }

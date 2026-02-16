@@ -154,8 +154,8 @@
                             tap. Real-time tracking, transparent pricing, and doorstep delivery.</p>
                     </div>
                     <a class="mt-auto inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all"
-                        href="#">
-                        Learn More <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                        href="{% url 'register_user' %}">
+                        Register User <span class="material-symbols-outlined text-sm">arrow_forward</span>
                     </a>
                 </div>
                 <!-- Business Pillar -->
@@ -168,7 +168,7 @@
                             management tools. Inventory, POS, and automated scheduling.</p>
                     </div>
                     <a class="mt-auto inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all"
-                        href="#">
+                        href="{% url 'register_business' %}">
                         Register Shop <span class="material-symbols-outlined text-sm">arrow_forward</span>
                     </a>
                 </div>
@@ -182,7 +182,7 @@
                             hours, reliable payouts, and optimized delivery routes.</p>
                     </div>
                     <a class="mt-auto inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all"
-                        href="#">
+                        href="{% url 'register_delivery' %}">
                         Become Partner <span class="material-symbols-outlined text-sm">arrow_forward</span>
                     </a>
                 </div>
@@ -293,7 +293,7 @@
             </div>
         </div>
         <div class="flex flex-col md:flex-row justify-between items-center pt-10 border-t border-white/5 gap-4">
-            <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/20">© 2024 ELAUNDRY SYSTEMS INC.</p>
+            <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/20">© <script>document.write(new Date().getFullYear())</script> ELAUNDRY SYSTEMS INC.</p>
             <div class="flex gap-8">
                 <a class="text-white/20 hover:text-white transition-colors" href="#"><span
                         class="material-symbols-outlined text-xl">language</span></a>
