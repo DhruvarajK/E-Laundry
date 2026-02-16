@@ -9,9 +9,9 @@ from user.models import BillItem, Payment, Subscription, SubscriptionPlan, user
 from django.shortcuts import render, redirect, get_object_or_404
 from user.models import ServiceOrder,LogisticsAssignment
 from django.urls import reverse
-from datetime import datetime
+from datetime import date, datetime, timedelta
+from django.utils import timezone
 from django.db.models import Sum
-from datetime import date, datetime
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -139,10 +139,71 @@ def reject(request,id):
 
 
 def admin_home(request):
-    if request.session['lid'] == 'out':
+    if request.session.get('lid') == 'out' or 'lid' not in request.session:
         return HttpResponse("<script>alert('please login');window.location='/'</script>")
-    else:
-        return render(request,"admin_home.html")
+    
+    # 1. Total Revenue (Paid payments)
+    revenue_data = Payment.objects.filter(payment_status='paid').aggregate(total=Sum('total_price'))
+    total_revenue = revenue_data['total'] or 0
+
+    # 2. Active Jobs (Not completed or canceled)
+    active_jobs_count = ServiceOrder.objects.exclude(status__in=['completed', 'canceled', 'Completed', 'Canceled']).count()
+    
+    # 3. Pending Pickup (Status: pending or pickup_assigned)
+    pending_pickup_count = ServiceOrder.objects.filter(status__in=['pending', 'pickup_assigned']).count()
+
+    # 4. Machine Usage (Simulated by Orders in 'Washing' status)
+    washing_count = ServiceOrder.objects.filter(status__in=['Washing', 'washing']).count()
+    # Assuming slight variety to make it look like a percentage if generic, 
+    # but for now let's just use the count or mapped percentage. 
+    # Let's say max capacity is 20 for demo purposes.
+    machine_usage_percent = min(int((washing_count / 20) * 100), 100) if washing_count else 0
+
+    # 5. Logistics (Courier count)
+    logistics_count = DeliveryMan.objects.filter(LOGIN__usertype='logistics').count()
+    
+    # 6. Couriers En Route (Assigned/In Transit)
+    couriers_en_route = LogisticsAssignment.objects.filter(delivery_status__in=['assigned', 'pickuped', 'in_transit']).count()
+
+    # 7. Incoming Jobs (Pending orders, limit 5)
+    incoming_jobs = ServiceOrder.objects.filter(status='pending').order_by('-order_date')[:5]
+
+    # 8. Live Operations (Active orders with time elapsed)
+    # We'll fetch active orders and calculate time elapsed in template or here.
+    live_operations = ServiceOrder.objects.filter(status__in=['Washing', 'washing', 'in_progress']).order_by('-order_date')[:4]
+
+    # 9. Revenue Chart Data (Last 12 intervals/hours/days? Let's do days for simplicity or dummy specific distribution)
+    # For now, let's just pass some data or calculate daily revenue for last 7 days.
+    # Simple chart data: Today's revenue by hour (simulated or real if enough data)
+    # Let's do last 7 days revenue.
+    
+    today = timezone.now().date()
+    revenue_chart_data = []
+    for i in range(11, -1, -1): # Last 12 days including today? Or 12 data points
+        day = today - timedelta(days=i)
+        daily_revenue = Payment.objects.filter(
+            payment_status='paid',
+            created_at__date=day
+        ).aggregate(total=Sum('total_price'))['total'] or 0
+        revenue_chart_data.append({
+            'day': day.strftime("%d"),
+            'revenue': float(daily_revenue),
+            'height_percent': min(int((daily_revenue / (total_revenue or 1)) * 100 * 5), 100) if total_revenue else 0 # simple scaling
+        })
+
+    context = {
+        'total_revenue': total_revenue,
+        'active_jobs_count': active_jobs_count,
+        'pending_pickup_count': pending_pickup_count,
+        'machine_usage_percent': machine_usage_percent,
+        'logistics_count': logistics_count,
+        'couriers_en_route': couriers_en_route,
+        'incoming_jobs': incoming_jobs,
+        'live_operations': live_operations,
+        'revenue_chart_data': revenue_chart_data,
+    }
+
+    return render(request, "admin_home.html", context)
 
 
 

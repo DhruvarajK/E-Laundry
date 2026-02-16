@@ -1,347 +1,336 @@
-<!doctype html>
-<html class="no-js" lang="zxx">
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
 <head>
     {% load static %}
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Laundry | Teamplate</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="manifest" href="{% static 'site.webmanifest' %}">
-    <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/img/favicon.ico' %}">
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>ELaundry | Admin Portal</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ffffff",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#000000",
+                        "surface": "#111111",
+                        "border-color": "#333333"
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0px",
+                        "lg": "0px",
+                        "xl": "0px",
+                        "full": "0px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background-color: #e4e4e7; border-radius: 0; }
+        .dark ::-webkit-scrollbar-thumb { background-color: #22222569; }
 
-    <!-- CSS here -->
-    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/owl.carousel.min.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/slicknav.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/flaticon.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/progressbar_barfiller.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/gijgo.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/animate.min.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/animated-headline.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/magnific-popup.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/fontawesome-all.min.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/themify-icons.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/slick.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/nice-select.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+        .chart-grid {
+            background-image: linear-gradient(to right, #333 1px, transparent 1px),
+                linear-gradient(to bottom, #333 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+    </style>
 </head>
-<body>
-    <!-- ? Preloader Start -->
-    <div id="preloader-active">
-        <div class="preloader d-flex align-items-center justify-content-center">
-            <div class="preloader-inner position-relative">
-                <div class="preloader-circle"></div>
-                <div class="preloader-img pere-text">
-                    <img src="{%static 'assets/img/logo/loder.png' %}" alt="">
+
+<body class="bg-background-dark font-display text-white antialiased overflow-hidden h-screen flex">
+    <aside class="w-64 border-r border-white/10 flex flex-col h-full bg-black shrink-0">
+        <div class="h-20 flex items-center gap-2 px-6 border-b border-white/10">
+            <span class="material-symbols-outlined text-white text-2xl">waves</span>
+            <h1 class="text-white text-lg font-black tracking-tighter uppercase">ELaundry</h1>
+        </div>
+        <nav class="flex-1 py-8 px-4 flex flex-col gap-2 overflow-y-auto">
+            <a class="flex items-center gap-4 px-4 py-3 bg-white text-black font-bold text-xs uppercase tracking-widest hover:bg-white/90 transition-colors"
+                href="{% url 'admin_home' %}">
+                <span class="material-symbols-outlined text-lg">dashboard</span>
+                Dashboard
+            </a>
+
+            <!-- Manage Section -->
+            <span class="px-4 text-[10px] uppercase font-bold text-white/40 mt-4 mb-2">Manage Users</span>
+            <a class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 font-bold text-xs uppercase tracking-widest transition-colors"
+                href="{% url 'view_users' %}">
+                <span class="material-symbols-outlined text-lg">person</span>
+                Users
+            </a>
+            <a class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 font-bold text-xs uppercase tracking-widest transition-colors"
+                href="{% url 'view_business' %}">
+                <span class="material-symbols-outlined text-lg">store</span>
+                Businesses
+            </a>
+            <a class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 font-bold text-xs uppercase tracking-widest transition-colors"
+                href="{% url 'view_logistics' %}">
+                <span class="material-symbols-outlined text-lg">local_shipping</span>
+                Logistics
+            </a>
+
+            <!-- Service & Orders -->
+            <span class="px-4 text-[10px] uppercase font-bold text-white/40 mt-4 mb-2">Operations</span>
+            <a class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 font-bold text-xs uppercase tracking-widest transition-colors"
+                href="{% url 'pending_service_orders' %}">
+                <span class="material-symbols-outlined text-lg">receipt_long</span>
+                Pending Orders
+            </a>
+            <a class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 font-bold text-xs uppercase tracking-widest transition-colors"
+                href="{% url 'assigned_orders' %}">
+                <span class="material-symbols-outlined text-lg">assignment_turned_in</span>
+                Assigned Orders
+            </a>
+            <a class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 font-bold text-xs uppercase tracking-widest transition-colors"
+                href="{% url 'update_order_status' %}">
+                <span class="material-symbols-outlined text-lg">edit_note</span>
+                Update Status
+            </a>
+
+            <!-- Subscriptions -->
+            <span class="px-4 text-[10px] uppercase font-bold text-white/40 mt-4 mb-2">Planning</span>
+            <a class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 font-bold text-xs uppercase tracking-widest transition-colors"
+                href="{% url 'list_subscription_plans' %}">
+                <span class="material-symbols-outlined text-lg">card_membership</span>
+                Plans
+            </a>
+            <a class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 font-bold text-xs uppercase tracking-widest transition-colors"
+                href="{% url 'create_subscription_plan' %}">
+                <span class="material-symbols-outlined text-lg">add_card</span>
+                Add Plan
+            </a>
+
+            <!-- Reports & Feedback -->
+            <span class="px-4 text-[10px] uppercase font-bold text-white/40 mt-4 mb-2">Insights</span>
+            <a class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 font-bold text-xs uppercase tracking-widest transition-colors"
+                href="{% url 'service_order_report' %}">
+                <span class="material-symbols-outlined text-lg">analytics</span>
+                Reports
+            </a>
+            <a class="flex items-center gap-4 px-4 py-3 text-white/60 hover:text-white hover:bg-white/5 font-bold text-xs uppercase tracking-widest transition-colors"
+                href="{% url 'feedback_list' %}">
+                <span class="material-symbols-outlined text-lg">feedback</span>
+                Feedback
+            </a>
+
+            <div class="mt-auto border-t border-white/10 pt-4">
+                <a class="flex items-center gap-4 px-4 py-3 text-red-500 hover:bg-red-500/10 font-bold text-xs uppercase tracking-widest transition-colors"
+                    href="{% url 'logout' %}">
+                    <span class="material-symbols-outlined text-lg">logout</span>
+                    Logout
+                </a>
+            </div>
+        </nav>
+        <div class="p-6 border-t border-white/10">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-white/10 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-sm">admin_panel_settings</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xs font-bold uppercase">Administrator</span>
+                    <span class="text-[10px] text-white/40 uppercase">System Control</span>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Preloader Start -->
-    <header>
-        <!-- Header Start -->
-        <div class="header-area">
-            <div class="main-header header-sticky">
-                <!-- Logo -->
-                <div class="header-left">
-                    <div class="logo">
-                        <a href="#"><img src="{%static 'assets/img/logo/logo.png'%}" alt=""></a>
+    </aside>
+    <main class="flex-1 flex flex-col h-full overflow-hidden bg-black relative">
+        <header class="h-20 border-b border-white/10 flex items-center justify-between px-8 bg-black shrink-0">
+            <h2 class="text-xl font-black uppercase tracking-widest">
+                {% block title %}Dashboard Overview{% endblock %}
+            </h2>
+            <div class="flex items-center gap-6">
+                <div class="flex items-center gap-2 px-3 py-1 border border-white/20">
+                    <span class="relative flex h-2 w-2">
+                        <span
+                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                    </span>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-green-500">System Online</span>
+                </div>
+                <button class="text-white/60 hover:text-white">
+                    <span class="material-symbols-outlined">notifications</span>
+                </button>
+            </div>
+        </header>
+        <div class="flex-1 overflow-y-auto p-8">
+            {% block body %}
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <!-- Total Revenue -->
+                <div class="bg-surface border border-white/10 p-6 hover:border-white/30 transition-colors">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-white/40">Total Revenue</span>
+                        <span class="material-symbols-outlined text-white/20">payments</span>
                     </div>
-                    <div class="menu-wrapper  d-flex align-items-center">
-                        <!-- Main-menu -->
-                        <div class="main-menu d-none d-lg-block">
-                            <nav> 
-                                <ul id="navigation">                                                                                          
-                                    <li class="active"><a href="\">Home</a></li>
-                                    
-                                    <li><a href="#">Service</a>
-                                        <ul class="submenu">
-                                            <li><a href="{%url 'service_order_report' %}">Report</a></li>
-                                            <li><a href="{%url 'update_bags' %}">Update Bag Count</a></li>
-                                            <li><a href="{%url 'track_delivery_works' %}">Track Works</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#">Orders</a>
-                                        <ul class="submenu">
-                                            <li><a href="{%url 'pending_service_orders' %}">Pending Order</a></li>
-                                            <li><a href="{%url 'assigned_orders' %}">Assigned Order</a></li>
-                                            <li><a href="{%url 'update_order_status'%}">Update Status</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#">Subscriptions</a>
-                                        <ul class="submenu">
-                                            <li><a href="{%url 'create_subscription_plan' %}">Add Subscription</a></li>
-                                            <li><a href="{%url 'list_subscription_plans' %}">Subscription plans</a></li>
-                                        </ul>
-                                    </li>
+                    <div class="text-3xl font-black mb-1">${{ total_revenue|floatformat:2 }}</div>
+                    <div class="text-xs text-green-500 font-medium flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm">trending_up</span> Lifetime
+                    </div>
+                </div>
 
-                                    <li><a href="#">Manage</a>
-                                        <ul class="submenu">
-                                            <li><a href="{%url 'view_users' %}">Individual</a></li>
-                                            <li><a href="{%url 'view_logistics' %}">Logistics</a></li>
-                                            <li><a href="{% url 'view_business' %}">Business</a></li>
-                                            
-                                        </ul>
-                                    </li>
-                                    <li><a href="{% url 'feedback_list' %}">Feedback</a></li>
-                                    <li><a href="{%url 'logout' %}">Logout</a></li>
-                                </ul>
-                            </nav>
+                <!-- Active Jobs -->
+                <div class="bg-surface border border-white/10 p-6 hover:border-white/30 transition-colors">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-white/40">Active Jobs</span>
+                        <span class="material-symbols-outlined text-white/20">local_laundry_service</span>
+                    </div>
+                    <div class="text-3xl font-black mb-1">{{ active_jobs_count }}</div>
+                    <div class="text-xs text-white/40 font-medium">{{ pending_pickup_count }} pending pickup</div>
+                </div>
+
+                <!-- Machine/System Usage -->
+                <div class="bg-surface border border-white/10 p-6 hover:border-white/30 transition-colors">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-white/40">Load Capacity</span>
+                        <span class="material-symbols-outlined text-white/20">speed</span>
+                    </div>
+                    <div class="text-3xl font-black mb-1">{{ machine_usage_percent }}%</div>
+                    <div class="w-full h-1 bg-white/10 mt-2">
+                        <div class="h-full bg-white transition-all duration-500"
+                            style="width: {{ machine_usage_percent }}%"></div>
+                    </div>
+                </div>
+
+                <!-- Logistics -->
+                <div class="bg-surface border border-white/10 p-6 hover:border-white/30 transition-colors">
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-white/40">Logistics</span>
+                        <span class="material-symbols-outlined text-white/20">local_shipping</span>
+                    </div>
+                    <div class="text-3xl font-black mb-1">{{ logistics_count }}</div>
+                    <div class="text-xs text-white/40 font-medium">{{ couriers_en_route }} en route</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full min-h-[500px]">
+                <div class="lg:col-span-2 flex flex-col gap-8">
+                    <!-- Live Operations -->
+                    <div class="bg-surface border border-white/10 p-6 flex-1">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-sm font-bold uppercase tracking-widest">Live Operations</h3>
+                            <a href="{% url 'update_order_status' %}"
+                                class="text-[10px] font-bold uppercase tracking-widest text-white/40 hover:text-white border border-white/10 px-3 py-1 hover:border-white/40">Detail
+                                View</a>
+                        </div>
+                        {% if live_operations %}
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            {% for op in live_operations %}
+                            <div
+                                class="aspect-square border border-white/20 bg-white/5 p-4 flex flex-col justify-between relative group hover:border-white transition-colors cursor-pointer">
+                                <div class="flex justify-between items-start">
+                                    <span class="text-[10px] font-bold text-white/40">#{{ op.id }}</span>
+                                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-xl font-black truncate">{{ op.service_type }}</span>
+                                    <span class="text-[10px] uppercase text-white/60">{{ op.get_status_display }}</span>
+                                </div>
+                                <div class="absolute inset-x-0 bottom-0 h-1 bg-white/20">
+                                    <div class="h-full bg-white w-[60%]"></div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div
+                            class="flex items-center justify-center h-40 border border-dashed border-white/10 text-white/40 uppercase text-xs font-bold tracking-widest">
+                            No Active Operations
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Revenue Overview Chart -->
+                    <div class="bg-surface border border-white/10 p-6 h-64 flex flex-col">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-sm font-bold uppercase tracking-widest">Revenue Overview (Last 12 Days)</h3>
+                            <div class="flex gap-2">
+                                <!-- <button class="text-[10px] font-bold uppercase tracking-widest bg-white text-black px-2 py-1">Day</button> -->
+                            </div>
+                        </div>
+                        <div
+                            class="relative flex-1 w-full border border-white/5 chart-grid overflow-hidden flex items-end justify-between px-2 pb-2 gap-2">
+                            {% for data in revenue_chart_data %}
+                            <div class="w-full bg-white/20 hover:bg-white transition-colors relative group"
+                                style="height: {{ data.height_percent }}%">
+                                <div
+                                    class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-white text-black text-[10px] font-bold px-1 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                    ${{ data.revenue }}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div
+                            class="flex justify-between mt-2 text-[10px] text-white/30 uppercase font-bold tracking-widest">
+                            {% for data in revenue_chart_data %}
+                            <span>{{ data.day }}</span>
+                            {% endfor %}
                         </div>
                     </div>
-                </div> 
-                
+                </div>
+
+                <!-- Incoming Jobs -->
+                <div class="bg-surface border border-white/10 flex flex-col h-full">
+                    <div class="p-6 border-b border-white/10 flex justify-between items-center">
+                        <h3 class="text-sm font-bold uppercase tracking-widest">Incoming Jobs</h3>
+                        <span class="bg-white text-black text-[10px] font-bold px-2 py-0.5 rounded-none">{{
+                            incoming_jobs|length }} NEW</span>
+                    </div>
+                    <div class="overflow-y-auto flex-1 p-0 no-scrollbar max-h-[600px]">
+                        {% for job in incoming_jobs %}
+                        <div
+                            class="p-6 border-b border-white/5 hover:bg-white/5 transition-colors group cursor-pointer">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-xs font-bold text-white">#ORD-{{ job.id }}</span>
+                                <span
+                                    class="text-[10px] font-bold uppercase tracking-widest {% if job.payment.payment_status == 'paid' %}text-green-400{% else %}text-white/40{% endif %}">
+                                    {{ job.payment.payment_status }}
+                                </span>
+                            </div>
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-8 h-8 bg-white/10 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-sm">local_laundry_service</span>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-xs text-white/80">{{ job.service_type }}</span>
+                                    <span class="text-[10px] text-white/40">{{ job.service_for }} • {{
+                                        job.order_date|date:"M d" }}</span>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center mt-2">
+                                <span class="text-[10px] text-white/40 font-mono">{{ job.order_date|date:"H:i" }}</span>
+                                <a href="{% url 'assign_delivery_man' job.id %}"
+                                    class="opacity-0 group-hover:opacity-100 transition-opacity text-[10px] font-bold uppercase tracking-widest border border-white/20 px-3 py-1 hover:bg-white hover:text-black">Assign</a>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="p-6 text-center text-white/40 text-[10px] uppercase font-bold tracking-widest">
+                            No pending jobs
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="p-6 border-t border-white/10 mt-auto">
+                        <a href="{% url 'pending_service_orders' %}"
+                            class="block w-full text-center py-4 bg-white text-black font-bold uppercase tracking-widest text-xs hover:bg-white/90 transition-colors">
+                            View All Orders
+                        </a>
+                    </div>
+                </div>
             </div>
+            {% endblock %}
         </div>
-        <!-- Header End -->
-    </header>
-    <main>
-        <div class="container">
-            
-            {% block body %} {% endblock %}
-        </div>
-
-        
-        <!-- Want To work End -->
-        <!-- Testimonials_start -->
-        <!-- <section class="testimonials-area testimonials-overly position-relative">
-            <div class="container">
-                <div class="border-bottom section-padding40">
-                    <div class="row">
-                        <div class="col-xl-12">
-                           
-                            <div class="testmonial-nav text-center">
-                                <div class="testmonial-thumb">
-                                    <img src="{% static 'assets/img/gallery/testimonila1.png' %}" alt="">
-                                </div>
-                                <div class="testmonial-thumb">
-                                    <img src="{% static 'assets/img/gallery/testimonila2.png' %}" alt="">
-                                </div>
-                                <div class="testmonial-thumb">
-                                    <img src="{% static 'assets/img/gallery/testimonila3.png' %}" alt="">
-                                </div>
-                                <div class="testmonial-thumb">
-                                    <img src="{% static 'assets/img/gallery/testimonila2.png' %}" alt="">
-                                </div>
-                            </div>
-                            <div class="testmonial-item-active text-center">
-                                
-                                <div class="testmonial-item">
-                                    <p class="pera">The automated process starts as soon as your clothes go into the<br> machine. The outcome is gleaming clothes!</p>
-                                    <div class="rating">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <p> - Rupaya</p>
-                                </div>
-                                
-                                <div class="testmonial-item">
-                                    <p class="pera">The automated process starts as soon as your clothes go into the<br> machine. The outcome is gleaming clothes!</p>
-                                    <div class="rating">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <p> - Rupaya</p>
-                                </div>
-                                
-                                <div class="testmonial-item">
-                                    <p class="pera">The automated process starts as soon as your clothes go into the<br> machine. The outcome is gleaming clothes!</p>
-                                    <div class="rating">
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                    <p> - Rupaya</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section> -->
-        
-        <!-- Testimonials_end -->
-        <!--? Company achievement Start -->
-        <section class="services-area section-padding40 fix">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-xl-7 col-lg-8">
-                        <div class="section-tittle text-center mb-55">
-                            <span class="element">Fun Fact</span>
-                            <h2>Company achievement</h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-4 col-md-6 col-sm-6">
-                        <div class="single-cat text-center">
-                            <div class="cat-cap">
-                                <span>4000</span>
-                                <p>The automated process starts as soon as your clothes go into the machine.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-6">
-                        <div class="single-cat text-center">
-                            <div class="cat-cap">
-                                <span>300+</span>
-                                <p>The automated process starts as soon as your clothes go into the machine.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-6">
-                        <div class="single-cat text-center">
-                            <div class="cat-cap">
-                                <span>95%</span>
-                                <p>The automated process starts as soon as your clothes go into the machine.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="bottom-bt">
-                                <img src="{% static 'assets/img/gallery/company-bg.png' %}" alt="">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-
     </main>
-    <footer>
-        <!-- Footer Start-->
-        <div class="footer-area footer-padding">
-            <div class="container">
-                <div class="row d-flex justify-content-between">
-                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6">
-                     <div class="single-footer-caption mb-50">
-                       <div class="single-footer-caption mb-30">
-                        <!-- logo -->
-                        <div class="footer-logo mb-35">
-                            <a href="#"><img src="{%static 'assets/img/logo/logo2_footer.png'%}" alt=""></a>
-                        </div>
-                        <div class="footer-tittle">
-                            <div class="footer-pera">
-                                <p>Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla.</p>
-                            </div>
-                        </div>
-                        <!-- social -->
-                        <div class="footer-social">
-                            <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="https://bit.ly/sai4ull"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#"><i class="fab fa-pinterest-p"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
-                <div class="single-footer-caption mb-50">
-                    <div class="footer-tittle">
-                        <h4>Services </h4>
-                        <ul>
-                            <li><a href="#">- Dry Cleaning</a></li>
-                            <li><a href="#">- Dry Clean</a></li>
-                            <li><a href="#">- Ironing Services</a></li>
-                            <li><a href="#">- Laundry Service London</a></li>
-                            <li><a href="#">- Laundry App</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6">
-                <div class="single-footer-caption mb-50">
-                    <div class="footer-tittle">
-                        <h4>Get in touch</h4>
-                        <ul>
-                            <li class="number"><a href="#">(90) 898 789-8957</a></li>
-                            <li><a href="#">laundry@567.com</a></li>
-                            <li><a href="#">789/A, Green road NYC-9089</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- footer-bottom area -->
-<div class="footer-bottom-area section-bg2" data-background="{%static 'assets/img/gallery/footer-bg.png'%}">
-    <div class="container">
-        <div class="footer-border">
-           <div class="row d-flex align-items-center">
-               <div class="col-xl-12 ">
-                   <div class="footer-copy-right text-center">
-                       <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                          Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-                          <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
-  <!-- Footer End-->
-</footer>
-<!-- Scroll Up -->
-<div id="back-top" >
-    <a title="Go to Top" href="#"> <i class="fas fa-level-up-alt"></i></a>
-</div>
-
-<!-- JS here -->
-
- <!-- Content from original index.html remains unchanged -->
-
-    <!-- JS here -->
-    <script src="{% static 'assets/js/vendor/modernizr-3.5.0.min.js' %}"></script>
-    <!-- Jquery, Popper, Bootstrap -->
-    <script src="{% static 'assets/js/vendor/jquery-1.12.4.min.js' %}"></script>
-    <script src="{% static 'assets/js/popper.min.js' %}"></script>
-    <script src="{% static 'assets/js/bootstrap.min.js' %}"></script>
-    <!-- Jquery Mobile Menu -->
-    <script src="{% static 'assets/js/jquery.slicknav.min.js' %}"></script>
-
-    <!-- Jquery Slick , Owl-Carousel Plugins -->
-    <script src="{% static 'assets/js/owl.carousel.min.js' %}"></script>
-    <script src="{% static 'assets/js/slick.min.js' %}"></script>
-    <!-- One Page, Animated-HeadLine -->
-    <script src="{% static 'assets/js/wow.min.js' %}"></script>
-    <script src="{% static 'assets/js/animated.headline.js' %}"></script>
-    <script src="{% static 'assets/js/jquery.magnific-popup.js' %}"></script>
-
-    <!-- Date Picker -->
-    <script src="{% static 'assets/js/gijgo.min.js' %}"></script>
-    <!-- Nice-select, sticky -->
-    <script src="{% static 'assets/js/jquery.nice-select.min.js' %}"></script>
-    <script src="{% static 'assets/js/jquery.sticky.js' %}"></script>
-    <!-- Progress -->
-    <script src="{% static 'assets/js/jquery.barfiller.js' %}"></script>
-
-    <!-- counter , waypoint,Hover Direction -->
-    <script src="{% static 'assets/js/jquery.counterup.min.js' %}"></script>
-    <script src="{% static 'assets/js/waypoints.min.js' %}"></script>
-    <script src="{% static 'assets/js/jquery.countdown.min.js' %}"></script>
-    <script src="{% static 'assets/js/hover-direction-snake.min.js' %}"></script>
-
-    <!-- contact js -->
-    <script src="{% static 'assets/js/contact.js' %}"></script>
-    <script src="{% static 'assets/js/jquery.form.js' %}"></script>
-    <script src="{% static 'assets/js/jquery.validate.min.js' %}"></script>
-    <script src="{% static 'assets/js/mail-script.js' %}"></script>
-    <script src="{% static 'assets/js/jquery.ajaxchimp.min.js' %}"></script>
-
-    <!-- Jquery Plugins, main Jquery -->	
-    <script src="{% static 'assets/js/plugins.js' %}"></script>
-    <script src="{% static 'assets/js/main.js' %}"></script>
-
 </body>
+
 </html>
