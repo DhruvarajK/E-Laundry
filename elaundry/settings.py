@@ -1,34 +1,30 @@
 from pathlib import Path
 import os
+from dotenv import load_dotenv
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+load_dotenv()
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-CSRF_COOKIE_SECURE = False  # Set to True if using HTTPS
+CSRF_COOKIE_SECURE = False  
 CSRF_COOKIE_NAME = 'csrftoken'
-CSRF_HEADER_NAME = 'HTTP_X_CSRFTOKEN'  # This is the default header name for CSRF tokens
+CSRF_HEADER_NAME = 'HTTP_X_CSRFTOKEN'  
 
 
-SECRET_KEY = 'django-insecure-nd(s+f(ycmop^8dj#ry#v=i_-gcl9eau_fj$l$-y7ms9c8drc$'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-ALLOWED_HOSTS = ['*','b7a3-2409-40f3-1009-a49f-34a2-722a-5d9d-4f33.ngrok-free.app']
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-nd(s+f(ycmop^8dj#ry#v=i_-gcl9eau_fj$l$-y7ms9c8drc$')
 
 
-CSRF_TRUSTED_ORIGINS = [
-    'http://127.0.0.1:8000',
-    'https://b7a3-2409-40f3-1009-a49f-34a2-722a-5d9d-4f33.ngrok-free.app',
-]
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
+
+
+CSRF_TRUSTED_ORIGINS = [origin for origin in os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',') if origin]
 
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10242880  # 5MB, for example
 
 
-
-# settings.py
-
-RAZORPAY_KEY_ID = 'rzp_test_Ey8ivDWGODPlAZ'
-RAZORPAY_KEY_SECRET = 'ttmCr5Cy7mQYI2Eck7W6UD3u'
+RAZORPAY_KEY_ID = os.getenv('RAZORPAY_KEY_ID')
+RAZORPAY_KEY_SECRET = os.getenv('RAZORPAY_KEY_SECRET')
 
 
 # Application definition

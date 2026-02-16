@@ -334,8 +334,7 @@
                 <div class="bg-surface border border-white/10 flex flex-col h-full">
                     <div class="p-6 border-b border-white/10 flex justify-between items-center">
                         <h3 class="text-sm font-bold uppercase tracking-widest">Incoming Jobs</h3>
-                        <span class="bg-white text-black text-[10px] font-bold px-2 py-0.5 rounded-none">{{
-                            incoming_jobs|length }} NEW</span>
+                        <span class="bg-white text-black text-[10px] font-bold px-2 py-0.5 rounded-none">{{incoming_jobs|length }} NEW</span>
                     </div>
                     <div class="overflow-y-auto flex-1 p-0 no-scrollbar max-h-[600px]">
                         {% for job in incoming_jobs %}
