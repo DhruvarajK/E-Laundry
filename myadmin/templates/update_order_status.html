@@ -1,408 +1,165 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Font Awesome CDN -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+{% extends 'admin_home.html' %}
+{% block title %}Update Order Status{% endblock %}
+{% block body %}
+<div class="flex flex-col gap-6 h-full">
+    <!-- Header & Filter -->
+    <div class="flex flex-col gap-4 bg-surface border border-white/10 p-6 rounded-none">
+        <div class="flex justify-between items-center">
+            <h3 class="text-sm font-bold uppercase tracking-widest text-white">Update Status</h3>
+            {% if messages %}
+            <div class="flex flex-col gap-2">
+                {% for message in messages %}
+                <div
+                    class="px-3 py-1 bg-green-500/10 border border-green-500/20 text-green-500 text-xs font-bold uppercase tracking-widest">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
 
-    <title>Update Order Status</title>
-    <style>
-        :root {
-            --primary: #4A6FDC;
-            --primary-light: #6a8ae3;
-            --primary-dark: #3a5abe;
-            --gray-100: #f8f9fa;
-            --gray-200: #e9ecef;
-            --gray-300: #dee2e6;
-            --gray-600: #6c757d;
-            --gray-800: #343a40;
-            --white: #ffffff;
-            --red: #dc3545;
-            --green: #28a745;
-            --yellow: #ffc107;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        }
-
-        body {
-            background-color: var(--gray-100);
-            color: var(--gray-800);
-            line-height: 1.6;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: var(--white);
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        h1 {
-            color: var(--gray-800);
-            font-size: 1.8rem;
-            font-weight: 600;
-        }
-
-        .back-btn {
-            display: inline-flex;
-            align-items: center;
-            padding: 8px 16px;
-            background-color: var(--primary);
-            color: var(--white);
-            border: none;
-            border-radius: 4px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            text-decoration: none;
-        }
-
-        .back-btn:hover {
-            background-color: var(--primary-dark);
-        }
-
-        .back-btn svg {
-            margin-right: 8px;
-        }
-
-        .alert {
-            color: var(--red);
-            font-weight: bold;
-            padding: 12px 15px;
-            margin-bottom: 20px;
-            background-color: rgba(220, 53, 69, 0.1);
-            border-left: 4px solid var(--red);
-            border-radius: 4px;
-        }
-
-        .filter-form {
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: var(--gray-100);
-            border-radius: 6px;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .checkbox-label {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        .checkbox-label input {
-            margin-right: 8px;
-        }
-
-        .table-container {
-            overflow-x: auto;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            white-space: nowrap;
-        }
-
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid var(--gray-300);
-        }
-
-        th {
-            background-color: var(--primary);
-            color: var(--white);
-            font-weight: 500;
-            position: sticky;
-            top: 0;
-        }
-
-        tr:nth-child(even) {
-            background-color: var(--gray-100);
-        }
-
-        tr:hover {
-            background-color: var(--gray-200);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--gray-600);
-        }
-
-        .action-link {
-            display: inline-block;
-            padding: 6px 12px;
-            background-color: var(--primary);
-            color: var(--white);
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            transition: background-color 0.2s;
-            text-align: center;
-        }
-
-        .action-link:hover {
-            background-color: var(--primary-light);
-        }
-
-        .form-group {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: var(--gray-100);
-            border-radius: 6px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        select {
-            width: 100%;
-            max-width: 300px;
-            padding: 8px 12px;
-            border: 1px solid var(--gray-300);
-            border-radius: 4px;
-            font-size: 1rem;
-            background-color: var(--white);
-        }
-
-        .submit-btn {
-            margin-top: 15px;
-            padding: 10px 20px;
-            background-color: var(--primary);
-            color: var(--white);
-            border: none;
-            border-radius: 4px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .submit-btn:hover {
-            background-color: var(--primary-dark);
-        }
-
-        .filter-btn {
-            padding: 8px 16px;
-            background-color: var(--gray-600);
-            color: var(--white);
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .filter-btn:hover {
-            background-color: var(--gray-800);
-        }
-
-        /* Mobile responsive adjustments */
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
-
-            h1 {
-                font-size: 1.5rem;
-            }
-
-            th, td {
-                padding: 10px;
-            }
-
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .action-link {
-                display: block;
-                text-align: center;
-            }
-
-            .filter-form {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-        }
-
-        @media (max-width: 576px) {
-            body {
-                padding: 10px;
-            }
-
-            .container {
-                padding: 10px;
-            }
-
-            th, td {
-                padding: 8px;
-                font-size: 0.9rem;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>Update Order Status</h1>
-            <button class="back-btn" onclick="goBack()">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M19 12H5M12 19l-7-7 7-7"/>
-                </svg>
-                Back
-            </button>
+            {% if error %}
+            <div
+                class="px-3 py-1 bg-red-500/10 border border-red-500/20 text-red-500 text-xs font-bold uppercase tracking-widest">
+                {{ error }}
+            </div>
+            {% endif %}
         </div>
-        
-        {% if error %}
-        <div class="alert">
-            {{ error }}
-        </div>
-        {% endif %}
-        
-        {% if messages %}
-        {% for message in messages %}
-        <div class="alert">{{ message }}</div>
-        {% endfor %}
-        {% endif %}
-        
-        <!-- Filter to show/hide completed orders -->
-        <form method="get" action="" class="filter-form">
-            <label class="checkbox-label">
-                <input type="checkbox" name="hide_completed" value="true" {% if hide_completed %}checked{% endif %}>
-                Hide Completed Orders
+
+        <form method="get" action="" class="flex items-center gap-4">
+            <label class="flex items-center gap-2 cursor-pointer group">
+                <input type="checkbox" name="hide_completed" value="true" {% if hide_completed %}checked{% endif %}
+                    class="w-4 h-4 rounded border-white/20 bg-white/5 text-blue-500 focus:ring-offset-0 focus:ring-0">
+                <span
+                    class="text-xs text-white/60 group-hover:text-white transition-colors uppercase font-bold tracking-widest">Hide
+                    Completed Orders</span>
             </label>
-            <button type="submit" class="filter-btn">Apply Filter</button>
+            <button type="submit"
+                class="px-4 py-2 bg-white/5 hover:bg-white/10 text-white text-[10px] font-bold uppercase tracking-widest border border-white/10 transition-colors">
+                Apply Filter
+            </button>
         </form>
-        
-        <!-- Form to update order status -->
-        <form method="post">
-            {% csrf_token %}
-            <div class="table-container">
-                <table>
+    </div>
+
+    <!-- Orders Form -->
+    <form method="post" class="flex flex-col flex-1 gap-6">
+        {% csrf_token %}
+        <div class="bg-surface border border-white/10 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
                     <thead>
-                        <tr>
-                            <th>Select</th>
-                            <th>Order ID</th>
-                            <th>User</th>
-                            <th>Current Status</th>
-                            <th>Actions</th>
+                        <tr class="border-b border-white/10 bg-white/5">
+                            <th
+                                class="px-6 py-4 w-12 text-center text-[10px] font-bold uppercase tracking-widest text-white/40">
+                                <span class="material-symbols-outlined text-sm">check_box_outline_blank</span>
+                            </th>
+                            <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Order ID
+                            </th>
+                            <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Customer
+                                Details</th>
+                            <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Current
+                                Status</th>
+                            <th
+                                class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40 text-right">
+                                Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="divide-y divide-white/5">
                         {% for order in orders %}
-                        <tr>
-                            <td>
-                                <input type="checkbox" name="order_ids" value="{{ order.id }}">
+                        <tr class="hover:bg-white/5 transition-colors group">
+                            <td class="px-6 py-4 text-center">
+                                <input type="checkbox" name="order_ids" value="{{ order.id }}"
+                                    class="w-4 h-4 rounded border-white/20 bg-white/5 text-blue-500 focus:ring-offset-0 focus:ring-0">
                             </td>
-                            <td>{{ order.id }}</td>
-                            <td>{{ order.USER.first_name }} {{ order.USER.last_name }} {{ order.BUSINESS.owner_name }} {{ order.BUSINESS.business_name }}</td>
-                            <td>
-                                <span class="status-badge">{{ order.status }}</span>
+                            <td class="px-6 py-4">
+                                <span class="font-mono text-xs text-white/60">#{{ order.id }}</span>
                             </td>
-                            <td>
-                                {% if order.payment.bill_items.all|length %}
-                                <a href="{% url 'view_bill' order.id %}" class="action-link">View Bill</a>
-                                {% elif order.subscription %}
-                                
-                                <a href="#" class="action-link" style="cursor: not-allowed;">Generate Bill</a>
+                            <td class="px-6 py-4">
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-bold text-white">{{ order.USER.first_name }} {{
+                                        order.USER.last_name }}</span>
+                                    <div class="flex flex-col text-[10px] text-white/40 mt-0.5">
+                                        <span>{{ order.BUSINESS.business_name }}</span>
+                                        <span>Owner: {{ order.BUSINESS.owner_name }}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                {% if order.status|lower == 'completed' %}
+                                <span
+                                    class="inline-block px-2 py-1 bg-green-500/10 text-green-500 text-[10px] font-bold uppercase tracking-widest border border-green-500/20">
+                                    {{ order.status }}
+                                </span>
+                                {% elif order.status|lower == 'in progress' or order.status|lower == 'washing' %}
+                                <span
+                                    class="inline-block px-2 py-1 bg-yellow-500/10 text-yellow-500 text-[10px] font-bold uppercase tracking-widest border border-yellow-500/20">
+                                    {{ order.status }}
+                                </span>
                                 {% else %}
-                                <a href="{% url 'generate_bill' order.id %}" class="action-link">Generate Bill</a>
+                                <span
+                                    class="inline-block px-2 py-1 bg-white/5 text-white/60 text-[10px] font-bold uppercase tracking-widest border border-white/10">
+                                    {{ order.status }}
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                {% if order.payment.bill_items.all|length %}
+                                <a href="{% url 'view_bill' order.id %}"
+                                    class="inline-block px-3 py-1 bg-white/5 text-white border border-white/10 hover:bg-white/10 text-[10px] font-bold uppercase tracking-widest transition-colors">
+                                    View Bill
+                                </a>
+                                {% elif order.subscription %}
+                                <span
+                                    class="inline-block px-3 py-1 bg-white/5 text-white/40 border border-white/5 cursor-not-allowed text-[10px] font-bold uppercase tracking-widest">
+                                    Subscribed
+                                </span>
+                                {% else %}
+                                <a href="{% url 'generate_bill' order.id %}"
+                                    class="inline-block px-3 py-1 bg-green-500/10 text-green-500 border border-green-500/20 hover:bg-green-500 hover:text-black text-[10px] font-bold uppercase tracking-widest transition-colors">
+                                    Generate Bill
+                                </a>
                                 {% endif %}
                             </td>
                         </tr>
-                        {% empty %}
+                        {% endfor %}
+                        {% if not orders %}
                         <tr>
-                            <td colspan="5" class="empty-state">
-                                <p>No orders found.</p>
+                            <td colspan="5"
+                                class="px-6 py-12 text-center text-white/40 text-xs uppercase font-bold tracking-widest">
+                                No orders found
                             </td>
                         </tr>
-                        {% endfor %}
+                        {% endif %}
                     </tbody>
                 </table>
             </div>
-            
-            <!-- Dropdown to select status -->
-             
-            <div class="form-group">
-                <label for="new_status">Select New Status:</label>
-                <select name="new_status" id="new_status">
+        </div>
+
+        <!-- Action Bar -->
+        <div class="bg-surface border border-white/10 p-6 flex flex-col md:flex-row gap-6 justify-between items-center">
+            <div class="flex items-center gap-4 w-full md:w-auto">
+                <label for="new_status"
+                    class="text-xs font-bold uppercase tracking-widest text-white/60 whitespace-nowrap">New
+                    Status:</label>
+                <select name="new_status" id="new_status"
+                    class="bg-black/20 border border-white/10 text-white text-xs py-2 px-4 focus:ring-1 focus:ring-white/20 focus:border-white/20 outline-none w-full md:w-64">
                     <option value="in progress">In Progress</option>
                     <option value="Washing">Washing</option>
                     <option value="Completed">Completed</option>
                 </select>
-                
-                <button type="submit" class="submit-btn">Update Status</button>
             </div>
-            <div style="display: flex; align-items: center; padding: 12px 16px; background-color: #fdecea; color: #b71c1c; border-left: 4px solid #f44336; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); font-family: sans-serif;">
-                <i class="fas fa-exclamation-triangle" style="margin-right: 10px; font-size: 18px;"></i>
-                <span style="font-size: 15px;">Can’t generate bill for subscribed orders.</span>
-              </div>
-              
-              
-        </form>
-    </div>
 
-    <script>
-        function goBack() {
-            window.history.back();
-        }
-        
-        // Add custom styling to status badges based on status value
-        document.addEventListener('DOMContentLoaded', function() {
-            const statusElements = document.querySelectorAll('.status-badge');
-            
-            statusElements.forEach(element => {
-                const status = element.textContent.trim().toLowerCase();
-                
-                if (status === 'completed') {
-                    element.style.backgroundColor = '#d4edda';
-                    element.style.color = '#155724';
-                } else if (status === 'in progress' || status === 'washing') {
-                    element.style.backgroundColor = '#fff3cd';
-                    element.style.color = '#856404';
-                } else {
-                    element.style.backgroundColor = '#e2e3e5';
-                    element.style.color = '#383d41';
-                }
-                
-                // Apply badge styling
-                element.style.padding = '4px 8px';
-                element.style.borderRadius = '20px';
-                element.style.fontSize = '0.8rem';
-                element.style.fontWeight = '500';
-                element.style.textTransform = 'uppercase';
-            });
-        });
-    </script>
-</body>
-</html>
+            <div class="flex items-center gap-4 w-full md:w-auto">
+                <div
+                    class="hidden md:flex items-center gap-2 px-3 py-2 bg-red-500/5 border border-red-500/10 text-red-400/80 text-[10px]">
+                    <span class="material-symbols-outlined text-sm">warning</span>
+                    Can’t generate bill for subscribed orders
+                </div>
+                <button type="submit"
+                    class="w-full md:w-auto px-6 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold uppercase tracking-widest transition-colors">
+                    Update Selected
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
