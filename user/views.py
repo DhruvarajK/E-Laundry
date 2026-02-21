@@ -292,7 +292,8 @@ def normal_order(request):
         weight = float(request.POST.get('weight', 0))
 
         # Loyalty points check
-        if usr_obj.loyalty_points < 0:
+        usr_obj = context.get('user')
+        if usr_obj and usr_obj.loyalty_points < 0:
             messages.error(request, f'Order declined. You have negative loyalty points ({usr_obj.loyalty_points}). Please contact support.')
             return render(request, 'normal_order.html', context)
 
