@@ -22,9 +22,35 @@ load_dotenv()
 
 
 def index(request):
+    if 'lid' in request.session and request.session['lid'] != 'out':
+        try:
+            res = login.objects.get(id=request.session['lid'])
+            if res.usertype == "admin":
+                return redirect('/admin_home')
+            elif res.usertype == "logistics":
+                return redirect('/logistics_home')
+            elif res.usertype == "user":
+                return redirect('/user_home')
+            elif res.usertype == "business":
+                return redirect('/business_home')
+        except login.DoesNotExist:
+            pass
     return render(request,"main_index.html")
 
 def login_return(request):
+    if 'lid' in request.session and request.session['lid'] != 'out':
+        try:
+            res = login.objects.get(id=request.session['lid'])
+            if res.usertype == "admin":
+                return redirect('/admin_home')
+            elif res.usertype == "logistics":
+                return redirect('/logistics_home')
+            elif res.usertype == "user":
+                return redirect('/user_home')
+            elif res.usertype == "business":
+                return redirect('/business_home')
+        except login.DoesNotExist:
+            pass
     return render(request,"login.html")
 
 def login_post(request):
