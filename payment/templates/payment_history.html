@@ -173,7 +173,7 @@
                         <span class="text-[10px] font-bold uppercase tracking-widest text-white/40">{{ payments|length}}
                             Records</span>
                     </div>
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto hidden md:block">
                         <table class="w-full text-left border-collapse">
                             <thead>
                                 <tr class="border-b border-white/10">
@@ -280,6 +280,89 @@
                             </tbody>
                         </table>
                     </div>
+                    <!-- Mobile Transactions -->
+<div class="md:hidden space-y-4 p-4">
+    {% for payment in payments %}
+    <div class="border border-white/10 bg-white/5 p-4 space-y-3">
+
+        <!-- Header row -->
+        <div class="flex justify-between items-start">
+            <div class="text-xs font-mono text-white/80">
+                {{ payment.service_order.order_date|date:"Y-m-d H:i" }}
+            </div>
+
+            {% if payment.payment_status == 'paid' %}
+            <span class="px-2 py-1 text-[10px] uppercase font-bold tracking-widest border border-white/20 text-white">
+                Paid
+            </span>
+            {% elif payment.payment_status == 'pending' %}
+            <span class="px-2 py-1 text-[10px] uppercase font-bold tracking-widest border border-white/20 text-white/60">
+                Pending
+            </span>
+            {% elif payment.payment_status == 'failed' %}
+            <span class="px-2 py-1 text-[10px] uppercase font-bold tracking-widest border border-white/20 text-white/40">
+                Failed
+            </span>
+            {% endif %}
+        </div>
+
+        <!-- Service -->
+        <div class="flex items-center gap-2 text-sm">
+            {% if payment.service_order.service_type == 'dry-clean' %}
+            <i data-lucide="sparkles" class="w-4 h-4 text-white/60"></i>
+            {% elif payment.service_order.service_type == 'Machine Wash' %}
+            <i data-lucide="washing-machine" class="w-4 h-4 text-white/60"></i>
+            {% elif payment.service_order.service_type == 'iron' %}
+            <i data-lucide="iron" class="w-4 h-4 text-white/60"></i>
+            {% elif payment.service_order.service_type == 'fold' %}
+            <i data-lucide="package" class="w-4 h-4 text-white/60"></i>
+            {% elif payment.service_order.service_type == 'steam-press' %}
+            <i data-lucide="wind" class="w-4 h-4 text-white/60"></i>
+            {% elif payment.service_order.service_type == 'starch' %}
+            <i data-lucide="droplet" class="w-4 h-4 text-white/60"></i>
+            {% elif payment.service_order.service_type == 'hand-wash' %}
+            <i data-lucide="waves" class="w-4 h-4 text-white/60"></i>
+            {% elif payment.service_order.service_type == 'spot-cleaning' %}
+            <i data-lucide="target" class="w-4 h-4 text-white/60"></i>
+            {% elif payment.service_order.service_type == 'delicate-care' %}
+            <i data-lucide="feather" class="w-4 h-4 text-white/60"></i>
+            {% elif payment.service_order.service_type == 'Hand wash & Ironing' %}
+            <i data-lucide="hand" class="w-4 h-4 text-white/60"></i>
+            {% elif payment.service_order.service_type == 'Machine wash & Ironing' %}
+            <i data-lucide="cog" class="w-4 h-4 text-white/60"></i>
+            {% else %}
+            <i data-lucide="shirt" class="w-4 h-4 text-white/60"></i>
+            {% endif %}
+            <span class="uppercase font-bold tracking-wider">
+                {{ payment.service_order.service_type }}
+            </span>
+        </div>
+
+        <!-- Amount -->
+        <div class="flex justify-between items-center text-xs">
+            <span class="uppercase tracking-widest text-white/40">Amount</span>
+            {% if payment.service_order.subscription %}
+            <span class="text-white/60 uppercase tracking-widest text-[10px]">
+                Subscription
+            </span>
+            {% else %}
+            <span class="font-mono font-bold">
+                ₹{{ payment.total_price }}
+            </span>
+            {% endif %}
+        </div>
+
+        <!-- Payment date -->
+        <div class="text-[10px] uppercase tracking-widest text-white/40">
+            Paid on {{ payment.created_at|date:"Y-m-d H:i" }}
+        </div>
+    </div>
+    {% empty %}
+    <div class="text-center text-white/40 text-sm py-10">
+        No payment history available
+    </div>
+    {% endfor %}
+</div>
 
                     <!-- Pagination -->
                     {% if payments.has_other_pages %}

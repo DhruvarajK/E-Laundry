@@ -5,7 +5,8 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <meta name="description" content="A comprehensive laundry management solution designed to bridge the gap between customers, businesses, and logistics providers." />
+    <meta name="description"
+        content="A comprehensive laundry management solution designed to bridge the gap between customers, businesses, and logistics providers." />
     <link rel="icon" href="{% static 'favicon.ico' %}" sizes="any" />
     <link rel="apple-touch-icon" href="{% static 'apple-touch-icon.png' %}" />
     <title>User Dashboard | ELaundry</title>
@@ -197,10 +198,30 @@
                         class="border border-white/10 bg-white/5 p-6 flex flex-col md:flex-row gap-6 md:items-center justify-between group hover:border-white/30 transition-colors">
                         <div class="flex items-center gap-6">
                             <div class="w-16 h-16 bg-white/10 flex items-center justify-center border border-white/10">
-                                {% if order.service_type == 'Dry Cleaning' %}
-                                <i data-lucide="shirt" class="text-white/60 w-6 h-6"></i>
-                                {% else %}
+                                {% if order.service_type == 'dry-clean' %}
+                                <i data-lucide="sparkles" class="text-white/60 w-6 h-6"></i>
+                                {% elif order.service_type == 'Machine Wash' %}
                                 <i data-lucide="washing-machine" class="text-white/60 w-6 h-6"></i>
+                                {% elif order.service_type == 'iron' %}
+                                <i data-lucide="iron" class="text-white/60 w-6 h-6"></i>
+                                {% elif order.service_type == 'fold' %}
+                                <i data-lucide="package" class="text-white/60 w-6 h-6"></i>
+                                {% elif order.service_type == 'steam-press' %}
+                                <i data-lucide="wind" class="text-white/60 w-6 h-6"></i>
+                                {% elif order.service_type == 'starch' %}
+                                <i data-lucide="droplet" class="text-white/60 w-6 h-6"></i>
+                                {% elif order.service_type == 'hand-wash' %}
+                                <i data-lucide="waves" class="text-white/60 w-6 h-6"></i>
+                                {% elif order.service_type == 'spot-cleaning' %}
+                                <i data-lucide="target" class="text-white/60 w-6 h-6"></i>
+                                {% elif order.service_type == 'delicate-care' %}
+                                <i data-lucide="feather" class="text-white/60 w-6 h-6"></i>
+                                {% elif order.service_type == 'Hand wash & Ironing' %}
+                                <i data-lucide="hand" class="text-white/60 w-6 h-6"></i>
+                                {% elif order.service_type == 'Machine wash & Ironing' %}
+                                <i data-lucide="cog" class="text-white/60 w-6 h-6"></i>
+                                {% else %}
+                                <i data-lucide="shirt" class="text-white/60 w-6 h-6"></i>
                                 {% endif %}
                             </div>
                             <div>
@@ -208,7 +229,7 @@
                                     <span class="text-white font-bold uppercase tracking-wider">Order
                                         #{{order.id}}</span>
                                     <span
-                                        class="text-[10px] text-white/40 uppercase tracking-widest">{{order.order_date|date:"Md,Y, h:i A"}}</span>
+                                        class="text-[10px] text-white/40 uppercase tracking-widest">{{order.order_date|date:"Md,Y,h:i A"}}</span>
                                 </div>
                                 <div class="text-sm text-white/60">{{ order.service_type }}</div>
                             </div>
@@ -257,53 +278,68 @@
                     {% endfor %}
                 </div>
             </div>
-            <div class="pt-8 border-t border-white/10">
-                <div class="flex justify-between items-end mb-6">
-                    <h4 class="text-sm font-bold uppercase tracking-widest text-white/60">Recent Completed</h4>
-                    <a class="text-[10px] font-bold uppercase tracking-widest text-white hover:underline"
-                        href="{% url 'view_all_orders' %}">View All History</a>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="border-b border-white/10">
-                                <th class="py-3 text-[10px] font-bold uppercase tracking-widest text-white/40">
-                                    Order ID
-                                </th>
-                                <th class="py-3 text-[10px] font-bold uppercase tracking-widest text-white/40">
-                                    Date</th>
-                                <th class="py-3 text-[10px] font-bold uppercase tracking-widest text-white/40">
-                                    Service
-                                </th>
-                                <th class="py-3 text-[10px] font-bold uppercase tracking-widest text-white/40">
-                                    Amount
-                                </th>
-                                <th
-                                    class="py-3 text-[10px] font-bold uppercase tracking-widest text-white/40 text-right">
-                                    Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-white text-xs">
-                            {% for order in recent_completed %}
-                            <tr class="border-b border-white/5 hover:bg-white/5">
-                                <td class="py-4 font-mono">#{{ order.id }}</td>
-                                <td class="py-4">{{ order.order_date|date:"M d, Y" }}</td>
-                                <td class="py-4">{{ order.service_type }}</td>
-                                <td class="py-4">${{ order.payment.total_price|default:"0.00" }}</td>
-                                <td class="py-4 text-right"><span
-                                        class="px-2 py-1 bg-white/10 text-[10px] uppercase font-bold tracking-wider">Delivered</span>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="5" class="py-4 text-center text-white/40">No completed orders yet.
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            <!-- Mobile view -->
+<div class="flex flex-col gap-4 md:hidden">
+    {% for order in recent_completed %}
+    <div class="border border-white/10 bg-white/5 p-4 flex flex-col gap-3">
+
+        <!-- Top row -->
+        <div class="flex justify-between items-center">
+            <span class="font-mono text-xs text-white">#{{ order.id }}</span>
+            <span class="px-2 py-1 bg-white/10 text-[10px] uppercase font-bold tracking-wider">
+                Delivered
+            </span>
+        </div>
+
+        <!-- Date -->
+        <div class="text-[11px] uppercase tracking-widest text-white/40">
+            {{ order.order_date|date:"M d, Y" }}
+        </div>
+
+        <!-- Service -->
+        <div class="flex items-center gap-2 text-sm text-white">
+            {% if order.service_type == 'dry-clean' %}
+            <i data-lucide="sparkles" class="w-4 h-4 text-white/60"></i>
+            {% elif order.service_type == 'Machine Wash' %}
+            <i data-lucide="washing-machine" class="w-4 h-4 text-white/60"></i>
+            {% elif order.service_type == 'iron' %}
+            <i data-lucide="iron" class="w-4 h-4 text-white/60"></i>
+            {% elif order.service_type == 'fold' %}
+            <i data-lucide="package" class="w-4 h-4 text-white/60"></i>
+            {% elif order.service_type == 'steam-press' %}
+            <i data-lucide="wind" class="w-4 h-4 text-white/60"></i>
+            {% elif order.service_type == 'starch' %}
+            <i data-lucide="droplet" class="w-4 h-4 text-white/60"></i>
+            {% elif order.service_type == 'hand-wash' %}
+            <i data-lucide="waves" class="w-4 h-4 text-white/60"></i>
+            {% elif order.service_type == 'spot-cleaning' %}
+            <i data-lucide="target" class="w-4 h-4 text-white/60"></i>
+            {% elif order.service_type == 'delicate-care' %}
+            <i data-lucide="feather" class="w-4 h-4 text-white/60"></i>
+            {% elif order.service_type == 'Hand wash & Ironing' %}
+            <i data-lucide="hand" class="w-4 h-4 text-white/60"></i>
+            {% elif order.service_type == 'Machine wash & Ironing' %}
+            <i data-lucide="cog" class="w-4 h-4 text-white/60"></i>
+            {% else %}
+            <i data-lucide="shirt" class="w-4 h-4 text-white/60"></i>
+            {% endif %}
+            <span>{{ order.service_type }}</span>
+        </div>
+
+        <!-- Amount -->
+        <div class="flex justify-between items-center text-xs">
+            <span class="uppercase tracking-widest text-white/40">Amount</span>
+            <span class="text-white font-medium">
+                ${{ order.payment.total_price|default:"0.00" }}
+            </span>
+        </div>
+    </div>
+    {% empty %}
+    <div class="text-center text-white/40 text-sm py-6">
+        No completed orders yet.
+    </div>
+    {% endfor %}
+</div>
             {% endblock %}
         </div>
     </main>
