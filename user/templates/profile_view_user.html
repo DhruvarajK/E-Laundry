@@ -33,7 +33,7 @@
                 <div class="w-full border-t border-white/10 pt-6 mt-2">
                     <div class="flex justify-between items-center mb-3">
                         <span class="text-[10px] uppercase tracking-widest text-white/40">Loyalty Points</span>
-                        <span class="text-sm font-bold text-white">1,240</span>
+                        <span class="text-sm font-bold text-white">{{ user.loyalty_points|default:"0" }}</span>
                     </div>
                     <div class="flex justify-between items-center">
                         <span class="text-[10px] uppercase tracking-widest text-white/40">Member Since</span>

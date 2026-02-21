@@ -164,14 +164,14 @@
                             {% csrf_token %}
                             <div class="flex justify-between items-center mb-1">
                                 <span class="text-white text-sm font-bold">{{ order.service_type }}</span>
-                                <span class="text-white/40 text-xs">${{ order.payment.total_price|default:"0.00"}}</span>
+                                <span class="text-white/40 text-xs">${{order.payment.total_price|default:"0.00"}}</span>
                             </div>
                             <div class="text-[10px] text-white/40 uppercase tracking-wider mb-2">
                                 {% if order.special_instructions %}
                                 {{ order.special_instructions|truncatechars:40 }}
                                 {% else %} Based on your previous order {% endif %}
                             </div>
-                            <button type="submit"
+                            <button type="button" onclick="confirmReorder(this.form)"
                                 class="w-full py-2 border border-white/20 text-white/60 text-[10px] font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors">Reorder</button>
                         </form>
                         {% empty %}
@@ -205,7 +205,7 @@
                                     <span class="text-white font-bold uppercase tracking-wider">Order
                                         #{{order.id}}</span>
                                     <span
-                                        class="text-[10px] text-white/40 uppercase tracking-widest">{{order.order_date|date:"Md, Y, h:i A"}}</span>
+                                        class="text-[10px] text-white/40 uppercase tracking-widest">{{order.order_date|date:"Md,Y, h:i A"}}</span>
                                 </div>
                                 <div class="text-sm text-white/60">{{ order.service_type }}</div>
                             </div>
@@ -304,6 +304,34 @@
             {% endblock %}
         </div>
     </main>
+
+    <!-- Reorder Confirmation Modal -->
+    <div id="reorder-modal" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeReorderModal()"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md px-6">
+            <div class="bg-black border border-white/10 p-8 shadow-2xl relative">
+                <div class="mb-8">
+                    <h2 class="text-xs font-bold uppercase tracking-[0.4em] text-white/40 mb-4">Confirm Order</h2>
+                    <h3 class="text-2xl font-black uppercase tracking-tight text-white mb-4">Quick Reorder</h3>
+                    <p class="text-white/60 text-sm leading-relaxed uppercase tracking-widest text-[10px] font-bold">
+                        Are you sure you want to place this order again? This will schedule a new pickup based on your
+                        past service details.
+                    </p>
+                </div>
+                <div class="flex flex-col gap-3">
+                    <button id="confirm-reorder-btn"
+                        class="w-full py-4 bg-white text-black text-[10px] font-black uppercase tracking-[0.2em] hover:bg-gray-200 transition-colors">
+                        Confirm Reorder
+                    </button>
+                    <button onclick="closeReorderModal()"
+                        class="w-full py-4 border border-white/10 text-white/40 text-[10px] font-black uppercase tracking-[0.2em] hover:text-white hover:border-white/30 transition-colors">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="mobile-menu-overlay"
         class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 hidden transition-opacity duration-300 opacity-0"
         onclick="toggleMobileMenu()"></div>
@@ -334,9 +362,7 @@
         </nav>
         <div class="p-4 border-t border-white/10">
             <div class="flex items-center gap-3 px-4 py-3">
-                <div class="w-8 h-8 bg-white/10 flex items-center justify-center text-white font-bold text-xs">{% if
-                    user.first_name %}{{user.first_name|first}}{% if user.last_name%}{{user.last_name|first}}{%endif
-                    %}{% else %}U{% endif %}</div>
+                <div class="w-8 h-8 bg-white/10 flex items-center justify-center text-white font-bold text-xs">{% if user.first_name %}{{user.first_name|first}}{% if user.last_name%}{{user.last_name|first}}{%endif%}{% else %}U{% endif %}</div>
                 <div class="flex flex-col"><span
                         class="text-xs font-bold text-white uppercase tracking-wider">{{user.first_name}}
                         {{user.last_name}}</span><span
@@ -348,6 +374,27 @@
         </div>
     </aside>
     <script>
+        let formToSubmit = null;
+
+        function confirmReorder(form) {
+            formToSubmit = form;
+            const modal = document.getElementById('reorder-modal');
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+
+            // Add click event for confirmation
+            document.getElementById('confirm-reorder-btn').onclick = function () {
+                if (formToSubmit) formToSubmit.submit();
+            };
+        }
+
+        function closeReorderModal() {
+            const modal = document.getElementById('reorder-modal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            formToSubmit = null;
+        }
+
         function toggleMobileMenu() {
             const sidebar = document.getElementById('mobile-sidebar');
             const overlay = document.getElementById('mobile-menu-overlay');
