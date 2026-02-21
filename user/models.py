@@ -75,6 +75,15 @@ class LaundryBag(models.Model):
     assigned = models.BooleanField(default=True)
 
 
+class Machine(models.Model):
+    name = models.CharField(max_length=100)
+    capacity = models.FloatField(help_text="Capacity in kg")
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.name} ({self.capacity}kg)"
+
+
 # Updated ServiceOrder Model to Handle Subscription
 class ServiceOrder(models.Model):
     STATUS_CHOICES = [
@@ -99,6 +108,7 @@ class ServiceOrder(models.Model):
     pickup_date = models.DateTimeField(null=True, blank=True)
     delivery_date = models.DateTimeField(null=True, blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    weight = models.FloatField(default=0.0, help_text="Weight of laundry in kg")
     special_instructions = models.TextField(null=True, blank=True)
     
     

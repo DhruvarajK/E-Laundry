@@ -12,7 +12,7 @@
     <div class="space-y-4">
         {% for message in messages %}
         <div class="p-4 border border-white/10 bg-white/5 text-white text-sm flex items-center gap-3">
-            <span class="material-symbols-outlined text-green-400">check_circle</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info-icon lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
             {{ message }}
         </div>
         {% endfor %}
@@ -54,6 +54,14 @@
                 <textarea id="special_instructions" name="special_instructions" rows="4"
                     placeholder="Add any special instructions or notes for your order here..."
                     class="w-full bg-white/5 border border-white/10 text-white p-4 focus:outline-none focus:border-white/40 transition-colors placeholder:text-white/20 text-sm"></textarea>
+            </div>
+
+            <div class="space-y-4">
+                <label for="weight"
+                    class="block text-xs font-bold uppercase tracking-widest text-white/60">Estimated Weight (kg)</label>
+                <input type="number" step="0.1" id="weight" name="weight" required
+                    placeholder="Enter estimated weight in kg"
+                    class="w-full bg-white/5 border border-white/10 text-white p-4 focus:outline-none focus:border-white/40 transition-colors placeholder:text-white/20 text-sm">
             </div>
 
             <div class="pt-4">

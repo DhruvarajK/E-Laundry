@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.utils.timezone import make_aware
 from django.conf import settings
 from business.models import Business
-from .models import LaundryBag, LogisticsAssignment, Subscription, SubscriptionPlan, user
+from .models import LaundryBag, LogisticsAssignment, Machine, Subscription, SubscriptionPlan, user
 from geopy.geocoders import Nominatim
 from django.core.files.storage import FileSystemStorage
 from myadmin.models import login
@@ -237,6 +237,19 @@ def normal_order(request):
     if request.method == 'POST':
         service_type = request.POST.get('service_type')
         special_instructions = request.POST.get('special_instructions')
+        weight = float(request.POST.get('weight', 0))
+
+        # Capacity Check Logic
+        from django.db.models import Sum
+        total_capacity = Machine.objects.filter(is_active=True).aggregate(Sum('capacity'))['capacity__sum'] or 0
+        
+        today = timezone.now().date()
+        existing_weight = ServiceOrder.objects.filter(order_date__date=today).exclude(status='canceled').aggregate(Sum('weight'))['weight__sum'] or 0
+        
+        if (existing_weight + weight) > total_capacity:
+            messages.error(request, f'Order declined. Total machine capacity for today ({total_capacity}kg) is exceeded. Current orders: {existing_weight}kg, Your order: {weight}kg.')
+            return render(request, 'normal_order.html', context)
+
         # Optionally, handle subscription if provided in the form
         subscription_id = request.POST.get('subscription', None)
         subscription_instance = None
@@ -276,6 +289,7 @@ def normal_order(request):
             BUSINESS=business_instance,
             subscription=subscription_instance,
             service_type=service_type,
+            weight=weight,
             special_instructions=special_instructions,
         )
 
