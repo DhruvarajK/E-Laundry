@@ -41,10 +41,23 @@
                 </p>
             </div>
             <!-- Locate Button -->
-            <a class="px-6 py-2 border border-white/20 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all flex items-center gap-2"
-                href="{% url 'get_current_location' %}">
-                Locate <span class="material-symbols-outlined text-sm">location_on</span>
-            </a>
+            <button type="button" id="locateBtn"
+                class="px-6 py-2 border border-white/20 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all flex items-center gap-2 group relative overflow-hidden"
+                onclick="getLocation()">
+                <span id="btnText" class="flex items-center gap-2">
+                    Locate <span class="material-symbols-outlined text-sm">location_on</span>
+                </span>
+                <span id="spinner" class="hidden">
+                    <svg class="animate-spin h-4 w-4 text-current" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                        </circle>
+                        <path class="opacity-75" fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                        </path>
+                    </svg>
+                </span>
+            </button>
         </div>
 
         <form class="flex flex-col gap-12" method="POST" action="{% url 'register_user' %}"
@@ -203,11 +216,61 @@
 
 <script>
     function getLocation() {
+        const btnText = document.getElementById('btnText');
+        const spinner = document.getElementById('spinner');
+        const locateBtn = document.getElementById('locateBtn');
+
         if (navigator.geolocation) {
+            // Show spinner
+            btnText.classList.add('hidden');
+            spinner.classList.remove('hidden');
+            locateBtn.disabled = true;
+
             navigator.geolocation.getCurrentPosition(function (position) {
-                if (document.getElementById('latitude')) document.getElementById('latitude').value = position.coords.latitude;
-                if (document.getElementById('longitude')) document.getElementById('longitude').value = position.coords.longitude;
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+
+                if (document.getElementById('latitude')) document.getElementById('latitude').value = lat;
+                if (document.getElementById('longitude')) document.getElementById('longitude').value = lon;
+
+                // Fetch address details via AJAX
+                fetch("{% url 'get_current_location' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({ latitude: lat, longitude: lon })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            if (document.getElementById('place')) document.getElementById('place').value = data.place || '';
+                            if (document.getElementById('district')) document.getElementById('district').value = data.district || '';
+                            if (document.getElementById('state')) document.getElementById('state').value = data.state || '';
+                            if (document.getElementById('pin')) document.getElementById('pin').value = data.pin || '';
+                            if (document.getElementById('full_address')) document.getElementById('full_address').value = data.full_address || '';
+                            // Also populate 'post' if possible, or mapping it to something?
+                            // If place is city/village, maybe it covers it.
+                        } else {
+                            alert('Error: ' + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching location:', error);
+                        alert('An error occurred while fetching address details.');
+                    })
+                    .finally(() => {
+                        // Hide spinner
+                        btnText.classList.remove('hidden');
+                        spinner.classList.add('hidden');
+                        locateBtn.disabled = false;
+                    });
+
             }, function (error) {
+                btnText.classList.remove('hidden');
+                spinner.classList.add('hidden');
+                locateBtn.disabled = false;
                 alert('Unable to retrieve location. Make sure you have allowed location access.');
             });
         } else {

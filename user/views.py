@@ -171,14 +171,16 @@ def register_user(request):
 @csrf_exempt
 def get_current_location(request):
     if request.method == "POST":
-        latitude = request.POST.get('latitude', '').strip()
-        longitude = request.POST.get('longitude', '').strip()
+        try:
+            data = json.loads(request.body)
+            latitude = data.get('latitude')
+            longitude = data.get('longitude')
+        except json.JSONDecodeError:
+            latitude = request.POST.get('latitude', '').strip()
+            longitude = request.POST.get('longitude', '').strip()
 
-        # Check if latitude and longitude are provided
         if not latitude or not longitude:
-            return render(request, 'current_location.html', {
-                'error': "Latitude and longitude are missing. Please allow location access and try again."
-            })
+            return JsonResponse({'status': 'error', 'message': "Latitude and longitude are missing."}, status=400)
 
         try:
             latitude = float(latitude)
@@ -186,7 +188,8 @@ def get_current_location(request):
             location_details = get_location_details(latitude, longitude)
 
             if location_details:
-                return render(request, 'register_user.html', {
+                return JsonResponse({
+                    'status': 'success',
                     'latitude': latitude,
                     'longitude': longitude,
                     'place': location_details['place'],
@@ -196,15 +199,12 @@ def get_current_location(request):
                     'full_address': location_details['full_address'],
                 })
             else:
-                return render(request, 'current_location.html', {
-                    'error': "Could not fetch location details. Please try again."
-                })
+                return JsonResponse({'status': 'error', 'message': "Could not fetch location details."}, status=404)
 
         except ValueError:
-            return render(request, 'current_location.html', {
-                'error': "Invalid latitude or longitude values."
-            })
-    return render(request, 'current_location.html')
+            return JsonResponse({'status': 'error', 'message': "Invalid latitude or longitude values."}, status=400)
+    
+    return JsonResponse({'status': 'error', 'message': "Only POST requests are allowed."}, status=405)
 
 
 

@@ -87,7 +87,7 @@ def get_logged_in_user(request):
 
 def logout(request):
     request.session['lid'] = 'out'
-    return HttpResponse("<script>alert('logout');window.location='/'</script>")
+    return HttpResponse("<script>window.location='/'</script>")
     # return redirect('/')
 
 EMAIL_USER = os.getenv("EMAIL_USER")
