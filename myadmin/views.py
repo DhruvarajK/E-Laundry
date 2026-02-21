@@ -1,5 +1,5 @@
 from decimal import Decimal
-from pyexpat.errors import messages
+from django.contrib import messages
 from django.http import HttpResponse
 from business.models import Business
 from logistics.models import DeliveryMan
@@ -283,7 +283,6 @@ def userunblock(request,id):
 
 # Manage Logistics #
 
-from django.contrib import messages
 
 
 def pending_service_orders(request):

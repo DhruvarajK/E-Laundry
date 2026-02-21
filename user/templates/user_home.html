@@ -93,8 +93,7 @@
         <div class="p-4 border-t border-white/10">
             <div class="flex items-center gap-3 px-4 py-3">
                 <div class="w-8 h-8 bg-white/10 flex items-center justify-center text-white font-bold text-xs">
-                    {% if user.first_name %}{{user.first_name|first}}{% if
-                    user.last_name%}{{user.last_name|first}}{%endif %}{% else %}U{% endif %}
+                    {% if user.first_name %}{{user.first_name|first}}{% if user.last_name%}{{user.last_name|first}}{%endif %}{% else %}U{% endif %}
                 </div>
                 <div class="flex flex-col">
                     <span class="text-xs font-bold text-white uppercase tracking-wider">{{user.first_name}}
@@ -165,15 +164,12 @@
                             {% csrf_token %}
                             <div class="flex justify-between items-center mb-1">
                                 <span class="text-white text-sm font-bold">{{ order.service_type }}</span>
-                                <span class="text-white/40 text-xs">${{ order.payment.total_price|default:"0.00"
-                                    }}</span>
+                                <span class="text-white/40 text-xs">${{ order.payment.total_price|default:"0.00"}}</span>
                             </div>
                             <div class="text-[10px] text-white/40 uppercase tracking-wider mb-2">
                                 {% if order.special_instructions %}
                                 {{ order.special_instructions|truncatechars:40 }}
-                                {% else %}
-                                Based on your previous order
-                                {% endif %}
+                                {% else %} Based on your previous order {% endif %}
                             </div>
                             <button type="submit"
                                 class="w-full py-2 border border-white/20 text-white/60 text-[10px] font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors">Reorder</button>
@@ -209,8 +205,7 @@
                                     <span class="text-white font-bold uppercase tracking-wider">Order
                                         #{{order.id}}</span>
                                     <span
-                                        class="text-[10px] text-white/40 uppercase tracking-widest">{{order.order_date|date:"Md,
-                                        Y, h:i A"}}</span>
+                                        class="text-[10px] text-white/40 uppercase tracking-widest">{{order.order_date|date:"Md, Y, h:i A"}}</span>
                                 </div>
                                 <div class="text-sm text-white/60">{{ order.service_type }}</div>
                             </div>

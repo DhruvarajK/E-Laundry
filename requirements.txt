@@ -3,3 +3,8 @@ django-crontab
 Django>=5.0
 gunicorn
 python-dotenv
+geopy
+opencv-python
+numpy
+pyzbar
+Pillow
