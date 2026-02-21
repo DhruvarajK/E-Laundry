@@ -1,8 +1,6 @@
 from django.urls import path
-
-import logistics.views
 from . import views
-import logistics
+
 urlpatterns = [
     path('',views.index),
     path('login_return/', views.login_return , name='login_return'),

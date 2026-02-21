@@ -10,17 +10,11 @@ from myadmin.models import login
 from django.conf import settings
 import os
 from django.views.decorators.csrf import csrf_exempt
-import cv2
-import numpy as np
 import base64
-from pyzbar.pyzbar import decode
-from PIL import Image
 from django.shortcuts import get_object_or_404,redirect
 from user.models import LaundryBag, Payment, ServiceOrder
 from django.contrib import messages
 from datetime import datetime
-from myadmin.views import send_email
-
 
 def get_dashboard_stats(delivery_man):
     # Completed Assignments
@@ -306,6 +300,7 @@ import json
 import threading
 
 def send_email_async(recipient_email, subject, body):
+    from myadmin.views import send_email
     threading.Thread(target=send_email, args=(recipient_email, subject, body)).start()
 
 def update_pickup_status(request, assignment_id):
@@ -375,6 +370,10 @@ def open_scanner(request, service_order_id):
 @csrf_exempt  # You can remove this if CSRF token is being passed correctly
 def camera(request):
     try:
+        import cv2
+        import numpy as np
+        from pyzbar.pyzbar import decode
+        from PIL import Image
         if request.method == 'POST':
             data = json.loads(request.body)
             if 'image' not in data:
