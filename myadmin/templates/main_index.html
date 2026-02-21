@@ -177,8 +177,8 @@
     <main class="pt-20">
         {% block content %}
         <!-- Hero Section -->
-        <section class="relative min-h-[90vh] flex items-center px-6 lg:px-20 border-b border-white/10 py-20 lg:py-0">
-            <div class="grid lg:grid-cols-2 w-full gap-12 items-center">
+        <section class="relative min-h-[90vh] flex items-center px-6 lg:px-20 border-b border-white/10 py-24 lg:py-0">
+            <div class="grid lg:grid-cols-2 w-full gap-12 lg:gap-20 items-center">
                 <div class="flex flex-col gap-8">
                     <div class="inline-flex items-center gap-2 px-3 py-1 border border-white/20 w-fit">
                         <span class="relative flex h-2 w-2">
@@ -186,29 +186,32 @@
                                 class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
                             <span class="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
                         </span>
-                        <span class="text-[10px] font-bold uppercase tracking-[0.2em]">Live in 1 City</span>
+                        <span class="text-[10px] font-bold uppercase tracking-[0.2em]">Live in 3 Cities</span>
                     </div>
-                    <h1 class="text-6xl md:text-8xl font-black leading-[0.9] tracking-tighter uppercase">
+                    <h1
+                        class="text-5xl sm:text-6xl md:text-8xl font-black leading-[0.9] tracking-tighter uppercase mb-2">
                         Laundry,<br />Reimagined.
                     </h1>
-                    <p class="text-lg md:text-xl text-white/60 max-w-lg font-light leading-relaxed">
+                    <p class="text-base sm:text-lg md:text-xl text-white/60 max-w-lg font-light leading-relaxed">
                         Seamlessly connecting users, cleaners, and couriers with precision and speed. Experience the
-                        future of garment care through our high-efficiency monochrome workflow.
+                        future of garment care through our high-efficiency workflow.
                     </p>
-                    <div class="flex flex-col sm:flex-row gap-4 pt-4">
-                        <button
-                            class="px-10 py-5 bg-white text-black font-bold uppercase tracking-widest text-sm hover:bg-black hover:text-white border border-white transition-all duration-500 rounded-none w-full sm:w-auto">
+                    <div class="flex flex-col sm:flex-row gap-4 pt-6">
+                        <a href="{% url 'login_return'%}" class="w-full sm:w-auto">
+                            <button
+                            class="px-10 py-5 bg-white text-black font-bold uppercase tracking-widest text-xs sm:text-sm hover:bg-black hover:text-white border border-white transition-all duration-500 rounded-none w-full sm:w-auto">
                             Get Started Now
                         </button>
+                        </a>
                         <a href="{% url 'network'%}" class="w-full sm:w-auto">
                             <button
-                                class="px-10 py-5 border border-white/20 text-white font-bold uppercase tracking-widest text-sm hover:bg-white/10 transition-all duration-500 rounded-none w-full">
+                                class="px-10 py-5 border border-white/20 text-white font-bold uppercase tracking-widest text-xs sm:text-sm hover:bg-white/10 transition-all duration-500 rounded-none w-full">
                                 View Network
                             </button>
                         </a>
-
                     </div>
                 </div>
+                <!-- Hero Image Holder -->
                 <div class="relative aspect-square bg-white/5 border border-white/10 overflow-hidden hidden lg:block">
                     <div class="absolute inset-0 bg-gradient-to-tr from-black via-transparent to-transparent z-10">
                     </div>
@@ -218,23 +221,26 @@
                 </div>
             </div>
         </section>
+
         <!-- The Ecosystem -->
-        <section class="px-6 lg:px-20 py-24 border-b border-white/10">
-            <div class="flex flex-col gap-4 mb-20">
-                <h2 class="text-xs font-bold uppercase tracking-[0.4em] text-white/40">Our Network</h2>
-                <h3 class="text-4xl md:text-5xl font-black uppercase tracking-tight">The Three Pillars</h3>
+        <section class="px-6 lg:px-20 py-24 sm:py-32 border-b border-white/10">
+            <div class="flex flex-col gap-4 mb-20 lg:mb-24">
+                <h2 class="text-[10px] font-bold uppercase tracking-[0.4em] text-white/40">Our Network</h2>
+                <h3 class="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight">The Three Pillars</h3>
             </div>
-            <div class="grid md:grid-cols-3 gap-1px bg-white/10 border border-white/10">
+            <div class="grid md:grid-cols-3 gap-px bg-white/10 border border-white/10">
                 <!-- User Pillar -->
                 <div class="bg-black p-8 lg:p-12 flex flex-col gap-8 hover:bg-white/5 transition-colors group">
                     <span
-                        class="material-symbols-outlined text-5xl text-white/20 group-hover:text-white transition-colors">person</span>
+                        class="material-symbols-outlined text-4xl lg:text-5xl text-white/20 group-hover:text-white transition-colors">person</span>
                     <div class="flex flex-col gap-4">
-                        <h4 class="text-xl font-bold uppercase tracking-widest">For Users</h4>
-                        <p class="text-white/50 text-sm leading-relaxed">Book premium cleaning services with a single
+                        <h4 class="text-lg lg:text-xl font-bold uppercase tracking-widest">For Users</h4>
+                        <p
+                            class="text-white/40 text-xs sm:text-sm leading-relaxed uppercase tracking-wider font-medium">
+                            Book premium cleaning services with a single
                             tap. Real-time tracking, transparent pricing, and doorstep delivery.</p>
                     </div>
-                    <a class="mt-auto inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all"
+                    <a class="mt-8 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all"
                         href="{% url 'register_user' %}">
                         Register User <span class="material-symbols-outlined text-sm">arrow_forward</span>
                     </a>
@@ -242,13 +248,15 @@
                 <!-- Business Pillar -->
                 <div class="bg-black p-8 lg:p-12 flex flex-col gap-8 hover:bg-white/5 transition-colors group">
                     <span
-                        class="material-symbols-outlined text-5xl text-white/20 group-hover:text-white transition-colors">storefront</span>
+                        class="material-symbols-outlined text-4xl lg:text-5xl text-white/20 group-hover:text-white transition-colors">storefront</span>
                     <div class="flex flex-col gap-4">
-                        <h4 class="text-xl font-bold uppercase tracking-widest">For Businesses</h4>
-                        <p class="text-white/50 text-sm leading-relaxed">Scale your laundry shop with our professional
+                        <h4 class="text-lg lg:text-xl font-bold uppercase tracking-widest">For Businesses</h4>
+                        <p
+                            class="text-white/40 text-xs sm:text-sm leading-relaxed uppercase tracking-wider font-medium">
+                            Scale your laundry shop with our professional
                             management tools. Inventory, POS, and automated scheduling.</p>
                     </div>
-                    <a class="mt-auto inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all"
+                    <a class="mt-8 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all"
                         href="{% url 'register_business' %}">
                         Register Shop <span class="material-symbols-outlined text-sm">arrow_forward</span>
                     </a>
@@ -256,139 +264,155 @@
                 <!-- Logistics Pillar -->
                 <div class="bg-black p-8 lg:p-12 flex flex-col gap-8 hover:bg-white/5 transition-colors group">
                     <span
-                        class="material-symbols-outlined text-5xl text-white/20 group-hover:text-white transition-colors">local_shipping</span>
+                        class="material-symbols-outlined text-4xl lg:text-5xl text-white/20 group-hover:text-white transition-colors">local_shipping</span>
                     <div class="flex flex-col gap-4">
-                        <h4 class="text-xl font-bold uppercase tracking-widest">For Logistics</h4>
-                        <p class="text-white/50 text-sm leading-relaxed">Join our high-speed courier network. Flexible
+                        <h4 class="text-lg lg:text-xl font-bold uppercase tracking-widest">For Logistics</h4>
+                        <p
+                            class="text-white/40 text-xs sm:text-sm leading-relaxed uppercase tracking-wider font-medium">
+                            Join our high-speed courier network. Flexible
                             hours, reliable payouts, and optimized delivery routes.</p>
                     </div>
-                    <a class="mt-auto inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all"
+                    <a class="mt-8 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest group-hover:gap-4 transition-all"
                         href="{% url 'register_delivery' %}">
                         Become Partner <span class="material-symbols-outlined text-sm">arrow_forward</span>
                     </a>
                 </div>
             </div>
         </section>
+
         <!-- Process Section -->
-        <section class="px-6 lg:px-20 py-24">
-            <div class="grid lg:grid-cols-2 gap-20 items-start">
-                <div class="flex flex-col gap-12">
+        <section class="px-6 lg:px-20 py-24 sm:py-32">
+            <div class="grid lg:grid-cols-2 gap-20 lg:gap-32 items-start">
+                <div class="flex flex-col gap-12 lg:gap-16">
                     <div class="flex flex-col gap-4">
                         <h2 class="text-xs font-bold uppercase tracking-[0.4em] text-white/40">Execution</h2>
-                        <h3 class="text-4xl md:text-5xl font-black uppercase tracking-tight">The Protocol</h3>
+                        <h3 class="text-4xl sm:text-5xl font-black uppercase tracking-tight">The Protocol</h3>
                     </div>
-                    <div class="flex flex-col gap-16">
-                        <div class="flex gap-8 group">
+                    <div class="flex flex-col gap-12 lg:gap-16">
+                        <div class="flex items-start gap-6 lg:gap-8 group">
                             <span
-                                class="text-4xl font-black text-white/10 group-hover:text-white transition-colors duration-500">01</span>
+                                class="text-3xl lg:text-4xl font-black text-white/10 group-hover:text-white transition-colors duration-500 mt-1">01</span>
                             <div class="flex flex-col gap-2">
-                                <h5 class="text-lg font-bold uppercase tracking-widest">Digital Request</h5>
-                                <p class="text-white/50 text-sm max-w-md">Initiate your order through our encrypted
+                                <h5 class="text-base lg:text-lg font-bold uppercase tracking-widest">Digital Request
+                                </h5>
+                                <p
+                                    class="text-white/40 text-[10px] sm:text-xs leading-loose uppercase tracking-widest font-bold">
+                                    Initiate your order through our encrypted
                                     platform specifying garment type and treatment requirements.</p>
                             </div>
                         </div>
-                        <div class="flex gap-8 group">
+                        <div class="flex items-start gap-6 lg:gap-8 group">
                             <span
-                                class="text-4xl font-black text-white/10 group-hover:text-white transition-colors duration-500">02</span>
+                                class="text-3xl lg:text-4xl font-black text-white/10 group-hover:text-white transition-colors duration-500 mt-1">02</span>
                             <div class="flex flex-col gap-2">
-                                <h5 class="text-lg font-bold uppercase tracking-widest">Precision Pickup</h5>
-                                <p class="text-white/50 text-sm max-w-md">Our logistics partner arrives within a
+                                <h5 class="text-base lg:text-lg font-bold uppercase tracking-widest">Precision Pickup
+                                </h5>
+                                <p
+                                    class="text-white/40 text-[10px] sm:text-xs leading-loose uppercase tracking-widest font-bold">
+                                    Our logistics partner arrives within a
                                     15-minute window for secure transit to a certified facility.</p>
                             </div>
                         </div>
-                        <div class="flex gap-8 group">
+                        <div class="flex items-start gap-6 lg:gap-8 group">
                             <span
-                                class="text-4xl font-black text-white/10 group-hover:text-white transition-colors duration-500">03</span>
+                                class="text-3xl lg:text-4xl font-black text-white/10 group-hover:text-white transition-colors duration-500 mt-1">03</span>
                             <div class="flex flex-col gap-2">
-                                <h5 class="text-lg font-bold uppercase tracking-widest">Expert Care</h5>
-                                <p class="text-white/50 text-sm max-w-md">Specialized cleaning using eco-friendly
+                                <h5 class="text-base lg:text-lg font-bold uppercase tracking-widest">Expert Care</h5>
+                                <p
+                                    class="text-white/40 text-[10px] sm:text-xs leading-loose uppercase tracking-widest font-bold">
+                                    Specialized cleaning using eco-friendly
                                     monochrome-safe detergents and advanced machinery.</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="aspect-[3/4] border border-white/10 overflow-hidden">
-                        <img class="w-full h-full object-cover grayscale contrast-125"
+                <!-- Visual Assets -->
+                <div class="grid grid-cols-2 gap-4 lg:gap-6">
+                    <div class="aspect-[3/4] border border-white/10 overflow-hidden bg-white/5">
+                        <img class="w-full h-full object-cover grayscale contrast-125 opacity-70"
                             data-alt="Close up of clean white folded laundry"
                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkeBGLOB5ZK42vxcYYAKl1598g_hW_rUsYS9keA2srcggt8-R_04TS0wKOlfBPVnLmLPUXEXwAcZifFJMmf2mUZO_MH0zsb_9IPtl9akedRgcXEiTDiEZaaGAIDYyWqkHRtWHFAy6obnvNqIONSd-3bTJSJZZ2h_c3curOfjo1MVtypFPeBa_JW-NrYRy-JjL978tQXd0MYFRJcf_1nI-mt5yXegzekjy-sI6CqXkd7Cf8K5UIXAjbfXSG9dc6re6zj4ma5j6yiWnY" />
                     </div>
-                    <div class="aspect-[3/4] border border-white/10 overflow-hidden mt-12">
-                        <img class="w-full h-full object-cover grayscale contrast-125"
+                    <div class="aspect-[3/4] border border-white/10 overflow-hidden mt-12 bg-white/5">
+                        <img class="w-full h-full object-cover grayscale contrast-125 opacity-70"
                             data-alt="Interior of modern commercial laundry facility"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBHQdDh0IdQj4IrWUgPwZl05OTr6ngyWNQFg5jNiXy1xbg5iXsTHZ9Jj2coGIi-kWOFVBE3017zPp6HvxIssyQh5U1Jh-Z-chs_ZVBPiBShJwfSojzE1YIaibBVjhwFgDivagGV3vQ6FWxY8kjpQZxdILPDZyd-KbwxUTqxidfrW60TsBbHA324x7N5RMxRONcOUjprBDfj5BVNDlieBiAYl4vOEhgEKDIJy3R1K08T-otuyhgmzmL3DFlfv9bA9_O4xcyW_GpJYCO" />
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBHQdDh0IdQj4IrWUgPwZl05OTr6ngyWNQFg5jNiXy1xbg5iXsTHZ9Jj2coGIi-kWOFVBE3017zPp6HvxIssyQh5U1Jh-Z-chs_ZVBPiBShJwfSojzE1YIaibBVjhwFgDivagGV3vQ6FWxY8kjpQZxdILPDZyd-KbwxUTqxidfrW60TsBbHA324x7Y5RMxRONcOUjprBDfj5BVNDlieBiAYl4vOEhgEKDIJy3R1K08T-otuyhgmzmL3DFlfv9bA9_O4xcyW_GpJYCO" />
                     </div>
                 </div>
             </div>
         </section>
+
         <!-- Newsletter / Footer-top -->
         <section
-            class="bg-white text-black px-6 lg:px-20 py-20 flex flex-col lg:flex-row items-center justify-between gap-12">
-            <h4 class="text-3xl md:text-4xl font-black uppercase tracking-tight max-w-xl text-center lg:text-left">Ready
+            class="bg-white text-black px-6 lg:px-20 py-24 flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-24 overflow-hidden">
+            <h4
+                class="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-tight max-w-xl text-center lg:text-left leading-[0.9]">
+                Ready
                 for a cleaner
                 perspective?</h4>
             <div class="flex flex-col sm:flex-row w-full lg:w-auto gap-4">
                 <input
-                    class="bg-transparent border-b-2 border-black px-4 py-3 text-xs font-bold uppercase tracking-widest focus:outline-none w-full lg:w-80 rounded-none placeholder:text-black/30"
+                    class="bg-transparent border-b-2 border-black px-4 py-4 text-xs font-bold uppercase tracking-widest focus:outline-none w-full lg:w-80 rounded-none placeholder:text-black/30"
                     placeholder="ENTER EMAIL ADDRESS" type="email" />
                 <button
-                    class="bg-black text-white px-8 py-4 text-xs font-bold uppercase tracking-widest hover:bg-black/80 transition-all rounded-none w-full sm:w-auto">Join</button>
+                    class="bg-black text-white px-10 py-5 text-xs font-bold uppercase tracking-widest hover:bg-black/90 transition-all rounded-none w-full sm:w-auto">Join</button>
             </div>
         </section>
         {% endblock %}
     </main>
-    <footer class="bg-black border-t border-white/10 px-6 lg:px-20 py-20">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-12 mb-20">
-            <div class="sm:col-span-2 lg:col-span-2 flex flex-col gap-6">
+    <footer class="bg-black border-t border-white/10 px-6 lg:px-20 py-24">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-16 lg:gap-12 mb-24">
+            <div class="sm:col-span-2 lg:col-span-2 flex flex-col gap-8">
                 <div class="flex items-center gap-2">
-                    <span class="material-symbols-outlined text-white text-2xl">waves</span>
-                    <h1 class="text-white text-lg font-black tracking-tighter uppercase">ELaundry</h1>
+                    <span class="material-symbols-outlined text-white text-3xl">waves</span>
+                    <h1 class="text-white text-xl font-black tracking-tighter uppercase">ELaundry</h1>
                 </div>
-                <p class="text-white/40 text-xs font-medium uppercase tracking-widest leading-relaxed max-w-xs">
-                    Redefining garment care standards through technical precision and network efficiency.
+                <p class="text-white/40 text-xs font-medium uppercase tracking-widest leading-relaxed max-w-sm">
+                    Redefining garment care standards through technical precision and network efficiency. Join the
+                    future of autonomous laundry logistics.
                 </p>
             </div>
             <div class="flex flex-col gap-6">
                 <h6 class="text-[10px] font-bold uppercase tracking-[0.3em] text-white/40">Services</h6>
                 <div class="flex flex-col gap-4">
-                    <a class="text-xs font-bold uppercase tracking-widest hover:text-white/60"
+                    <a class="text-xs font-bold uppercase tracking-widest text-white/60 hover:text-white transition-colors"
                         href="{% url 'dry_cleaning'%}">Dry Cleaning</a>
-                    <a class="text-xs font-bold uppercase tracking-widest hover:text-white/60"
+                    <a class="text-xs font-bold uppercase tracking-widest text-white/60 hover:text-white transition-colors"
                         href="{% url 'express_wash'%}">Express Wash</a>
-                    <a class="text-xs font-bold uppercase tracking-widest hover:text-white/60"
+                    <a class="text-xs font-bold uppercase tracking-widest text-white/60 hover:text-white transition-colors"
                         href="{% url 'ironing'%}">Precision Ironing</a>
                 </div>
             </div>
             <div class="flex flex-col gap-6">
                 <h6 class="text-[10px] font-bold uppercase tracking-[0.3em] text-white/40">Company</h6>
                 <div class="flex flex-col gap-4">
-                    <a class="text-xs font-bold uppercase tracking-widest hover:text-white/60"
+                    <a class="text-xs font-bold uppercase tracking-widest text-white/60 hover:text-white transition-colors"
                         href="{% url 'about_us'%}">About Us</a>
-                    <a class="text-xs font-bold uppercase tracking-widest hover:text-white/60"
+                    <a class="text-xs font-bold uppercase tracking-widest text-white/60 hover:text-white transition-colors"
                         href="{% url 'network'%}">Network</a>
-                    <a class="text-xs font-bold uppercase tracking-widest hover:text-white/60"
+                    <a class="text-xs font-bold uppercase tracking-widest text-white/60 hover:text-white transition-colors"
                         href="{% url 'careers'%}">Careers</a>
                 </div>
             </div>
             <div class="flex flex-col gap-6 lg:col-span-2">
                 <h6 class="text-[10px] font-bold uppercase tracking-[0.3em] text-white/40">Legal</h6>
                 <div class="flex flex-col gap-4">
-                    <a class="text-xs font-bold uppercase tracking-widest hover:text-white/60"
+                    <a class="text-xs font-bold uppercase tracking-widest text-white/60 hover:text-white transition-colors"
                         href="{% url 'privacy_policy'%}">Privacy Policy</a>
-                    <a class="text-xs font-bold uppercase tracking-widest hover:text-white/60"
+                    <a class="text-xs font-bold uppercase tracking-widest text-white/60 hover:text-white transition-colors"
                         href="{% url 'terms_of_service'%}">Terms of Service</a>
                 </div>
             </div>
         </div>
-        <div class="flex flex-col md:flex-row justify-between items-center pt-10 border-t border-white/5 gap-4">
+        <div class="flex flex-col md:flex-row justify-between items-center pt-10 border-t border-white/5 gap-8">
             <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-white/20 text-center md:text-left">©
-                <script>document.write(new Date().getFullYear())</script> ELAUNDRY SYSTEMS INC.
+                <script>document.write(new Date().getFullYear())</script> ELAUNDRY SYSTEMS INC. ALL RIGHTS RESERVED.
             </p>
-            <div class="flex gap-8">
-                <a class="text-white/20 hover:text-white transition-colors" href="#"><span
-                        class="material-symbols-outlined text-xl">language</span></a>
-                <a class="text-white/20 hover:text-white transition-colors" href="#"><span
-                        class="material-symbols-outlined text-xl">share</span></a>
+            <div class="flex gap-10">
+                <a class="text-white/20 hover:text-white transition-all transform hover:scale-110" href="#"><span
+                        class="material-symbols-outlined text-2xl">language</span></a>
+                <a class="text-white/20 hover:text-white transition-all transform hover:scale-110" href="#"><span
+                        class="material-symbols-outlined text-2xl">share</span></a>
             </div>
         </div>
     </footer>
