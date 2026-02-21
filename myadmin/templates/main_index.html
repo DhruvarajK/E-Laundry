@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 
 <html class="dark" lang="en">
@@ -5,6 +6,10 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta name="description"
+        content="A comprehensive laundry management solution designed to bridge the gap between customers, businesses, and logistics providers." />
+    <link rel="icon" href="{% static 'favicon.ico' %}" sizes="any" />
+    <link rel="apple-touch-icon" href="{% static 'apple-touch-icon.png' %}" />
     {% block title %}
     <title>ELaundry</title>
     {% endblock %}
