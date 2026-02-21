@@ -40,8 +40,6 @@ def user_home(request):
         except user.DoesNotExist:
              return HttpResponse("<script>alert('User not found');window.location='/'</script>")
         
-        # Fetch active orders (status not 'completed' or 'canceled', or delivery status not 'delivered')
-        # We can use exclude.
         active_orders = ServiceOrder.objects.filter(USER=usr_obj).exclude(
             status__in=['completed', 'canceled']
         ).exclude(
@@ -54,11 +52,61 @@ def user_home(request):
             logisticsassignment__delivery_status__in=['delivered', 'Delivered']
         ).order_by('-order_date')[:5]
 
+        # Fetch quick reorder templates (last 2 unique service types/instructions)
+        # We want to show distinct types of past orders
+        all_past_orders = ServiceOrder.objects.filter(USER=usr_obj).order_by('-order_date')
+        quick_reorder_orders = []
+        seen_types = set()
+        for o in all_past_orders:
+            if o.service_type not in seen_types:
+                quick_reorder_orders.append(o)
+                seen_types.add(o.service_type)
+            if len(quick_reorder_orders) >= 2:
+                break
+
         return render(request, "user_home.html", {
             'user': usr_obj,
             'active_orders': active_orders,
-            'recent_completed': recent_completed
+            'recent_completed': recent_completed,
+            'quick_reorder_orders': quick_reorder_orders
         })
+
+
+def quick_reorder(request, order_id):
+    if request.session.get('lid') == 'out' or 'lid' not in request.session:
+        return redirect('login')
+    
+    original_order = get_object_or_404(ServiceOrder, id=order_id)
+    
+    # Check if the order belongs to the user
+    usr_obj = user.objects.get(LOGIN=request.session['lid'])
+    if original_order.USER != usr_obj:
+        messages.error(request, "Invalid order access.")
+        return redirect('user_home')
+
+    # Create new order
+    new_order = ServiceOrder.objects.create(
+        service_for=original_order.service_for,
+        USER=original_order.USER,
+        BUSINESS=original_order.BUSINESS,
+        service_type=original_order.service_type,
+        special_instructions=original_order.special_instructions,
+        weight=0.0,
+        status='pending'
+    )
+
+    # Create logistics assignment
+    LogisticsAssignment.objects.create(service_order=new_order)
+
+    # Create payment record
+    Payment.objects.create(
+        service_order=new_order,
+        total_price=0.0,
+        payment_status='pending'
+    )
+
+    messages.success(request, f'Reorder of {new_order.service_type} placed successfully!')
+    return redirect('order_confirmed', order_id=new_order.id)
 
 
 def get_user_context(request):
@@ -526,12 +574,12 @@ def assign_bag_with_qr(request, service_order_id):
         service_order = get_object_or_404(ServiceOrder, id=service_order_id)
         user = service_order.USER
 
-        # Check if the QR code is already used
+        # check if the QR code is already used
         if LaundryBag.objects.filter(qr_code=qr_code).exists():
             messages.error(request, "This QR code is already assigned.")
             return redirect('open_scanner')
 
-        # Assign the bag
+        # assign the bag
         LaundryBag.objects.create(
             USER=user,
             bag_number=user.num_bags + 1,
@@ -552,7 +600,6 @@ def check_assign_bags(request, service_order_id):
         prefer=request.POST.get('prefer')
         service_order = get_object_or_404(ServiceOrder, id=service_order_id)
 
-        # Determine which account to update along with a textual indicator for current service type
         if service_order.service_for == 'business' and service_order.BUSINESS:
             account = service_order.BUSINESS
             current_service = 'business'
@@ -560,14 +607,11 @@ def check_assign_bags(request, service_order_id):
             account = service_order.USER
             current_service = 'user'
 
-        # Use the num_bags field from the relevant account
         num_bags_needed = account.num_bags
 
-        # Check if this QR code is already assigned anywhere
         existing_assigned_bag = LaundryBag.objects.filter(qr_code=qr_code).first()
         if existing_assigned_bag:
-            # Determine the service type used by the assigned bag
-            # (Assuming that if the BUSINESS field is set, then it's a business assignment; otherwise, it's a user assignment)
+            
             assigned_service = 'business' if existing_assigned_bag.BUSINESS else 'user'
             if assigned_service != current_service:
                 messages.error(
@@ -594,7 +638,6 @@ def check_assign_bags(request, service_order_id):
                     )
                 return redirect('view_assigned_services')
 
-        # If no existing bag with this QR code for any service, then check the number of bags already assigned to the current account.
         if current_service == 'business':
             assigned_bags_count = LaundryBag.objects.filter(BUSINESS=account).count()
         else:
@@ -606,7 +649,6 @@ def check_assign_bags(request, service_order_id):
                 "<script>alert('Cannot assign more bags than the required number.');window.location='/assigned-services'</script>"
             )
 
-        # Create a new bag if limit hasn't been reached
         if current_service == 'business':
             LaundryBag.objects.create(
                 BUSINESS=account,
@@ -627,7 +669,6 @@ def check_assign_bags(request, service_order_id):
     return render(request, 'qr_scanner.html', {'service_order_id': service_order_id})
 
 
-#function for sketcher
 
 def assign_bags_to_user(user, num_bags):
     for i in range(1, num_bags + 1):
@@ -647,12 +688,11 @@ def pickup_laundry(user, bag_service_types):
 
 
 
-# Display all subscription plans
+
 def subscription_plans(request):
     plans = SubscriptionPlan.objects.all()
     context = {'plans': plans}
-    
-    # Check if user is logged in and is a 'user' type
+
     if 'lid' in request.session and request.session['lid'] != 'out':
         try:
             login_instance = login.objects.get(id=request.session['lid'])
@@ -682,8 +722,7 @@ def subscription_confirmed(request, subscription_id):
         'display_amount': plan_price,
         'razorpay_key': settings.RAZORPAY_KEY_ID
     }
-    
-    # Check if user is logged in and is a 'user' type
+
     if 'lid' in request.session and request.session['lid'] != 'out':
         try:
             login_instance = login.objects.get(id=request.session['lid'])
@@ -731,7 +770,6 @@ def subscribe(request, plan_id):
             request.session['razorpay_order_id'] = razorpay_order['id']
 
             now = timezone.now()
-            # If current time is past 10:00, start the subscription from tomorrow 10:00, else today 10:00
             if now.time() > time(10, 0):
                 start_date = datetime.combine(now.date() + timedelta(days=1), time(10, 0))
             else:
@@ -770,16 +808,14 @@ def subscribe(request, plan_id):
 from django.utils import timezone
 from django.contrib import messages
 from django.shortcuts import render
-from .models import Subscription, Business, user, login  # adjust import as needed
+from .models import Subscription, Business, user, login  
 
 def subscription_details(request):
-    # Grab the login instance from the session using 'lid'
     login_instance = login.objects.get(id=request.session['lid'])
     
     template_name = 'subscription_details.html'
     context = {}
 
-    # Check if the login is for a business or a user
     if login_instance.usertype.lower() == 'business':
         business_instance = Business.objects.get(LOGIN=login_instance)
         subscription = Subscription.objects.filter(business=business_instance, is_active=True).first()
@@ -788,21 +824,17 @@ def subscription_details(request):
         subscription = Subscription.objects.filter(user=user_instance, is_active=True).first()
         template_name = 'user_subscription_details.html'
         context = get_user_context(request)
-    
-    # Calculate remaining days and update remaining_services
+
     if subscription:
         now = timezone.now()
         if subscription.end_date > now:
             days_remaining = (subscription.end_date - now).days
         else:
             days_remaining = 0
-            subscription.is_active = False  # Optionally mark it inactive
-
-        # Update remaining_services to match days_remaining
+            subscription.is_active = False  
         subscription.remaining_services = days_remaining
         subscription.save()
     else:
-        # messages.error(request, "No active subscription found.") # This might show up even if just visiting the page
         days_remaining = 0
 
     context.update({
@@ -846,7 +878,6 @@ def terms_of_service(request):
 def scan_qr_page(request):
     return render(request, 'scan_qr.html')
 
-# Processes the camera feed (if you ever need to use image processing on the server)
 @csrf_exempt
 def process_camera(request):
     try:
@@ -866,7 +897,6 @@ def process_camera(request):
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
 
-# Renders the bag details based on the scanned QR code
 def bag_details(request):
     qr_code = request.GET.get('qr_code')
     if qr_code:
@@ -887,26 +917,23 @@ def razorpay_payment(request, order_id):
     order = get_object_or_404(ServiceOrder, id=order_id)
     payment = order.payment
 
-    # Convert amount to paise
+
     amount_in_paise = int(payment.total_price * 100)
 
-    # Razorpay client setup
     client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
-    # Create Razorpay Order
     razorpay_order = client.order.create({
-        "amount": amount_in_paise,  # Amount in paise
+        "amount": amount_in_paise,
         "currency": "INR",
         "receipt": f"order_rcptid_{order.id}",
-        "payment_capture": 1,  # Auto-capture
+        "payment_capture": 1,  
     })
 
-    # Pass the order ID from Razorpay to frontend
     context = {
         "order": order,
         "total_price": amount_in_paise,
         "amount_display": payment.total_price,
-        "razorpay_order_id": razorpay_order['id'],  # Use Razorpay order ID
+        "razorpay_order_id": razorpay_order['id'],  # razorpay order ID
         "razorpay_key": settings.RAZORPAY_KEY_ID
     }
     return render(request, "razorpay_payment.html", context)

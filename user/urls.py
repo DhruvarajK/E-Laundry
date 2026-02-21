@@ -4,7 +4,7 @@ from . import views
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('view_profile_user/', views.view_profile_user, name='view_profile_user'),  # View Profile
+    path('view_profile_user/', views.view_profile_user, name='view_profile_user'),  
     path('update_profile_user/', views.update_profile_user, name='update_profile_user'),
     path('register/', views.register_user, name='register_user'),
     path('get-location/', views.get_current_location, name='get_current_location'),
@@ -35,6 +35,7 @@ urlpatterns = [
     path('careers/', views.careers, name='careers'),
     path('privacy-policy/', views.privacy_policy, name='privacy_policy'),
     path('terms-of-service/', views.terms_of_service, name='terms_of_service'),
+    path('quick-reorder/<int:order_id>/', views.quick_reorder, name='quick_reorder'),
 ]
      
 
