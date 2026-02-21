@@ -4,3 +4,4 @@ new_home.html
 __pycache__/
 logo.html
 favicon/
+staticfiles/
