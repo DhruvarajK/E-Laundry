@@ -796,3 +796,6 @@ def delete_machine(request, machine_id):
 
 def error_404_view(request, exception):
     return render(request, '404.html', status=404)
+
+def contact(request):
+    return render(request, 'contact.html')
