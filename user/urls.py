@@ -27,6 +27,7 @@ urlpatterns = [
     path('bag-details/', views.bag_details, name='bag_details'),
     path('razorpay-payment/<int:order_id>/', views.razorpay_payment, name='razorpay_payment'),
     path('payment-success/<int:order_id>/', views.payment_success, name='payment_success'),
+    path('about-us/', views.about_us, name='about_us'),
 ]
      
 

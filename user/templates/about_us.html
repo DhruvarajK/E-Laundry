@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | ELaundry</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ffffff",
+                        "background-dark": "#000000",
+                        "surface": "#111111",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0px",
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+
+<body class="bg-background-dark font-display text-white antialiased min-h-screen">
+    <div class="max-w-4xl mx-auto px-6 py-16 lg:py-24">
+        <!-- Header -->
+        <header class="mb-20 space-y-6 border-b border-white/10 pb-16">
+            <div class="flex items-center gap-3 mb-4">
+                <i data-lucide="waves" class="w-10 h-10 text-white"></i>
+                <h1 class="text-2xl font-black uppercase tracking-tighter">ELaundry</h1>
+            </div>
+            <h2 class="text-5xl lg:text-7xl font-black uppercase tracking-tight leading-none">Redefining <br /><span
+                    class="text-white/20">Clean.</span></h2>
+            <p class="text-white/40 uppercase tracking-[0.4em] text-sm font-bold max-w-lg">
+                Premium garment care delivered through technology and precision.
+            </p>
+        </header>
+
+        <!-- Mission -->
+        <section class="grid lg:grid-cols-2 gap-16 mb-24">
+            <div class="space-y-8">
+                <h3 class="text-xs font-bold uppercase tracking-[0.4em] text-white/40">Our Mission</h3>
+                <p class="text-2xl font-bold leading-relaxed text-white">
+                    We combine high-performance machinery with intuitive logistics to provide a seamless laundry
+                    experience for modern urban living.
+                </p>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div
+                    class="aspect-square bg-surface border border-white/10 p-6 flex flex-col justify-between group hover:border-white/40 transition-colors">
+                    <i data-lucide="shield-check"
+                        class="w-8 h-8 text-white/20 group-hover:text-white transition-colors"></i>
+                    <span class="text-[10px] font-bold uppercase tracking-widest leading-loose">Trusted
+                        Protection</span>
+                </div>
+                <div class="aspect-square bg-white text-black p-6 flex flex-col justify-between">
+                    <i data-lucide="Zap" class="w-8 h-8"></i>
+                    <span class="text-[10px] font-bold uppercase tracking-widest leading-loose">Rapid Turnaround</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Values Table-like Grid -->
+        <section class="space-y-1 bg-white/5 border border-white/10 overflow-hidden">
+            <div class="grid md:grid-cols-4 border-b border-white/10">
+                <div class="p-8 border-r border-white/10 opacity-40 text-[10px] font-black uppercase tracking-widest">
+                    Process</div>
+                <div class="p-8 md:col-span-3 text-sm text-white/60 leading-loose uppercase tracking-wider">
+                    Every garment undergoes a multi-stage quality check, from ultrasonic cleaning to precision pressing
+                    and eco-friendly finishing.
+                </div>
+            </div>
+            <div class="grid md:grid-cols-4 border-b border-white/10">
+                <div class="p-8 border-r border-white/10 opacity-40 text-[10px] font-black uppercase tracking-widest">
+                    Tech</div>
+                <div class="p-8 md:col-span-3 text-sm text-white/60 leading-loose uppercase tracking-wider">
+                    Our dynamic capacity management system ensures that every order is handled by optimized machinery,
+                    minimizing wait times and energy consumption.
+                </div>
+            </div>
+            <div class="grid md:grid-cols-4">
+                <div class="p-8 border-r border-white/10 opacity-40 text-[10px] font-black uppercase tracking-widest">
+                    Impact</div>
+                <div class="p-8 md:col-span-3 text-sm text-white/60 leading-loose uppercase tracking-wider">
+                    Commitment to water restoration and chemical-free detergents, because premium care shouldn't cost
+                    the environment.
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA/Footer -->
+        <footer class="mt-32 pt-16 border-t border-white/10 grid md:grid-cols-2 gap-12 items-end">
+            <div class="space-y-4">
+                <div class="text-[10px] font-bold uppercase tracking-widest text-white/40">Established 2026</div>
+                <p class="text-xs text-white/20 leading-loose uppercase tracking-widest">
+                    Operational Headquarters <br />
+                    Urban Processing Facility 01 <br />
+                    Global Standards Applied
+                </p>
+            </div>
+            <div class="flex flex-col items-end gap-6">
+                <a href="/"
+                    class="bg-white text-black font-black uppercase tracking-widest px-12 py-5 flex items-center justify-center gap-3 hover:bg-gray-200 transition-colors shadow-2xl text-xs">
+                    Return to Portal
+                </a>
+                <p class="text-[10px] text-white/40 uppercase tracking-[0.3em] font-bold">
+                    &copy; 2026 ELaundry Operations. All rights reserved.
+                </p>
+            </div>
+        </footer>
+    </div>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

@@ -817,6 +817,9 @@ def subscription_details(request):
 def terms_and_conditions(request):
     return render(request, 'terms_and_conditions.html')
 
+def about_us(request):
+    return render(request, 'about_us.html')
+
 
 def scan_qr_page(request):
     return render(request, 'scan_qr.html')
