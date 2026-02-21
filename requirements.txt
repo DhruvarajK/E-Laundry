@@ -4,7 +4,7 @@ Django>=5.0
 gunicorn
 python-dotenv
 geopy
-opencv-python
+opencv-python-headless
 numpy
 pyzbar
 Pillow
