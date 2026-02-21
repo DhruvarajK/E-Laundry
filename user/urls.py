@@ -28,6 +28,13 @@ urlpatterns = [
     path('razorpay-payment/<int:order_id>/', views.razorpay_payment, name='razorpay_payment'),
     path('payment-success/<int:order_id>/', views.payment_success, name='payment_success'),
     path('about-us/', views.about_us, name='about_us'),
+    path('dry-cleaning/', views.dry_cleaning, name='dry_cleaning'),
+    path('express-wash/', views.express_wash, name='express_wash'),
+    path('ironing/', views.ironing, name='ironing'),
+    path('network/', views.network, name='network'),
+    path('careers/', views.careers, name='careers'),
+    path('privacy-policy/', views.privacy_policy, name='privacy_policy'),
+    path('terms-of-service/', views.terms_of_service, name='terms_of_service'),
 ]
      
 

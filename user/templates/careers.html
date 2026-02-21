@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Careers | ELaundry</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ffffff",
+                        "background-dark": "#000000",
+                        "surface": "#111111",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0px",
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+
+<body class="bg-background-dark font-display text-white antialiased min-h-screen">
+    <div class="max-w-4xl mx-auto px-6 py-16 lg:py-24">
+        <header class="mb-16 border-b border-white/10 pb-12">
+            <h2 class="text-xs font-bold uppercase tracking-[0.4em] text-white/40 mb-4">Join The Force</h2>
+            <h3 class="text-4xl lg:text-6xl font-black uppercase tracking-tight">Careers</h3>
+        </header>
+
+        <main class="space-y-16">
+            <section class="grid lg:grid-cols-2 gap-12 items-start">
+                <div class="space-y-8">
+                    <p
+                        class="text-xl text-white/60 leading-relaxed uppercase tracking-wide italic border-l border-white/20 pl-6">
+                        We are building the infrastructure of urban laundry. Join us in optimizing logistical flows and
+                        operational quality.
+                    </p>
+                    <div class="bg-surface border border-white/10 p-8 space-y-4">
+                        <h4 class="text-[10px] font-black uppercase tracking-widest text-white">Why Join?</h4>
+                        <ul class="text-[10px] uppercase font-bold tracking-widest space-y-3 text-white/40">
+                            <li>Equity/Incentive Programs</li>
+                            <li>Operational Training</li>
+                            <li>Tech-Driven Environment</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <div
+                        class="p-8 border border-white/10 bg-white/5 hover:bg-white/10 transition-colors flex justify-between items-center group cursor-pointer">
+                        <div>
+                            <div class="text-sm font-bold uppercase tracking-widest text-white">Logistics Lead</div>
+                            <div class="text-[8px] uppercase tracking-widest text-white/40 mt-1">Full-Time • Office
+                            </div>
+                        </div>
+                        <i data-lucide="arrow-right"
+                            class="w-4 h-4 text-white/20 group-hover:text-white transition-all group-hover:translate-x-1"></i>
+                    </div>
+                    <div
+                        class="p-8 border border-white/10 bg-white/5 hover:bg-white/10 transition-colors flex justify-between items-center group cursor-pointer">
+                        <div>
+                            <div class="text-sm font-bold uppercase tracking-widest text-white">QA Specialist</div>
+                            <div class="text-[8px] uppercase tracking-widest text-white/40 mt-1">On-Site • Facility
+                            </div>
+                        </div>
+                        <i data-lucide="arrow-right"
+                            class="w-4 h-4 text-white/20 group-hover:text-white transition-all group-hover:translate-x-1"></i>
+                    </div>
+                    <div
+                        class="p-8 border border-white/10 bg-white/5 hover:bg-white/10 transition-colors flex justify-between items-center group cursor-pointer">
+                        <div>
+                            <div class="text-sm font-bold uppercase tracking-widest text-white">Station Operator</div>
+                            <div class="text-[8px] uppercase tracking-widest text-white/40 mt-1">Full-Time • Shift</div>
+                        </div>
+                        <i data-lucide="arrow-right"
+                            class="w-4 h-4 text-white/20 group-hover:text-white transition-all group-hover:translate-x-1"></i>
+                    </div>
+                </div>
+            </section>
+
+            <div class="pt-8 flex flex-col items-center gap-6">
+                <a href="/"
+                    class="bg-white text-black font-black uppercase tracking-widest px-12 py-5 flex items-center justify-center gap-3 hover:bg-gray-200 transition-colors shadow-2xl text-xs">
+                    Return to Portal
+                </a>
+            </div>
+        </main>
+    </div>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

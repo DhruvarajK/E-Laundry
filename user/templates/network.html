@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Network | ELaundry</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ffffff",
+                        "background-dark": "#000000",
+                        "surface": "#111111",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0px",
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+
+<body class="bg-background-dark font-display text-white antialiased min-h-screen">
+    <div class="max-w-4xl mx-auto px-6 py-16 lg:py-24">
+        <header class="mb-16 border-b border-white/10 pb-12">
+            <h2 class="text-xs font-bold uppercase tracking-[0.4em] text-white/40 mb-4">Strategic Coverage</h2>
+            <h3 class="text-4xl lg:text-6xl font-black uppercase tracking-tight">The Network</h3>
+        </header>
+
+        <main class="space-y-16">
+            <section class="grid lg:grid-cols-2 gap-12">
+                <div class="space-y-8">
+                    <p class="text-xl text-white/60 leading-relaxed uppercase tracking-wide">
+                        ELaundry operates across 12 urban processing facilities, linked by a real-time logistics layer
+                        to ensure maximum efficiency.
+                    </p>
+                    <div class="bg-white text-black p-8">
+                        <div class="text-[10px] font-black uppercase tracking-widest mb-1">Status</div>
+                        <div class="text-2xl font-black uppercase tracking-tight">Active Coverage</div>
+                        <div class="mt-4 text-[10px] font-bold uppercase tracking-widest opacity-60">Downtown • 15 Units
+                            <br /> Uptown • 08 Units <br /> Industrial Zone • 04 Units</div>
+                    </div>
+                </div>
+                <div class="space-y-8">
+                    <div class="p-8 border border-white/10 bg-surface">
+                        <h4
+                            class="text-[10px] font-bold uppercase tracking-widest text-white/40 mb-4 flex items-center gap-2">
+                            <i data-lucide="map-pin" class="w-4 h-4"></i> Decentralized Processing
+                        </h4>
+                        <p class="text-sm text-white/60 leading-loose uppercase tracking-wider">
+                            By processing garments closer to collection points, we reduce carbon footprint and lead
+                            times.
+                        </p>
+                    </div>
+                    <div class="p-8 border border-white/10 bg-surface">
+                        <h4
+                            class="text-[10px] font-bold uppercase tracking-widest text-white/40 mb-4 flex items-center gap-2">
+                            <i data-lucide="radio" class="w-4 h-4"></i> Real-time Sync
+                        </h4>
+                        <p class="text-sm text-white/60 leading-loose uppercase tracking-wider">
+                            Every facility is hyper-connected, allowing for dynamic load balancing across the entire
+                            city.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <div class="pt-8 flex flex-col items-center gap-6">
+                <a href="/"
+                    class="bg-white text-black font-black uppercase tracking-widest px-12 py-5 flex items-center justify-center gap-3 hover:bg-gray-200 transition-colors shadow-2xl text-xs">
+                    Return to Portal
+                </a>
+            </div>
+        </main>
+    </div>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

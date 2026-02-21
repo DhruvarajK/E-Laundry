@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dry Cleaning | ELaundry</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ffffff",
+                        "background-dark": "#000000",
+                        "surface": "#111111",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0px",
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+
+<body class="bg-background-dark font-display text-white antialiased min-h-screen">
+    <div class="max-w-4xl mx-auto px-6 py-16 lg:py-24">
+        <header class="mb-16 border-b border-white/10 pb-12">
+            <h2 class="text-xs font-bold uppercase tracking-[0.4em] text-white/40 mb-4">Elite Wardrobe Care</h2>
+            <h3 class="text-4xl lg:text-6xl font-black uppercase tracking-tight">Dry Cleaning</h3>
+        </header>
+
+        <main class="space-y-16">
+            <section class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6">
+                    <p class="text-xl text-white/60 leading-relaxed uppercase tracking-wide">
+                        Our dry cleaning process uses high-purity solvents and advanced filtration to remove stains
+                        while preserving garment structure.
+                    </p>
+                    <ul class="space-y-4">
+                        <li class="flex items-center gap-3 text-sm font-bold uppercase tracking-widest">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-white"></i>
+                            Silk & Wool Specialists
+                        </li>
+                        <li class="flex items-center gap-3 text-sm font-bold uppercase tracking-widest">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-white"></i>
+                            Hand-Finished Pressing
+                        </li>
+                        <li class="flex items-center gap-3 text-sm font-bold uppercase tracking-widest">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-white"></i>
+                            Stain Pre-Treatment
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-surface border border-white/10 aspect-video flex items-center justify-center">
+                    <i data-lucide="shirt" class="w-24 h-24 text-white/10"></i>
+                </div>
+            </section>
+
+            <section class="bg-white/5 border border-white/10 p-12">
+                <h4
+                    class="text-xs font-bold uppercase tracking-[0.3em] text-white/40 mb-8 border-b border-white/10 pb-4">
+                    Service Protocol</h4>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="space-y-2">
+                        <div class="text-[10px] font-black uppercase tracking-widest opacity-20">Step 01</div>
+                        <div class="text-sm font-bold uppercase tracking-widest text-white">Inspection</div>
+                        <p class="text-[10px] text-white/40 leading-loose uppercase tracking-widest">Detailed check for
+                            minor repairs and stain identification.</p>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="text-[10px] font-black uppercase tracking-widest opacity-20">Step 02</div>
+                        <div class="text-sm font-bold uppercase tracking-widest text-white">Processing</div>
+                        <p class="text-[10px] text-white/40 leading-loose uppercase tracking-widest">Solvent-based
+                            cleaning in computer-controlled systems.</p>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="text-[10px] font-black uppercase tracking-widest opacity-20">Step 03</div>
+                        <div class="text-sm font-bold uppercase tracking-widest text-white">Finishing</div>
+                        <p class="text-[10px] text-white/40 leading-loose uppercase tracking-widest">Professional
+                            steaming and precision tensioning.</p>
+                    </div>
+                </div>
+            </section>
+
+            <div class="pt-8 flex flex-col items-center gap-6">
+                <a href="/"
+                    class="bg-white text-black font-black uppercase tracking-widest px-12 py-5 flex items-center justify-center gap-3 hover:bg-gray-200 transition-colors shadow-2xl text-xs">
+                    Return to Portal
+                </a>
+            </div>
+        </main>
+    </div>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

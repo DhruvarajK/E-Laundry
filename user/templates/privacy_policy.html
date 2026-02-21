@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | ELaundry</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ffffff",
+                        "background-dark": "#000000",
+                        "surface": "#111111",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0px",
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+
+<body class="bg-background-dark font-display text-white antialiased min-h-screen">
+    <div class="max-w-3xl mx-auto px-6 py-16 lg:py-24">
+        <header class="mb-16 border-b border-white/10 pb-12">
+            <h2 class="text-xs font-bold uppercase tracking-[0.4em] text-white/40 mb-4">Data Governance</h2>
+            <h3 class="text-4xl lg:text-5xl font-black uppercase tracking-tight">Privacy Policy</h3>
+            <p class="text-[10px] font-bold uppercase tracking-widest text-white/20 mt-4">Last Updated: February 2026
+            </p>
+        </header>
+
+        <main class="space-y-12">
+            <div class="space-y-4">
+                <h4 class="text-xs font-bold uppercase tracking-widest text-white">01. Information Collection</h4>
+                <p class="text-[11px] text-white/40 leading-loose uppercase tracking-widest font-medium">
+                    We collect essential data to facilitate logistics, including name, physical address for
+                    pickup/delivery, contact numbers, and order history.
+                </p>
+            </div>
+
+            <div class="space-y-4">
+                <h4 class="text-xs font-bold uppercase tracking-widest text-white">02. Data Usage</h4>
+                <p class="text-[11px] text-white/40 leading-loose uppercase tracking-widest font-medium">
+                    Data is strictly used for order fulfillment, capacity optimization, and critical service
+                    notifications. We do not sell user data to third-party advertisers.
+                </p>
+            </div>
+
+            <div class="space-y-4">
+                <h4 class="text-xs font-bold uppercase tracking-widest text-white">03. Security Layers</h4>
+                <p class="text-[11px] text-white/40 leading-loose uppercase tracking-widest font-medium">
+                    Sensitive payment information is handled via Razorpay (PCI-DSS compliant). Our internal systems use
+                    multi-layer encryption for storage.
+                </p>
+            </div>
+
+            <div class="space-y-4">
+                <h4 class="text-xs font-bold uppercase tracking-widest text-white">04. Retention</h4>
+                <p class="text-[11px] text-white/40 leading-loose uppercase tracking-widest font-medium">
+                    Account data is retained for the duration of your active subscription and 24 months
+                    post-deactivation to comply with local financial reporting standards.
+                </p>
+            </div>
+
+            <div class="pt-8 flex flex-col items-center gap-6">
+                <a href="/"
+                    class="bg-white text-black font-black uppercase tracking-widest px-12 py-5 flex items-center justify-center gap-3 hover:bg-gray-200 transition-colors shadow-2xl text-xs">
+                    Return to Portal
+                </a>
+            </div>
+        </main>
+    </div>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

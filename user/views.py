@@ -820,6 +820,28 @@ def terms_and_conditions(request):
 def about_us(request):
     return render(request, 'about_us.html')
 
+def dry_cleaning(request):
+    return render(request, 'dry_cleaning.html')
+
+def express_wash(request):
+    return render(request, 'express_wash.html')
+
+def ironing(request):
+    return render(request, 'ironing.html')
+
+def network(request):
+    return render(request, 'network.html')
+
+def careers(request):
+    return render(request, 'careers.html')
+
+def privacy_policy(request):
+    return render(request, 'privacy_policy.html')
+
+def terms_of_service(request):
+    return render(request, 'terms_of_service.html')
+
+
 
 def scan_qr_page(request):
     return render(request, 'scan_qr.html')

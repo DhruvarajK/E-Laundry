@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service | ELaundry</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ffffff",
+                        "background-dark": "#000000",
+                        "surface": "#111111",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0px",
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+
+<body class="bg-background-dark font-display text-white antialiased min-h-screen">
+    <div class="max-w-3xl mx-auto px-6 py-16 lg:py-24">
+        <header class="mb-16 border-b border-white/10 pb-12">
+            <h2 class="text-xs font-bold uppercase tracking-[0.4em] text-white/40 mb-4">Master Service Agreement</h2>
+            <h3 class="text-4xl lg:text-5xl font-black uppercase tracking-tight">Terms of Service</h3>
+            <p class="text-[10px] font-bold uppercase tracking-widest text-white/20 mt-4">Version 2.0 • Feb 2026</p>
+        </header>
+
+        <main class="space-y-12">
+            <div class="bg-surface border border-white/10 p-8 space-y-6">
+                <h4 class="text-xs font-bold uppercase tracking-widest text-white border-b border-white/10 pb-4">General
+                    Terms</h4>
+                <p class="text-[11px] text-white/60 leading-loose uppercase tracking-widest">
+                    By accessing ELaundry services, you agree to comply with operational guidelines including weight
+                    limits, pickup windows, and payment schedules.
+                </p>
+
+                <h4 class="text-xs font-bold uppercase tracking-widest text-white border-b border-white/10 pb-4">Service
+                    Liability</h4>
+                <p class="text-[11px] text-white/60 leading-loose uppercase tracking-widest">
+                    Liability for garment damage is limited to 3x the service cost of the individual item, unless
+                    high-value coverage is pre-declared and approved.
+                </p>
+
+                <h4 class="text-xs font-bold uppercase tracking-widest text-white border-b border-white/10 pb-4">Account
+                    Integrity</h4>
+                <p class="text-[11px] text-white/60 leading-loose uppercase tracking-widest">
+                    Users are responsible for maintaining the security of their QR codes and account credentials. System
+                    misuse results in immediate termination.
+                </p>
+            </div>
+
+            <div class="pt-8 flex flex-col items-center gap-6">
+                <a href="/"
+                    class="bg-white text-black font-black uppercase tracking-widest px-12 py-5 flex items-center justify-center gap-3 hover:bg-gray-200 transition-colors shadow-2xl text-xs">
+                    Return to Portal
+                </a>
+            </div>
+        </main>
+    </div>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

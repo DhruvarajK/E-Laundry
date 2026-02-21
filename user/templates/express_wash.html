@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Express Wash | ELaundry</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ffffff",
+                        "background-dark": "#000000",
+                        "surface": "#111111",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0px",
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+
+<body class="bg-background-dark font-display text-white antialiased min-h-screen">
+    <div class="max-w-4xl mx-auto px-6 py-16 lg:py-24">
+        <header class="mb-16 border-b border-white/10 pb-12">
+            <h2 class="text-xs font-bold uppercase tracking-[0.4em] text-white/40 mb-4">Speed & Precision</h2>
+            <h3 class="text-4xl lg:text-6xl font-black uppercase tracking-tight">Express Wash</h3>
+        </header>
+
+        <main class="space-y-16">
+            <section class="grid lg:grid-cols-2 gap-12 items-center">
+                <div
+                    class="bg-surface border border-white/10 aspect-video flex items-center justify-center order-2 lg:order-1">
+                    <i data-lucide="zap" class="w-24 h-24 text-white/10"></i>
+                </div>
+                <div class="space-y-6 order-1 lg:order-2">
+                    <p class="text-xl text-white/60 leading-relaxed uppercase tracking-wide">
+                        Optimized for daily wear, our express wash utilizes high-RPM extraction and specialized
+                        detergents for a 24-hour turnaround.
+                    </p>
+                    <ul class="space-y-4">
+                        <li class="flex items-center gap-3 text-sm font-bold uppercase tracking-widest">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-white"></i>
+                            Antibacterial Treatment
+                        </li>
+                        <li class="flex items-center gap-3 text-sm font-bold uppercase tracking-widest">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-white"></i>
+                            Eco-Friendly Detergents
+                        </li>
+                        <li class="flex items-center gap-3 text-sm font-bold uppercase tracking-widest">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-white"></i>
+                            Automatic Fabric Softener
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="grid md:grid-cols-2 gap-1">
+                <div class="bg-white text-black p-12">
+                    <h4 class="text-[10px] font-black uppercase tracking-widest mb-4">Standard Express</h4>
+                    <p class="text-2xl font-black uppercase tracking-tighter mb-8">24 Hours</p>
+                    <ul class="text-[10px] uppercase font-bold tracking-widest space-y-2 opacity-60">
+                        <li>Wash, Dry & Fold</li>
+                        <li>Standard Detergent</li>
+                        <li>Regular Packing</li>
+                    </ul>
+                </div>
+                <div class="bg-surface border border-white/10 p-12">
+                    <h4 class="text-[10px] font-black uppercase tracking-widest mb-4 text-white/40">Priority Express
+                    </h4>
+                    <p class="text-2xl font-black uppercase tracking-tighter mb-8">12 Hours</p>
+                    <ul class="text-[10px] uppercase font-bold tracking-widest space-y-2 text-white/40">
+                        <li>Premium Care</li>
+                        <li>Fabric Sanitize</li>
+                        <li>Hanger Service</li>
+                    </ul>
+                </div>
+            </section>
+
+            <div class="pt-8 flex flex-col items-center gap-6">
+                <a href="/"
+                    class="bg-white text-black font-black uppercase tracking-widest px-12 py-5 flex items-center justify-center gap-3 hover:bg-gray-200 transition-colors shadow-2xl text-xs">
+                    Return to Portal
+                </a>
+            </div>
+        </main>
+    </div>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>
