@@ -18,6 +18,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from dotenv import load_dotenv
 import os
+from .auth_check import login_required
 
 load_dotenv()
 
@@ -130,55 +131,42 @@ def send_email(to_email: str, subject: str, body: str):
     except Exception as e:
         print(f"General error sending to {to_email}: {e}")
 
+@login_required
 def view_pending_deliverymen(request):
-    if request.session['lid'] == 'out':
-        return HttpResponse("<script>alert('please login');window.location='/'</script>")
-    else:
-        data = DeliveryMan.objects.filter(LOGIN__usertype="pending")
-        return render(request,"pending_deliveryman.html",{"pending_deliverymen":data})
+    data = DeliveryMan.objects.filter(LOGIN__usertype="pending")
+    return render(request,"pending_deliveryman.html",{"pending_deliverymen":data})
 
 
 
+@login_required
 def view_users(request):
-    if request.session['lid'] == 'out':
-        return HttpResponse("<script>alert('please login');window.location='/'</script>")
-    else:
-        # data = user.objects.filter(LOGIN__usertype="user")
-        data = user.objects.filter(Q(LOGIN__usertype="user") | Q(LOGIN__usertype="block"))
-        return render(request,"view_user.html",{"data":data})
+    # data = user.objects.filter(LOGIN__usertype="user")
+    data = user.objects.filter(Q(LOGIN__usertype="user") | Q(LOGIN__usertype="block"))
+    return render(request,"view_user.html",{"data":data})
 
+@login_required
 def view_logistics(request):
-    if request.session['lid'] == 'out':
-        return HttpResponse("<script>alert('please login');window.location='/'</script>")
-    else:
-         data = DeliveryMan.objects.filter(Q(LOGIN__usertype="logistics") | Q(LOGIN__usertype="block"))
-         return render(request,'view_logistics.html',{"data":data})
+     data = DeliveryMan.objects.filter(Q(LOGIN__usertype="logistics") | Q(LOGIN__usertype="block"))
+     return render(request,'view_logistics.html',{"data":data})
 
+@login_required
 def view_business(request):
-    if request.session['lid'] == 'out':
-        return HttpResponse("<script>alert('please login');window.location='/'</script>")
-    else:
-         data = Business.objects.filter(Q(LOGIN__usertype="business") | Q(LOGIN__usertype="block"))
-         return render(request,'view_business.html',{"data":data})
+     data = Business.objects.filter(Q(LOGIN__usertype="business") | Q(LOGIN__usertype="block"))
+     return render(request,'view_business.html',{"data":data})
 
+@login_required
 def accept(request,id):
-    if request.session['lid'] == 'out':
-        return HttpResponse("<script>alert('please login');window.location='/'</script>")
-    else:
-        login.objects.filter(id=id).update(usertype='logistics')
-        return HttpResponse("<script>alert('logistics accepted');window.location='/pending_deliverymen/'</script>")
+    login.objects.filter(id=id).update(usertype='logistics')
+    return HttpResponse("<script>alert('logistics accepted');window.location='/pending_deliverymen/'</script>")
 
+@login_required
 def reject(request,id):
-    if request.session['lid'] == 'out':
-        return HttpResponse("<script>alert('please login');window.location='/'</script>")
-    else:
-         login.objects.filter(id=id).delete()
-         return HttpResponse("<script>alert('logistics rejected');window.location='/pending_deliverymen/'</script>")
+     login.objects.filter(id=id).delete()
+     return HttpResponse("<script>alert('logistics rejected');window.location='/pending_deliverymen/'</script>")
 
 
+@login_required
 def admin_home(request):
-    if request.session.get('lid') == 'out' or 'lid' not in request.session:
-        return HttpResponse("<script>alert('please login');window.location='/'</script>")
     
     # 1. Total Revenue (Paid payments)
     revenue_data = Payment.objects.filter(payment_status='paid').aggregate(total=Sum('total_price'))
@@ -245,36 +233,28 @@ def admin_home(request):
 
 
 
+@login_required
 def block(request,id):
-    if request.session['lid'] == 'out':
-        return HttpResponse("<script>alert('please login');window.location='/'</script>")
-    else:
-         login.objects.filter(id=id).update(usertype='block')
-         return HttpResponse("<script>alert('blocked');window.location='/admin_home/'</script>")
+     login.objects.filter(id=id).update(usertype='block')
+     return HttpResponse("<script>alert('blocked');window.location='/admin_home/'</script>")
 
+@login_required
 def unblock(request,id):
-    if request.session['lid'] == 'out':
-        return HttpResponse("<script>alert('please login');window.location='/'</script>")
-    else:
-          login.objects.filter(id=id).update(usertype='logistics')
-          return HttpResponse("<script>alert('logistics unblocked');window.location='/view_logistics/'</script>")
+      login.objects.filter(id=id).update(usertype='logistics')
+      return HttpResponse("<script>alert('logistics unblocked');window.location='/view_logistics/'</script>")
 
+@login_required
 def businessunblock(request,id):
-    if request.session['lid'] == 'out':
-        return HttpResponse("<script>alert('please login');window.location='/'</script>")
-    else:
-          login.objects.filter(id=id).update(usertype='business')
-          return HttpResponse("<script>alert('business unblocked');window.location='/view_business/'</script>")
+      login.objects.filter(id=id).update(usertype='business')
+      return HttpResponse("<script>alert('business unblocked');window.location='/view_business/'</script>")
 
 
 
 
+@login_required
 def userunblock(request,id):
-    if request.session['lid'] == 'out':
-        return HttpResponse("<script>alert('please login');window.location='/'</script>")
-    else:
-          login.objects.filter(id=id).update(usertype='user')
-          return HttpResponse("<script>alert('user unblocked');window.location='/view_users/'</script>")
+      login.objects.filter(id=id).update(usertype='user')
+      return HttpResponse("<script>alert('user unblocked');window.location='/view_users/'</script>")
 
 # def admin_viewrequirements(request):
 #     if request.session['lid'] == 'out':
@@ -772,15 +752,13 @@ def track_delivery_works(request):
     }
     return render(request, 'track_delivery_works.html', context)
 
+@login_required
 def manage_machines(request):
-    if request.session.get('lid') == 'out' or 'lid' not in request.session:
-        return redirect('/')
     machines = Machine.objects.all()
     return render(request, 'manage_machines.html', {'machines': machines})
 
+@login_required
 def add_machine(request):
-    if request.session.get('lid') == 'out' or 'lid' not in request.session:
-        return redirect('/')
     if request.method == 'POST':
         name = request.POST.get('name')
         capacity = request.POST.get('capacity')
@@ -796,9 +774,8 @@ def add_machine(request):
     
     return render(request, 'add_machine.html')
 
+@login_required
 def edit_machine(request, machine_id):
-    if request.session.get('lid') == 'out' or 'lid' not in request.session:
-        return redirect('/')
     machine = get_object_or_404(Machine, id=machine_id)
     if request.method == 'POST':
         machine.name = request.POST.get('name')
@@ -810,10 +787,12 @@ def edit_machine(request, machine_id):
     
     return render(request, 'add_machine.html', {'machine': machine})
 
+@login_required
 def delete_machine(request, machine_id):
-    if request.session.get('lid') == 'out' or 'lid' not in request.session:
-        return redirect('/')
     machine = get_object_or_404(Machine, id=machine_id)
     machine.delete()
     messages.success(request, 'Machine deleted successfully!')
     return redirect('manage_machines')
+
+def error_404_view(request, exception):
+    return render(request, '404.html', status=404)

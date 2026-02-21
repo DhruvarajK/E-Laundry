@@ -32,7 +32,7 @@ from django.conf import settings
 import razorpay  
 
 def user_home(request):
-    if request.session['lid'] == 'out':
+    if request.session.get('lid') == 'out' or 'lid' not in request.session:
         return HttpResponse("<script>alert('please login');window.location='/'</script>")
     else:
         try:

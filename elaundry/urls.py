@@ -15,3 +15,5 @@ urlpatterns = [
     path('',include("business.urls")),
     path('',include("logistics.urls")),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+handler404 = 'myadmin.views.error_404_view'
