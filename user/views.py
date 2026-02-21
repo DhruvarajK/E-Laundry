@@ -886,6 +886,15 @@ def privacy_policy(request):
 def terms_of_service(request):
     return render(request, 'terms_of_service.html')
 
+def process_view(request):
+    return render(request, 'process.html')
+
+def partners(request):
+    return render(request, 'partners.html')
+
+def enterprise(request):
+    return render(request, 'enterprise.html')
+
 
 
 def scan_qr_page(request):

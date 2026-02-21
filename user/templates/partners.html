@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partnerships | ELaundry</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ffffff",
+                        "background-dark": "#000000",
+                        "surface": "#111111",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0px",
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+
+<body class="bg-background-dark font-display text-white antialiased min-h-screen">
+    <div class="max-w-4xl mx-auto px-6 py-16 lg:py-24">
+        <header class="mb-20 space-y-6 border-b border-white/10 pb-16">
+            <h2 class="text-xs font-bold uppercase tracking-[0.4em] text-white/40">Growth & Scale</h2>
+            <h3 class="text-5xl lg:text-7xl font-black uppercase tracking-tight leading-none">Partner <br /><span
+                    class="text-white/20">Network.</span></h3>
+            <p class="text-white/40 uppercase tracking-[0.4em] text-sm font-bold max-w-lg mt-6">
+                Empowering independent laundry businesses with world-class tech and logistics.
+            </p>
+        </header>
+
+        <main class="space-y-16">
+            <section class="grid lg:grid-cols-2 gap-8">
+                <div
+                    class="bg-surface border border-white/10 p-12 flex flex-col justify-between group hover:border-white/40 transition-colors">
+                    <div class="space-y-4">
+                        <i data-lucide="store"
+                            class="w-10 h-10 text-white/20 group-hover:text-white transition-colors"></i>
+                        <h4 class="text-xl font-bold uppercase tracking-widest">Shop Owners</h4>
+                        <p class="text-xs text-white/60 leading-loose uppercase tracking-wider">
+                            Transform your local shop into a high-efficiency processing hub. Access our digital POS and
+                            customer base.
+                        </p>
+                    </div>
+                    <a href="{% url 'register_business' %}"
+                        class="mt-8 text-[10px] font-black uppercase tracking-[0.3em] border-b border-white/20 pb-1 w-fit hover:border-white transition-colors">Apply
+                        as Shop Partner</a>
+                </div>
+                <div
+                    class="bg-surface border border-white/10 p-12 flex flex-col justify-between group hover:border-white/40 transition-colors">
+                    <div class="space-y-4">
+                        <i data-lucide="truck"
+                            class="w-10 h-10 text-white/20 group-hover:text-white transition-colors"></i>
+                        <h4 class="text-xl font-bold uppercase tracking-widest">Logistics Agents</h4>
+                        <p class="text-xs text-white/60 leading-loose uppercase tracking-wider">
+                            Join our urban courier force. Choose your hours, use our optimized routing, and earn
+                            reliable weekly payouts.
+                        </p>
+                    </div>
+                    <a href="{% url 'register_delivery' %}"
+                        class="mt-8 text-[10px] font-black uppercase tracking-[0.3em] border-b border-white/20 pb-1 w-fit hover:border-white transition-colors">Apply
+                        as Logistics Partner</a>
+                </div>
+            </section>
+
+            <div class="pt-8 flex flex-col items-center gap-6">
+                <a href="/"
+                    class="bg-white text-black font-black uppercase tracking-widest px-12 py-5 flex items-center justify-center gap-3 hover:bg-gray-200 transition-colors shadow-2xl text-xs">
+                    Return to Portal
+                </a>
+            </div>
+        </main>
+    </div>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Process | ELaundry</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ffffff",
+                        "background-dark": "#000000",
+                        "surface": "#111111",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0px",
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+
+<body class="bg-background-dark font-display text-white antialiased min-h-screen">
+    <div class="max-w-4xl mx-auto px-6 py-16 lg:py-24">
+        <header class="mb-20 space-y-6 border-b border-white/10 pb-16">
+            <h2 class="text-xs font-bold uppercase tracking-[0.4em] text-white/40">The Protocol</h2>
+            <h3 class="text-5xl lg:text-7xl font-black uppercase tracking-tight leading-none">Operational <br /><span
+                    class="text-white/20">Excellence.</span></h3>
+            <p class="text-white/40 uppercase tracking-[0.4em] text-sm font-bold max-w-lg mt-6">
+                A highly optimized, end-to-end workflow designed for garment integrity.
+            </p>
+        </header>
+
+        <main class="space-y-32">
+            <!-- Step-by-Step -->
+            <section class="space-y-1 bg-white/5 border border-white/10 overflow-hidden">
+                <div class="grid md:grid-cols-4 border-b border-white/10">
+                    <div
+                        class="p-8 border-r border-white/10 opacity-40 text-[10px] font-black uppercase tracking-widest">
+                        01 / Intake</div>
+                    <div class="p-8 md:col-span-3">
+                        <h4 class="text-sm font-bold uppercase tracking-widest text-white mb-2">Digital Tagging</h4>
+                        <p class="text-xs text-white/60 leading-loose uppercase tracking-wider">
+                            Every garment is assigned a unique digital ID via QR code scanning, tracking its journey
+                            from pickup to delivery.
+                        </p>
+                    </div>
+                </div>
+                <div class="grid md:grid-cols-4 border-b border-white/10">
+                    <div
+                        class="p-8 border-r border-white/10 opacity-40 text-[10px] font-black uppercase tracking-widest">
+                        02 / Sorting</div>
+                    <div class="p-8 md:col-span-3">
+                        <h4 class="text-sm font-bold uppercase tracking-widest text-white mb-2">Fiber Analysis</h4>
+                        <p class="text-xs text-white/60 leading-loose uppercase tracking-wider">
+                            Automated sorting based on fabric weight, color profile, and required thermal processing
+                            levels.
+                        </p>
+                    </div>
+                </div>
+                <div class="grid md:grid-cols-4 border-b border-white/10">
+                    <div
+                        class="p-8 border-r border-white/10 opacity-40 text-[10px] font-black uppercase tracking-widest">
+                        03 / Care</div>
+                    <div class="p-8 md:col-span-3">
+                        <h4 class="text-sm font-bold uppercase tracking-widest text-white mb-2">Precision Wash</h4>
+                        <p class="text-xs text-white/60 leading-loose uppercase tracking-wider">
+                            Processing in climate-controlled facilities using eco-safe solvents and high-efficiency
+                            machinery.
+                        </p>
+                    </div>
+                </div>
+                <div class="grid md:grid-cols-4">
+                    <div
+                        class="p-8 border-r border-white/10 opacity-40 text-[10px] font-black uppercase tracking-widest">
+                        04 / Dispatch</div>
+                    <div class="p-8 md:col-span-3">
+                        <h4 class="text-sm font-bold uppercase tracking-widest text-white mb-2">Dynamic Logistics</h4>
+                        <p class="text-xs text-white/60 leading-loose uppercase tracking-wider">
+                            Finished items are packed in eco-friendly wraps and assigned to the nearest available
+                            logistics agent.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <div class="flex flex-col items-center gap-6">
+                <a href="/"
+                    class="bg-white text-black font-black uppercase tracking-widest px-12 py-5 flex items-center justify-center gap-3 hover:bg-gray-200 transition-colors shadow-2xl text-xs">
+                    Return to Portal
+                </a>
+            </div>
+        </main>
+    </div>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>
