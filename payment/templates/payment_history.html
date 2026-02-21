@@ -2,255 +2,337 @@
 <html class="dark" lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <title>Scan QR | ELaundry</title>
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-    rel="stylesheet" />
-  <script id="tailwind-config">
-    tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          colors: {
-            "primary": "#ffffff",
-            "background-light": "#f6f6f8",
-            "background-dark": "#000000",
-          },
-          fontFamily: {
-            "display": ["Inter", "sans-serif"]
-          },
-          borderRadius: {
-            "DEFAULT": "0px",
-            "lg": "0px",
-            "xl": "0px",
-            "full": "0px"
-          },
-        },
-      },
-    }
-  </script>
-  <style>
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-  </style>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Scan QR | ELaundry</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ffffff",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#000000",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0px",
+                        "lg": "0px",
+                        "xl": "0px",
+                        "full": "0px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
 </head>
 
 <body
-  class="bg-background-light dark:bg-background-dark font-display text-black dark:text-white antialiased min-h-screen flex">
+    class="bg-background-light dark:bg-background-dark font-display text-black dark:text-white antialiased min-h-screen flex">
 
-  <main class="flex-1 bg-black relative overflow-y-auto">
+    <main class="flex-1 bg-black relative overflow-y-auto">
 
-    <!-- Header -->
-    <header
-      class="h-16 bg-black border-b border-white/10 flex items-center justify-between px-5 sticky top-0 z-30">
-      <div class="flex items-center gap-2">
-        <span class="material-symbols-outlined text-white text-2xl">waves</span>
-        <span class="text-white text-lg font-black uppercase tracking-tight">
-          ELaundry
-        </span>
-      </div>
-    </header>
-
-    <!-- Page Container -->
-    <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-<div class="space-y-8">
-    <!-- Header -->
-    <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-white/10 pb-8">
-        <div>
-            <h2 class="text-xs font-bold uppercase tracking-[0.4em] text-white/40 mb-2">My Activity</h2>
-            <h3 class="text-3xl md:text-4xl font-black uppercase tracking-tight text-white">Payment History</h3>
-        </div>
-
-        <div class="flex gap-4">
-            <button
-                class="px-4 py-2 border border-white/10 bg-white/5 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors flex items-center gap-2">
-                <i data-lucide="filter" class="w-4 h-4"></i> Filter
-            </button>
-            <button
-                class="px-4 py-2 bg-white text-black text-[10px] font-bold uppercase tracking-widest hover:bg-gray-200 transition-colors flex items-center gap-2">
-                <i data-lucide="download" class="w-4 h-4"></i> Export
-            </button>
-        </div>
-    </div>
-
-    <!-- Stats Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Total Spent -->
-        <div class="border border-white/10 bg-white/5 p-6 group hover:border-white/30 transition-colors">
-            <div class="flex items-center gap-4 mb-4">
-                <div class="w-10 h-10 bg-white/10 flex items-center justify-center text-white">
-                    <i data-lucide="banknote" class="w-5 h-5"></i>
-                </div>
-                <div>
-                    <span class="text-[10px] uppercase tracking-widest text-white/40 block">Total Spent</span>
-                    <span class="text-xl font-bold text-white">₹{{ combined_total }}</span>
-                </div>
+        <!-- Header -->
+        <header class="h-16 bg-black border-b border-white/10 flex items-center justify-between px-5 sticky top-0 z-30">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-white text-2xl">waves</span>
+                <span class="text-white text-lg font-black uppercase tracking-tight">
+                    ELaundry
+                </span>
             </div>
-            <div class="h-1 w-full bg-white/10">
-                <div class="h-full bg-white w-3/4"></div>
-            </div>
-        </div>
+        </header>
 
-        <!-- Subscription Total -->
-        <div class="border border-white/10 bg-white/5 p-6 group hover:border-white/30 transition-colors">
-            <div class="flex items-center gap-4 mb-4">
-                <div class="w-10 h-10 bg-white/10 flex items-center justify-center text-white">
-                    <i data-lucide="credit-card" class="w-5 h-5"></i>
-                </div>
-                <div>
-                    <span class="text-[10px] uppercase tracking-widest text-white/40 block">Subscription Total</span>
-                    <span class="text-xl font-bold text-white">₹{{ subscription_total }}</span>
-                </div>
-            </div>
-            <div class="h-1 w-full bg-white/10">
-                <div class="h-full bg-white w-1/2"></div>
-            </div>
-        </div>
+        <!-- Page Container -->
+        <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+            <div class="space-y-8">
+                <!-- Header -->
+                <div
+                    class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-white/10 pb-8">
+                    <div>
+                        <h2 class="text-xs font-bold uppercase tracking-[0.4em] text-white/40 mb-2">My Activity</h2>
+                        <h3 class="text-3xl md:text-4xl font-black uppercase tracking-tight text-white">Payment History
+                        </h3>
+                    </div>
 
-        <!-- Last Payment -->
-        <div class="border border-white/10 bg-white/5 p-6 group hover:border-white/30 transition-colors">
-            <div class="flex items-center gap-4 mb-4">
-                <div class="w-10 h-10 bg-white/10 flex items-center justify-center text-white">
-                    <i data-lucide="calendar" class="w-5 h-5"></i>
+                    <div class="flex flex-wrap gap-4">
+                        <form method="GET" class="flex gap-4">
+                            <select name="service_type" onchange="this.form.submit()"
+                                class="bg-white/5 border-white/10 text-white text-[10px] font-bold uppercase tracking-widest focus:ring-0 focus:border-white transition-colors cursor-pointer">
+                                <option value="">All Services</option>
+                                <option value="dry-clean" {% if current_service == 'dry-clean' %}selected{% endif %}>Dry Clean</option>
+                                <option value="Machine Wash" {% if current_service == 'Machine Wash' %}selected{% endif%}>Machine Wash</option>
+                                <option value="iron" {% if current_service == 'iron' %}selected{% endif %}>Iron</option>
+                                <option value="fold" {% if current_service == 'fold' %}selected{% endif %}>Fold</option>
+                                <option value="steam-press" {% if current_service == 'steam-press' %}selected{% endif %}>Steam Press</option>
+                                <option value="starch" {% if current_service == 'starch' %}selected{% endif %}>Starch</option>
+                                <option value="hand-wash" {% if current_service == 'hand-wash' %}selected{% endif %}>Hand Wash</option>
+                                <option value="spot-cleaning" {% if current_service == 'spot-cleaning' %}selected{% endif %}>Spot Cleaning</option>
+                                <option value="delicate-care" {% if current_service == 'delicate-care' %}selected{% endif %}>Delicate Care</option>
+                                <option value="Hand wash & Ironing" {% if current_service == 'Hand wash & Ironing'%}selected{% endif %}>Hand wash & Ironing</option>
+                                <option value="Machine wash & Ironing" {% if current_service == 'Machine wash & Ironing'%}selected{% endif %}>Machine wash & Ironing</option>
+                            </select>
+                            <select name="payment_status" onchange="this.form.submit()"
+                                class="bg-white/5 border-white/10 text-white text-[10px] font-bold uppercase tracking-widest focus:ring-0 focus:border-white transition-colors cursor-pointer">
+                                <option value="">All Status</option>
+                                <option value="paid" {% if current_status == 'paid' %}selected{% endif %}>Paid</option>
+                                <option value="pending" {% if current_status == 'pending' %}selected{% endif %}>Pending
+                                </option>
+                                <option value="failed" {% if current_status == 'failed' %}selected{% endif %}>Failed
+                                </option>
+                            </select>
+                        </form>
+                        <a href="?export=csv&service_type={{ current_service }}&payment_status={{ current_status }}"
+                            class="px-4 py-2 bg-white text-black text-[10px] font-bold uppercase tracking-widest hover:bg-gray-200 transition-colors flex items-center gap-2">
+                            <i data-lucide="download" class="w-4 h-4"></i> Export
+                        </a>
+                    </div>
                 </div>
-                <div>
-                    <span class="text-[10px] uppercase tracking-widest text-white/40 block">Last Payment</span>
-                    <span class="text-xl font-bold text-white">
-                        {% if payments %}
-                        {{ payments.0.created_at|date:"M d, Y" }}
-                        {% else %}
-                        N/A
-                        {% endif %}
-                    </span>
-                </div>
-            </div>
-            <div class="h-1 w-full bg-white/10">
-                <div class="h-full bg-white w-full"></div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Transactions Table -->
-    <div class="border border-white/10 bg-white/5">
-        <div class="p-6 border-b border-white/10 flex justify-between items-center">
-            <h4 class="text-sm font-bold uppercase tracking-widest text-white/60">Transaction Details</h4>
-            <span class="text-[10px] font-bold uppercase tracking-widest text-white/40">{{ payments|length }}
-                Records</span>
-        </div>
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="border-b border-white/10">
-                        <th class="p-6 text-[10px] font-bold uppercase tracking-widest text-white/40">Date & Time</th>
-                        <th class="p-6 text-[10px] font-bold uppercase tracking-widest text-white/40">Service</th>
-                        <th class="p-6 text-[10px] font-bold uppercase tracking-widest text-white/40">Amount</th>
-                        <th class="p-6 text-[10px] font-bold uppercase tracking-widest text-white/40">Status</th>
-                        <th class="p-6 text-[10px] font-bold uppercase tracking-widest text-white/40">Payment Date</th>
-                    </tr>
-                </thead>
-                <tbody class="text-white text-xs">
-                    {% for payment in payments %}
-                    <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
-                        <td class="p-6 font-mono text-white/80">
-                            {{ payment.service_order.order_date|date:"Y-m-d H:i" }}
-                        </td>
-                        <td class="p-6">
-                            <div class="flex items-center gap-2">
-                                {% if payment.service_order.service_type == 'Delivery' %}
-                                <i data-lucide="truck" class="w-4 h-4 text-white/60"></i>
-                                {% elif payment.service_order.service_type == 'Installation' %}
-                                <i data-lucide="wrench" class="w-4 h-4 text-white/60"></i>
-                                {% elif payment.service_order.service_type == 'Repair' %}
-                                <i data-lucide="hammer" class="w-4 h-4 text-white/60"></i>
-                                {% else %}
-                                <i data-lucide="shirt" class="w-4 h-4 text-white/60"></i>
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Total Spent -->
+                    <div class="border border-white/10 bg-white/5 p-6 group hover:border-white/30 transition-colors">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-10 h-10 bg-white/10 flex items-center justify-center text-white">
+                                <i data-lucide="banknote" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <span class="text-[10px] uppercase tracking-widest text-white/40 block">Total
+                                    Spent</span>
+                                <span class="text-xl font-bold text-white">₹{{ combined_total }}</span>
+                            </div>
+                        </div>
+                        <div class="h-1 w-full bg-white/10">
+                            <div class="h-full bg-white transition-all duration-500"
+                                style="width: {{ total_spent_pct }}%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Subscription Total -->
+                    <div class="border border-white/10 bg-white/5 p-6 group hover:border-white/30 transition-colors">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-10 h-10 bg-white/10 flex items-center justify-center text-white">
+                                <i data-lucide="credit-card" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <span class="text-[10px] uppercase tracking-widest text-white/40 block">Subscription
+                                    Total</span>
+                                <span class="text-xl font-bold text-white">₹{{ subscription_total }}</span>
+                            </div>
+                        </div>
+                        <div class="h-1 w-full bg-white/10">
+                            <div class="h-full bg-white transition-all duration-500" style="width: {{ sub_pct }}%">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Last Payment -->
+                    <div class="border border-white/10 bg-white/5 p-6 group hover:border-white/30 transition-colors">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-10 h-10 bg-white/10 flex items-center justify-center text-white">
+                                <i data-lucide="calendar" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <span class="text-[10px] uppercase tracking-widest text-white/40 block">Last
+                                    Payment</span>
+                                <span class="text-xl font-bold text-white">
+                                    {% if payments %}
+                                    {{ payments.0.created_at|date:"M d, Y" }}
+                                    {% else %}
+                                    N/A
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="h-1 w-full bg-white/10">
+                            <div class="h-full bg-white transition-all duration-500"
+                                style="width: {{ last_payment_pct }}%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transactions Table -->
+                <div class="border border-white/10 bg-white/5">
+                    <div class="p-6 border-b border-white/10 flex justify-between items-center">
+                        <h4 class="text-sm font-bold uppercase tracking-widest text-white/60">Transaction Details</h4>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-white/40">{{ payments|length}}
+                            Records</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-white/10">
+                                    <th class="p-6 text-[10px] font-bold uppercase tracking-widest text-white/40">Date &
+                                        Time</th>
+                                    <th class="p-6 text-[10px] font-bold uppercase tracking-widest text-white/40">
+                                        Service</th>
+                                    <th class="p-6 text-[10px] font-bold uppercase tracking-widest text-white/40">Amount
+                                    </th>
+                                    <th class="p-6 text-[10px] font-bold uppercase tracking-widest text-white/40">Status
+                                    </th>
+                                    <th class="p-6 text-[10px] font-bold uppercase tracking-widest text-white/40">
+                                        Payment Date</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-white text-xs">
+                                {% for payment in payments %}
+                                <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                    <td class="p-6 font-mono text-white/80">
+                                        {{ payment.service_order.order_date|date:"Y-m-d H:i" }}
+                                    </td>
+                                    <td class="p-6">
+                                        <div class="flex items-center gap-2">
+                                            {% if payment.service_order.service_type == 'dry-clean' %}
+                                            <i data-lucide="sparkles" class="w-4 h-4 text-white/60"></i>
+                                            {% elif payment.service_order.service_type == 'Machine Wash' %}
+                                            <i data-lucide="washing-machine" class="w-4 h-4 text-white/60"></i>
+                                            {% elif payment.service_order.service_type == 'iron' %}
+                                            <i data-lucide="iron" class="w-4 h-4 text-white/60"></i>
+                                            {% elif payment.service_order.service_type == 'fold' %}
+                                            <i data-lucide="package" class="w-4 h-4 text-white/60"></i>
+                                            {% elif payment.service_order.service_type == 'steam-press' %}
+                                            <i data-lucide="wind" class="w-4 h-4 text-white/60"></i>
+                                            {% elif payment.service_order.service_type == 'starch' %}
+                                            <i data-lucide="droplet" class="w-4 h-4 text-white/60"></i>
+                                            {% elif payment.service_order.service_type == 'hand-wash' %}
+                                            <i data-lucide="waves" class="w-4 h-4 text-white/60"></i>
+                                            {% elif payment.service_order.service_type == 'spot-cleaning' %}
+                                            <i data-lucide="target" class="w-4 h-4 text-white/60"></i>
+                                            {% elif payment.service_order.service_type == 'delicate-care' %}
+                                            <i data-lucide="feather" class="w-4 h-4 text-white/60"></i>
+                                            {% elif payment.service_order.service_type == 'Hand wash & Ironing' %}
+                                            <i data-lucide="hand" class="w-4 h-4 text-white/60"></i>
+                                            {% elif payment.service_order.service_type == 'Machine wash & Ironing' %}
+                                            <i data-lucide="cog" class="w-4 h-4 text-white/60"></i>
+                                            {% else %}
+                                            <i data-lucide="shirt" class="w-4 h-4 text-white/60"></i>
+                                            {% endif %}
+                                            <span class="uppercase tracking-wider font-bold">{{payment.service_order.service_type}}</span>
+                                        </div>
+                                    </td>
+                                    <td class="p-6 font-mono font-bold">
+                                        {% if payment.service_order.subscription %}
+                                        <span
+                                            class="text-white/60 uppercase tracking-widest text-[10px]">Subscription</span>
+                                        {% else %}
+                                        ₹{{ payment.total_price }}
+                                        {% endif %}
+                                    </td>
+                                    <td class="p-6">
+                                        {% if payment.payment_status == 'paid' %}
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-2 py-1 bg-green-500/10 text-green-400 text-[10px] font-bold uppercase tracking-widest border border-green-500/20">
+                                            <i data-lucide="check-circle" class="w-3 h-3"></i> Paid
+                                        </span>
+                                        {% elif payment.payment_status == 'pending' %}
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-2 py-1 bg-yellow-500/10 text-yellow-400 text-[10px] font-bold uppercase tracking-widest border border-yellow-500/20">
+                                            <i data-lucide="clock" class="w-3 h-3"></i> Pending
+                                        </span>
+                                        {% elif payment.payment_status == 'failed' %}
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-2 py-1 bg-red-500/10 text-red-400 text-[10px] font-bold uppercase tracking-widest border border-red-500/20">
+                                            <i data-lucide="x-circle" class="w-3 h-3"></i> Failed
+                                        </span>
+                                        {% else %}
+                                        <span
+                                            class="inline-flex items-center gap-1.5 px-2 py-1 bg-white/10 text-white/60 text-[10px] font-bold uppercase tracking-widest border border-white/20">
+                                            {{ payment.payment_status }}
+                                        </span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="p-6 text-white/60">
+                                        {{ payment.created_at|date:"Y-m-d H:i" }}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="p-12 text-center">
+                                        <div class="flex flex-col items-center justify-center gap-4">
+                                            <div
+                                                class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center">
+                                                <i data-lucide="inbox" class="w-8 h-8 text-white/20"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-white/40 text-sm mb-1">No payment history available</p>
+                                                <p class="text-white/20 text-xs">Your completed transactions will appear
+                                                    here</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    {% if payments.has_other_pages %}
+                    <div class="p-4 border-t border-white/10 flex items-center justify-between">
+                        <span class="text-[10px] uppercase tracking-widest text-white/40">
+                            Page {{ payments.number }} of {{ payments.paginator.num_pages }} ({{payments.paginator.count }} total records)
+                        </span>
+                        <div class="flex gap-2">
+                            {% if payments.has_previous %}
+                            <a href="?page={{ payments.previous_page_number }}&service_type={{ current_service }}&payment_status={{ current_status }}"
+                                class="w-8 h-8 flex items-center justify-center border border-white/10 bg-white/5 text-white/40 hover:bg-white/10 hover:text-white transition-colors">
+                                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                            </a>
+                            {% else %}
+                            <button disabled
+                                class="w-8 h-8 flex items-center justify-center border border-white/10 bg-white/5 text-white/20 cursor-not-allowed">
+                                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                            </button>
+                            {% endif %}
+
+                            {% for num in payments.paginator.page_range %}
+                            {% if payments.number == num %}
+                            <button
+                                class="w-8 h-8 flex items-center justify-center border border-white/10 bg-white text-black font-bold text-xs">{{num }}</button>
+                            {% elif num > payments.number|add:'-3' and num < payments.number|add:'3' %} <a
+                                href="?page={{ num }}&service_type={{ current_service }}&payment_status={{ current_status }}"
+                                class="w-8 h-8 flex items-center justify-center border border-white/10 bg-white/5 text-white/40 hover:bg-white/10 hover:text-white transition-colors text-xs">
+                                {{ num }}</a>
                                 {% endif %}
-                                <span class="uppercase tracking-wider font-bold">{{ payment.service_order.service_type}}</span>
-                            </div>
-                        </td>
-                        <td class="p-6 font-mono font-bold">
-                            {% if payment.service_order.subscription %}
-                            <span class="text-white/60 uppercase tracking-widest text-[10px]">Subscription</span>
-                            {% else %}
-                            ₹{{ payment.total_price }}
-                            {% endif %}
-                        </td>
-                        <td class="p-6">
-                            {% if payment.payment_status == 'paid' %}
-                            <span
-                                class="inline-flex items-center gap-1.5 px-2 py-1 bg-green-500/10 text-green-400 text-[10px] font-bold uppercase tracking-widest border border-green-500/20">
-                                <i data-lucide="check-circle" class="w-3 h-3"></i> Paid
-                            </span>
-                            {% elif payment.payment_status == 'pending' %}
-                            <span
-                                class="inline-flex items-center gap-1.5 px-2 py-1 bg-yellow-500/10 text-yellow-400 text-[10px] font-bold uppercase tracking-widest border border-yellow-500/20">
-                                <i data-lucide="clock" class="w-3 h-3"></i> Pending
-                            </span>
-                            {% elif payment.payment_status == 'failed' %}
-                            <span
-                                class="inline-flex items-center gap-1.5 px-2 py-1 bg-red-500/10 text-red-400 text-[10px] font-bold uppercase tracking-widest border border-red-500/20">
-                                <i data-lucide="x-circle" class="w-3 h-3"></i> Failed
-                            </span>
-                            {% else %}
-                            <span
-                                class="inline-flex items-center gap-1.5 px-2 py-1 bg-white/10 text-white/60 text-[10px] font-bold uppercase tracking-widest border border-white/20">
-                                {{ payment.payment_status }}
-                            </span>
-                            {% endif %}
-                        </td>
-                        <td class="p-6 text-white/60">
-                            {{ payment.created_at|date:"Y-m-d H:i" }}
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="5" class="p-12 text-center">
-                            <div class="flex flex-col items-center justify-center gap-4">
-                                <div class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center">
-                                    <i data-lucide="inbox" class="w-8 h-8 text-white/20"></i>
-                                </div>
-                                <div>
-                                    <p class="text-white/40 text-sm mb-1">No payment history available</p>
-                                    <p class="text-white/20 text-xs">Your completed transactions will appear here</p>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                                {% endfor %}
 
-        <!-- Pagination (Static/Visual for now as original was also simple) -->
-        {% if payments %}
-        <div class="p-4 border-t border-white/10 flex items-center justify-between">
-            <span class="text-[10px] uppercase tracking-widest text-white/40">Showing all records</span>
-            <div class="flex gap-2">
-                <button
-                    class="w-8 h-8 flex items-center justify-center border border-white/10 bg-white/5 text-white/40 hover:bg-white/10 hover:text-white transition-colors disabled:opacity-50">
-                    <i data-lucide="chevron-left" class="w-4 h-4"></i>
-                </button>
-                <button
-                    class="w-8 h-8 flex items-center justify-center border border-white/10 bg-white text-black font-bold text-xs">1</button>
-                <button
-                    class="w-8 h-8 flex items-center justify-center border border-white/10 bg-white/5 text-white/40 hover:bg-white/10 hover:text-white transition-colors">
-                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                </button>
+                                {% if payments.has_next %}
+                                <a href="?page={{ payments.next_page_number }}&service_type={{ current_service }}&payment_status={{ current_status }}"
+                                    class="w-8 h-8 flex items-center justify-center border border-white/10 bg-white/5 text-white/40 hover:bg-white/10 hover:text-white transition-colors">
+                                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                                </a>
+                                {% else %}
+                                <button disabled
+                                    class="w-8 h-8 flex items-center justify-center border border-white/10 bg-white/5 text-white/20 cursor-not-allowed">
+                                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                                </button>
+                                {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
-        </div>
-        {% endif %}
-    </div>
-</div>
 
-<script>
-    lucide.createIcons();
-</script>
-</section>
-</main>
+            <script>
+                lucide.createIcons();
+            </script>
+        </section>
+    </main>
 </body>
+
 </html>

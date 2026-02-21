@@ -72,10 +72,19 @@ def login_post(request):
             request.session['lid'] = res.id
             return redirect('/business_home')
         else:
-            return HttpResponse("<script>alert('wrong usertype');window.location='/'</script>")
+            return render(
+                request,
+                "login.html",
+                {"error": "Invalid user type."}
+            )
     else:
-        return HttpResponse("<script>alert('wrong password or username');window.location='/'</script>")
-
+        return render(
+            request,
+            "login.html",
+            {
+                "error": "Invalid username or password.",
+            }
+        )
 def get_logged_in_user(request):
     user_id = request.session.get('lid')
     if user_id:
