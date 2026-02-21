@@ -111,7 +111,7 @@
                             <img id="profile_preview" class="profile-image-preview hidden" src="" alt="Profile Preview">
                         </label>
                         <div id="profileError"
-                            class="text-red-500 text-[10px] font-bold uppercase tracking-widest hidden text-center md:text-left">
+                            class="text-zinc-400 text-[10px] font-bold uppercase tracking-widest hidden text-center md:text-left">
                             Please upload a profile picture.</div>
                     </div>
 
@@ -376,13 +376,19 @@
             if (!profileImage) {
                 profileError.classList.remove('hidden');
                 valid = false;
+            } else {
+                profileError.classList.add('hidden');
             }
             if (!idCardFile) {
                 idCardError.classList.remove('hidden');
                 valid = false;
+            } else {
+                idCardError.classList.add('hidden');
             }
             if (!valid) {
                 event.preventDefault();
+                // Scroll to top or to the first error
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         });
     }

@@ -83,9 +83,12 @@
                                 Photo</span>
                         </div>
                         <input class="profile-image-input" type="file" id="profile_image" name="profile_image"
-                            accept=".jpg, .jpeg, .png" required>
+                            accept=".jpg, .jpeg, .png">
                         <img id="profile_preview" class="profile-image-preview hidden" src="" alt="Profile Preview">
                     </label>
+                    <div id="profileError"
+                        class="text-zinc-400 text-[10px] font-bold uppercase tracking-widest hidden text-center md:text-left">
+                        Please upload a profile picture.</div>
                 </div>
 
                 <!-- Right Column: Fields (Spanning 2 cols) -->
@@ -285,18 +288,42 @@
 
         profileImageInput.addEventListener('change', function (event) {
             const file = event.target.files[0];
+            const profileError = document.getElementById('profileError');
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     profilePreview.src = e.target.result;
                     profilePreview.classList.remove('hidden');
                     profilePlaceholder.classList.add('hidden');
+                    if (profileError) profileError.classList.add('hidden');
                 };
                 reader.readAsDataURL(file);
             } else {
                 profilePreview.src = '';
                 profilePreview.classList.add('hidden');
                 profilePlaceholder.classList.remove('hidden');
+            }
+        });
+    }
+
+    const form = document.querySelector('#mainForm');
+    if (form) {
+        form.addEventListener('submit', function (event) {
+            const profileImageInput = document.getElementById('profile_image');
+            const profileError = document.getElementById('profileError');
+            const profileImage = profileImageInput ? profileImageInput.files[0] : null;
+            let valid = true;
+
+            if (!profileImage) {
+                if (profileError) profileError.classList.remove('hidden');
+                valid = false;
+            } else {
+                if (profileError) profileError.classList.add('hidden');
+            }
+
+            if (!valid) {
+                event.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         });
     }

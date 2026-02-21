@@ -51,6 +51,10 @@
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
+        ::selection {
+      background: #fff; 
+      color: #000;      
+    }
     </style>
     {% block head %}{% endblock %}
 </head>
@@ -217,7 +221,7 @@
                     </div>
                     <img class="w-full h-full object-cover grayscale opacity-50 contrast-125"
                         data-alt="Minimalist black and white laundry facility"
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBv52pUfptXQrXzQSI4NRtEzx4UFcwtJnOXZR6KONPJjtiB0XU_V1cC10MgOFrPAs-TDJjIedHhZjE8oceQFs7ovpFJkMYuR741vDUbshrmIKJKxi8eOx_wl3gTaDx_a5kgnZbCE3w3_ItYzw8CfoL-BR7tRaF8tMWFwlaztwqcMqz7_HE8YGjpLtiq-U07eU7MPHDD4aXSzdj584q8NDwut2GHveNXHaJVjUIYhxbbJkdEynPVxgrnxg8Pa95eE5NT2R3Ac6rRZ0c6" />
+                        src="{% static 'machine.png' %}" />
                 </div>
             </div>
         </section>
@@ -331,12 +335,12 @@
                     <div class="aspect-[3/4] border border-white/10 overflow-hidden bg-white/5">
                         <img class="w-full h-full object-cover grayscale contrast-125 opacity-70"
                             data-alt="Close up of clean white folded laundry"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkeBGLOB5ZK42vxcYYAKl1598g_hW_rUsYS9keA2srcggt8-R_04TS0wKOlfBPVnLmLPUXEXwAcZifFJMmf2mUZO_MH0zsb_9IPtl9akedRgcXEiTDiEZaaGAIDYyWqkHRtWHFAy6obnvNqIONSd-3bTJSJZZ2h_c3curOfjo1MVtypFPeBa_JW-NrYRy-JjL978tQXd0MYFRJcf_1nI-mt5yXegzekjy-sI6CqXkd7Cf8K5UIXAjbfXSG9dc6re6zj4ma5j6yiWnY" />
+                            src="{% static 'cloth.png' %}" />
                     </div>
                     <div class="aspect-[3/4] border border-white/10 overflow-hidden mt-12 bg-white/5">
                         <img class="w-full h-full object-cover grayscale contrast-125 opacity-70"
                             data-alt="Interior of modern commercial laundry facility"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBHQdDh0IdQj4IrWUgPwZl05OTr6ngyWNQFg5jNiXy1xbg5iXsTHZ9Jj2coGIi-kWOFVBE3017zPp6HvxIssyQh5U1Jh-Z-chs_ZVBPiBShJwfSojzE1YIaibBVjhwFgDivagGV3vQ6FWxY8kjpQZxdILPDZyd-KbwxUTqxidfrW60TsBbHA324x7Y5RMxRONcOUjprBDfj5BVNDlieBiAYl4vOEhgEKDIJy3R1K08T-otuyhgmzmL3DFlfv9bA9_O4xcyW_GpJYCO" />
+                            src="{% static 'laundry.jpg' %}" />
                     </div>
                 </div>
             </div>

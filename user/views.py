@@ -214,7 +214,8 @@ def register_user(request):
         )
         User.save()
 
-        return HttpResponse("<script>alert('Registered successfully');window.location='/'</script>")
+        messages.success(request, 'Registered successfully! You can login now.')
+        return redirect('/')
     
     return render(request, 'register_user.html')
 

@@ -166,7 +166,8 @@ def register_delivery_man(request):
         )
         delivery_man.save()
 
-        return HttpResponse("<script>alert('Registered successfully');window.location='/'</script>")
+        messages.success(request, 'Registered successfully! You can login now.')
+        return redirect('/')
 
     return render(request, 'register.html')
 
