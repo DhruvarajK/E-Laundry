@@ -10,6 +10,7 @@ from business.models import Business
 from .models import LaundryBag, LogisticsAssignment, Machine, Subscription, SubscriptionPlan, user
 from geopy.geocoders import Nominatim
 from django.core.files.storage import FileSystemStorage
+from django.contrib.auth.hashers import make_password
 from myadmin.models import login
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
@@ -191,7 +192,7 @@ def register_user(request):
             return HttpResponse("<script>alert('Already exist');window.location='/'</script>")
         
         # Create login entry
-        log_obj = login(username=email, password=password1, usertype='user')
+        log_obj = login(username=email, password=make_password(password1), usertype='user')
         log_obj.save()
         
         # Save user data

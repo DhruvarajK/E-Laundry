@@ -1,5 +1,6 @@
 from decimal import Decimal
 from django.contrib import messages
+from django.contrib.auth.hashers import check_password
 from django.http import HttpResponse
 from business.models import Business
 from logistics.models import DeliveryMan
@@ -56,28 +57,30 @@ def login_return(request):
 def login_post(request):
     username = request.POST['textfield']
     password = request.POST['textfield2']
-    res=login.objects.filter(username=username,password=password)
-    if res.exists():
-        res=res[0]
-        if res.usertype =="admin":
-            request.session['lid'] = res.id
-            return redirect('/admin_home')
-        elif res.usertype == "logistics":
-            request.session['lid'] = res.id
-            return redirect('/logistics_home')
-        elif res.usertype == "user":
-            request.session['lid'] = res.id
-            return redirect('/user_home')
-        elif res.usertype == "business":
-            request.session['lid'] = res.id
-            return redirect('/business_home')
+    try:
+        res = login.objects.get(username=username)
+        if check_password(password, res.password):
+            if res.usertype =="admin":
+                request.session['lid'] = res.id
+                return redirect('/admin_home')
+            elif res.usertype == "logistics":
+                request.session['lid'] = res.id
+                return redirect('/logistics_home')
+            elif res.usertype == "user":
+                request.session['lid'] = res.id
+                return redirect('/user_home')
+            elif res.usertype == "business":
+                request.session['lid'] = res.id
+                return redirect('/business_home')
+            else:
+                return render(
+                    request,
+                    "login.html",
+                    {"error": "Invalid user type."}
+                )
         else:
-            return render(
-                request,
-                "login.html",
-                {"error": "Invalid user type."}
-            )
-    else:
+            raise login.DoesNotExist
+    except login.DoesNotExist:
         return render(
             request,
             "login.html",

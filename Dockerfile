@@ -25,6 +25,7 @@ COPY . /app/
 
 RUN echo '#!/bin/bash\n\
 python manage.py migrate --noinput\n\
+python manage.py seed_admin\n\
 python manage.py collectstatic --noinput\n\
 python manage.py crontab add\n\
 service cron start\n\

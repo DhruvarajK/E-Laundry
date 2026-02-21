@@ -6,6 +6,7 @@ from geopy.geocoders import Nominatim
 from django.conf import settings
 from geopy.geocoders import Nominatim
 from django.core.files.storage import FileSystemStorage
+from django.contrib.auth.hashers import make_password
 from myadmin.models import login
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
@@ -87,7 +88,7 @@ def register_business(request):
             return HttpResponse("<script>alert('Already exist');window.location='/'</script>")
 
         # Create a login entry for the business user
-        log_obj = login(username=business_email, password=password, usertype='business')
+        log_obj = login(username=business_email, password=make_password(password), usertype='business')
         log_obj.save()
 
         # Save the business data

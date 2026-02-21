@@ -1,5 +1,6 @@
 import os
 from django.core.management.base import BaseCommand
+from django.contrib.auth.hashers import make_password
 from myadmin.models import login
 
 class Command(BaseCommand):
@@ -15,7 +16,8 @@ class Command(BaseCommand):
 
         # 2. Seed custom login model
         if not login.objects.filter(username=username).exists():
-            login.objects.create(username=username, password=password, usertype='admin')
+            hashed_password = make_password(password)
+            login.objects.create(username=username, password=hashed_password, usertype='admin')
             self.stdout.write(self.style.SUCCESS(f'Successfully created custom login entry for: {username}'))
         else:
             self.stdout.write(self.style.WARNING(f'Custom login entry for "{username}" already exists'))

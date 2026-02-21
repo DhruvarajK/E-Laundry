@@ -5,7 +5,7 @@ import django.utils.timezone as timezone
 
 class login(models.Model):
     username = models.CharField(max_length=100)
-    password = models.CharField(max_length=100)
+    password = models.CharField(max_length=255)
     usertype = models.CharField(max_length=100)
 
 class Feedback(models.Model):
