@@ -11,7 +11,8 @@
         rel="stylesheet" />
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
         rel="stylesheet" />
     <script id="tailwind-config">
         tailwind.config = {
@@ -142,6 +143,11 @@
                 href="{% url 'update_order_status' %}">
                 <i data-lucide="file-edit" class="w-5 h-5"></i>
                 Update Status
+            </a>
+            <a class="flex items-center gap-4 px-4 py-3 font-bold text-xs uppercase tracking-widest transition-colors {% if request.resolver_match.url_name == 'manage_machines' %}bg-white text-black{% else %}text-white/60 hover:text-white hover:bg-white/5{% endif %}"
+                href="{% url 'manage_machines' %}">
+                <i data-lucide="settings" class="w-5 h-5"></i>
+                Machines
             </a>
 
             <!-- Subscriptions -->
@@ -334,7 +340,9 @@
                 <div class="bg-surface border border-white/10 flex flex-col h-full">
                     <div class="p-6 border-b border-white/10 flex justify-between items-center">
                         <h3 class="text-sm font-bold uppercase tracking-widest">Incoming Jobs</h3>
-                        <span class="bg-white text-black text-[10px] font-bold px-2 py-0.5 rounded-none">{{incoming_jobs|length }} NEW</span>
+                        <span
+                            class="bg-white text-black text-[10px] font-bold px-2 py-0.5 rounded-none">{{incoming_jobs|length
+                            }} NEW</span>
                     </div>
                     <div class="overflow-y-auto flex-1 p-0 no-scrollbar max-h-[600px]">
                         {% for job in incoming_jobs %}

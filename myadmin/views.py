@@ -5,7 +5,7 @@ from business.models import Business
 from logistics.models import DeliveryMan
 from .models import Feedback, login
 from django.db.models import Q,Count
-from user.models import BillItem, Payment, Subscription, SubscriptionPlan, user
+from user.models import BillItem, Machine, Payment, Subscription, SubscriptionPlan, user
 from django.shortcuts import render, redirect, get_object_or_404
 from user.models import ServiceOrder,LogisticsAssignment
 from django.urls import reverse
@@ -720,4 +720,48 @@ def track_delivery_works(request):
     }
     return render(request, 'track_delivery_works.html', context)
 
+def manage_machines(request):
+    if request.session.get('lid') == 'out' or 'lid' not in request.session:
+        return redirect('/')
+    machines = Machine.objects.all()
+    return render(request, 'manage_machines.html', {'machines': machines})
 
+def add_machine(request):
+    if request.session.get('lid') == 'out' or 'lid' not in request.session:
+        return redirect('/')
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        capacity = request.POST.get('capacity')
+        is_active = request.POST.get('is_active') == 'on'
+        
+        Machine.objects.create(
+            name=name,
+            capacity=float(capacity),
+            is_active=is_active
+        )
+        messages.success(request, 'Machine added successfully!')
+        return redirect('manage_machines')
+    
+    return render(request, 'add_machine.html')
+
+def edit_machine(request, machine_id):
+    if request.session.get('lid') == 'out' or 'lid' not in request.session:
+        return redirect('/')
+    machine = get_object_or_404(Machine, id=machine_id)
+    if request.method == 'POST':
+        machine.name = request.POST.get('name')
+        machine.capacity = float(request.POST.get('capacity'))
+        machine.is_active = request.POST.get('is_active') == 'on'
+        machine.save()
+        messages.success(request, 'Machine updated successfully!')
+        return redirect('manage_machines')
+    
+    return render(request, 'add_machine.html', {'machine': machine})
+
+def delete_machine(request, machine_id):
+    if request.session.get('lid') == 'out' or 'lid' not in request.session:
+        return redirect('/')
+    machine = get_object_or_404(Machine, id=machine_id)
+    machine.delete()
+    messages.success(request, 'Machine deleted successfully!')
+    return redirect('manage_machines')

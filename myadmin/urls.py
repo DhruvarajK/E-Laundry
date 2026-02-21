@@ -38,7 +38,10 @@ urlpatterns = [
     path('feedback/', views.feedback_list, name='feedback_list'),
     path('feedback/add/', views.add_feedback, name='add_feedback'),
     path('feedback/reply/<int:feedback_id>/', views.reply_feedback, name='reply_feedback'),
-    path('track_delivery_works/', views.track_delivery_works, name='track_delivery_works')
-
+    path('track_delivery_works/', views.track_delivery_works, name='track_delivery_works'),
+    path('manage_machines/', views.manage_machines, name='manage_machines'),
+    path('add_machine/', views.add_machine, name='add_machine'),
+    path('edit_machine/<int:machine_id>/', views.edit_machine, name='edit_machine'),
+    path('delete_machine/<int:machine_id>/', views.delete_machine, name='delete_machine'),
 ]
 
