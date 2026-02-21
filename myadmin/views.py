@@ -423,6 +423,21 @@ def update_order_status(request):
         # Update the status of selected orders
         for order_id in selected_order_ids:
             order = get_object_or_404(ServiceOrder, id=order_id)
+            
+            # Loyalty points logic: award points if status changes specifically to 'Completed'
+            if new_status == "Completed" and order.status != "Completed":
+                if order.service_for == 'user' and order.USER:
+                    usr_obj = order.USER
+                    points_to_add = 20 # Base points for completion
+                    
+                    # Additional points based on payment if total_price exists
+                    payment = getattr(order, 'payment', None)
+                    if payment and payment.payment_status == 'paid':
+                        points_to_add += int(payment.total_price)
+                    
+                    usr_obj.loyalty_points += points_to_add
+                    usr_obj.save()
+
             order.status = new_status
             order.save()
 

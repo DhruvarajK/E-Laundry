@@ -93,7 +93,8 @@
         <div class="p-4 border-t border-white/10">
             <div class="flex items-center gap-3 px-4 py-3">
                 <div class="w-8 h-8 bg-white/10 flex items-center justify-center text-white font-bold text-xs">
-                    {% if user.first_name %}{{user.first_name|first}}{% if user.last_name%}{{user.last_name|first}}{%endif %}{% else %}U{% endif %}
+                    {% if user.first_name %}{{user.first_name|first}}{% if
+                    user.last_name%}{{user.last_name|first}}{%endif %}{% else %}U{% endif %}
                 </div>
                 <div class="flex flex-col">
                     <span class="text-xs font-bold text-white uppercase tracking-wider">{{user.first_name}}
@@ -131,7 +132,7 @@
                 <div class="flex gap-4">
                     <div class="px-4 py-2 border border-white/10 bg-white/5 flex flex-col items-end">
                         <span class="text-[10px] uppercase tracking-widest text-white/40">Loyalty Points</span>
-                        <span class="text-xl font-bold text-white">1,240</span>
+                        <span class="text-xl font-bold text-white">{{ user.loyalty_points|default:"0" }}</span>
                     </div>
                 </div>
             </div>

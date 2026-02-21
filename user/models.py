@@ -27,6 +27,7 @@ class user(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     num_bags = models.PositiveIntegerField(default=1)
     LOGIN = models.ForeignKey(login, on_delete=models.CASCADE, default=1)
+    loyalty_points = models.IntegerField(default=0)
     
 
 

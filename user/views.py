@@ -84,6 +84,11 @@ def quick_reorder(request, order_id):
         messages.error(request, "Invalid order access.")
         return redirect('user_home')
 
+    # Loyalty points check
+    if usr_obj.loyalty_points < 0:
+        messages.error(request, f'Reorder declined. You have negative loyalty points ({usr_obj.loyalty_points}).')
+        return redirect('user_home')
+
     # Create new order
     new_order = ServiceOrder.objects.create(
         service_for=original_order.service_for,
@@ -287,6 +292,11 @@ def normal_order(request):
         special_instructions = request.POST.get('special_instructions')
         weight = float(request.POST.get('weight', 0))
 
+        # Loyalty points check
+        if usr_obj.loyalty_points < 0:
+            messages.error(request, f'Order declined. You have negative loyalty points ({usr_obj.loyalty_points}). Please contact support.')
+            return render(request, 'normal_order.html', context)
+
         # Capacity Check Logic
         from django.db.models import Sum
         total_capacity = Machine.objects.filter(is_active=True).aggregate(Sum('capacity'))['capacity__sum'] or 0
@@ -455,6 +465,10 @@ def cancel_order(request, order_id):
         order.status = 'canceled'
         order.save()
 
+        if login_instance.usertype.lower() == 'user':
+            user_instance.loyalty_points -= 50
+            user_instance.save()
+
         # Update logistics assignment if it exists
         logistics_assignment = LogisticsAssignment.objects.filter(service_order=order).first()
         if logistics_assignment:
@@ -467,7 +481,7 @@ def cancel_order(request, order_id):
             payment.payment_status = 'refunded' if payment.payment_status == 'paid' else 'canceled'
             payment.save()
 
-        messages.success(request, 'Your order has been canceled successfully.')
+        messages.success(request, 'Your order has been canceled successfully. 50 loyalty points have been deducted.')
     else:
         messages.error(request, 'You can only cancel orders that are in the "pending" status.')
 
