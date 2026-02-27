@@ -233,7 +233,7 @@
                         <span class="text-[10px] font-bold uppercase tracking-widest text-white/40">Total Revenue</span>
                         <i data-lucide="dollar-sign" class="text-white/20 w-5 h-5"></i>
                     </div>
-                    <div class="text-3xl font-black mb-1">${{ total_revenue|floatformat:2 }}</div>
+                    <div class="text-3xl font-black mb-1">₹{{ total_revenue|floatformat:2 }}</div>
                     <div class="text-xs text-green-500 font-medium flex items-center gap-1">
                         <i data-lucide="trending-up" class="w-3 h-3"></i> Lifetime
                     </div>
@@ -325,7 +325,7 @@
                                 style="height: {{ data.height_percent }}%">
                                 <div
                                     class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-white text-black text-[10px] font-bold px-1 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                                    ${{ data.revenue }}
+                                    ₹{{ data.revenue }}
                                 </div>
                             </div>
                             {% endfor %}

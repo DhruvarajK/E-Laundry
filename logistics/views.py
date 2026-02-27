@@ -123,7 +123,7 @@ def register_delivery_man(request):
         # Save profile image
         if profile_image:
             profile_filename = f"profile_{timestamp}.{profile_ext}"
-            profile_path = os.path.join('logistics/profiles', profile_filename)  # Save in 'media/logistics/profiles/'
+            profile_path = f"logistics/profiles/{profile_filename}"  # Save in 'media/logistics/profiles/'
             fs = FileSystemStorage(location=settings.MEDIA_ROOT)
             fs.save(profile_path, profile_image)
             profile_url = f"{settings.MEDIA_URL}{profile_path}"
@@ -133,7 +133,7 @@ def register_delivery_man(request):
         # Save ID card
         if id_card:
             id_card_filename = f"idcard_{timestamp}.{id_card_ext}"
-            id_card_path = os.path.join('logistics/idcards', id_card_filename)  # Save in 'media/logistics/idcards/'
+            id_card_path = f"logistics/idcards/{id_card_filename}"  # Save in 'media/logistics/idcards/'
             fs = FileSystemStorage(location=settings.MEDIA_ROOT)
             fs.save(id_card_path, id_card)
             id_card_url = f"{settings.MEDIA_URL}{id_card_path}"
@@ -177,22 +177,37 @@ def view_profile(request):
     return render(request, 'profile_view.html', {'user': usr_obj})
 
 def update_profile(request):
-    usr_obj= DeliveryMan.objects.get(LOGIN=request.session['lid'])  # Assuming 'user' is a related field on the User model
+    usr_obj = DeliveryMan.objects.get(LOGIN=request.session['lid'])
 
     if request.method == 'POST':
         # Update fields based on the form input
         usr_obj.first_name = request.POST.get('first_name')
         usr_obj.last_name = request.POST.get('last_name')
-        usr_obj.profile_image = request.FILES.get('profile_image') if 'profile_image' in request.FILES else usr_obj.profile_image
         usr_obj.phone_number = request.POST.get('phone_number')
         usr_obj.house = request.POST.get('house')
         usr_obj.district = request.POST.get('district')
         usr_obj.place = request.POST.get('place')
         usr_obj.post = request.POST.get('post')
         usr_obj.pin = request.POST.get('pin')
-        usr_obj.save()  # Save the updated data
 
-        return redirect('profile_view')  # Redirect to the profile view page after update
+        # Handle profile image upload
+        profile_image = request.FILES.get('profile_image')
+        if profile_image:
+            allowed_extensions = ['jpg', 'jpeg', 'png']
+            profile_ext = profile_image.name.split('.')[-1].lower()
+            if profile_ext in allowed_extensions:
+                timestamp = datetime.now().strftime('%Y%m%d-%H%M%S')
+                profile_filename = f"profile_{timestamp}.{profile_ext}"
+                profile_path = f"logistics/profiles/{profile_filename}"
+                fs = FileSystemStorage(location=settings.MEDIA_ROOT)
+                fs.save(profile_path, profile_image)
+                usr_obj.profile_image = f"{settings.MEDIA_URL}{profile_path}"
+            else:
+                messages.error(request, 'Invalid profile image type! Only JPG, JPEG, and PNG are allowed.')
+
+        usr_obj.save()
+        messages.success(request, 'Profile updated successfully!')
+        return redirect('profile_view')
 
     return render(request, 'profile_update.html', {'user': usr_obj})
 

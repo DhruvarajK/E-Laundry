@@ -179,7 +179,7 @@ def register_user(request):
             # Save file to media folder
             timestamp = datetime.now().strftime('%Y%m%d-%H%M%S')
             profile_image_name = f"user_{timestamp}.{photo_extension}"  # Unique file name
-            profile_image_path = os.path.join('user', profile_image_name)  # Save in 'media/user/'
+            profile_image_path = f"user/{profile_image_name}"  # Save in 'media/user/'
             fs = FileSystemStorage(location=settings.MEDIA_ROOT)  # FileSystemStorage with MEDIA_ROOT
             fs.save(profile_image_path, profile_image)
             pic_url = f"{settings.MEDIA_URL}{profile_image_path}"  # Build URL for accessing the image
@@ -267,22 +267,37 @@ def view_profile_user(request):
     return render(request, 'profile_view_user.html', {'user': usr_obj})
 
 def update_profile_user(request):
-    usr_obj= user.objects.get(LOGIN=request.session['lid'])  # Assuming 'user' is a related field on the User model
+    usr_obj = user.objects.get(LOGIN=request.session['lid'])
 
     if request.method == 'POST':
         # Update fields based on the form input
         usr_obj.first_name = request.POST.get('first_name')
         usr_obj.last_name = request.POST.get('last_name')
-        usr_obj.profile_image = request.FILES.get('profile_image') if 'profile_image' in request.FILES else usr_obj.profile_image
         usr_obj.phone_number = request.POST.get('phone_number')
         usr_obj.house = request.POST.get('house')
         usr_obj.district = request.POST.get('district')
         usr_obj.place = request.POST.get('place')
         usr_obj.post = request.POST.get('post')
         usr_obj.pin = request.POST.get('pin')
-        usr_obj.save()  # Save the updated data
 
-        return redirect('view_profile_user')  # Redirect to the profile view page after update
+        # Handle profile image upload
+        profile_image = request.FILES.get('profile_image')
+        if profile_image:
+            allowed_extensions = ['jpg', 'jpeg', 'png']
+            photo_extension = profile_image.name.split('.')[-1].lower()
+            if photo_extension in allowed_extensions:
+                timestamp = datetime.now().strftime('%Y%m%d-%H%M%S')
+                profile_image_name = f"user_{timestamp}.{photo_extension}"
+                profile_image_path = f"user/{profile_image_name}"
+                fs = FileSystemStorage(location=settings.MEDIA_ROOT)
+                fs.save(profile_image_path, profile_image)
+                usr_obj.profile_image = f"{settings.MEDIA_URL}{profile_image_path}"
+            else:
+                messages.error(request, 'Invalid profile image type! Only JPG, JPEG, and PNG are allowed.')
+
+        usr_obj.save()
+        messages.success(request, 'Profile updated successfully!')
+        return redirect('view_profile_user')
 
     return render(request, 'profile_update_user.html', {'user': usr_obj})
 
