@@ -6,11 +6,11 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <meta name="description"
-    content="A comprehensive laundry management solution designed to bridge the gap between customers, businesses, and logistics providers." />
+        content="A comprehensive laundry management solution designed to bridge the gap between customers, businesses, and logistics providers." />
     <link rel="icon" href="{% static 'favicon.ico' %}" sizes="any" />
     <link rel="apple-touch-icon" href="{% static 'apple-touch-icon.png' %}" />
     <title>ELaundry | Logistics Partner Portal</title>
-    
+
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap"
@@ -43,9 +43,10 @@
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
+
         ::selection {
-        background: #fff; 
-        color: #000;      
+            background: #fff;
+            color: #000;
         }
     </style>
     {% block head %}{% endblock %}
@@ -117,12 +118,17 @@
         </div>
         <div class="p-4 lg:p-6 border-t border-white/10">
             <div class="flex items-center gap-3">
-                <div class="w-8 h-8 bg-white/10 flex items-center justify-center text-xs font-bold rounded-full">
-                    {% if user.first_name %}{{ user.first_name|slice:":1" }}{% else %}U{% endif %}
+                <div
+                    class="w-8 h-8 flex items-center justify-center overflow-hidden rounded-full border border-white/10">
+                    {% if user.profile_image %}
+                    <img src="{{ user.profile_image }}" alt="Profile" class="w-full h-full object-cover">
+                    {% else %}
+                    <div class="w-full h-full bg-white/10 flex items-center justify-center text-xs font-bold">{{
+                        user.first_name|slice:":1" }}</div>
+                    {% endif %}
                 </div>
                 <div class="hidden lg:block">
-                    <p class="text-xs font-bold uppercase">{% if user.is_authenticated %}{{ user.first_name }} {{
-                        user.last_name }}{% else %}Guest{% endif %}</p>
+                    <p class="text-xs font-bold uppercase">{{ user.first_name }} {{ user.last_name }}</p>
                     <p class="text-[10px] text-white/40 uppercase tracking-wider">ID: {{ user.id }}-LOG</p>
                 </div>
                 <a href="{% url 'logout' %}" class="ml-auto text-white/40 hover:text-white hidden lg:block"
@@ -211,13 +217,14 @@
                                     </div>
                                     <p class="text-sm opacity-70 font-medium whitespace-pre-line">
                                         {% if order.service_for == 'user' and order.USER %}
-{{ order.USER.house }}, {{ order.USER.place }}
-{{ order.USER.district }}, {{ order.USER.post }} - {{ order.USER.pin }}
+                                        {{ order.USER.house }}, {{ order.USER.place }}
+                                        {{ order.USER.district }}, {{ order.USER.post }} - {{ order.USER.pin }}
                                         {% elif order.service_for == 'business' and order.BUSINESS %}
-{{ order.BUSINESS.business_address }}, {{ order.BUSINESS.place }}
-{{ order.BUSINESS.district }}, {{ order.BUSINESS.post }} - {{ order.BUSINESS.pin }}
+                                        {{ order.BUSINESS.business_address }}, {{ order.BUSINESS.place }}
+                                        {{ order.BUSINESS.district }}, {{ order.BUSINESS.post }} - {{ order.BUSINESS.pin
+                                        }}
                                         {% else %}
-Address Unavailable
+                                        Address Unavailable
                                         {% endif %}
                                     </p>
                                     <div class="mt-3 flex gap-2">
@@ -243,7 +250,9 @@ Address Unavailable
                                         Manage
                                     </a>
                                     <button
-                                        onclick="showOrderDetails('{{ order.id }}', '{{ order.service_type }}', `{% if order.service_for == 'user' and order.USER %}{{ order.USER.house }}, {{ order.USER.place }}, {{ order.USER.district }}, {{ order.USER.post }} - {{ order.USER.pin }}{% elif order.service_for == 'business' and order.BUSINESS %}{{ order.BUSINESS.business_address }}, {{ order.BUSINESS.place }}, {{ order.BUSINESS.district }}, {{ order.BUSINESS.post }} - {{ order.BUSINESS.pin }}{% else %}Address Unavailable{% endif %}`, '{{ order.weight|default:"0" }}', '{{ order.special_instructions|default:"None"|escapejs }}', '{{ order.USER.num_bags|default:"0" }}')"
+                                        onclick="showOrderDetails('{{ order.id }}', '{{ order.service_type }}', `{% if order.service_for == 'user' and order.USER %}{{ order.USER.house }}, {{ order.USER.place }}, {{ order.USER.district }}, {{ order.USER.post }} - {{ order.USER.pin }}{% elif order.service_for == 'business' and order.BUSINESS %}{{ order.BUSINESS.business_address }}, {{ order.BUSINESS.place }}, {{ order.BUSINESS.district }}, {{ order.BUSINESS.post }} - {{ order.BUSINESS.pin }}{% else %}Address Unavailable{% endif %}`, '{{ order.weight|default:"
+                                        0" }}', '{{ order.special_instructions|default:"None"|escapejs }}'
+                                        , '{{ order.USER.num_bags|default:"0" }}' )"
                                         class="flex-1 px-4 py-3 border border-black/20 text-black text-[10px] font-bold uppercase tracking-widest hover:bg-black/5 transition-colors">
                                         Details
                                     </button>
@@ -360,10 +369,17 @@ Address Unavailable
         </nav>
         <div class="p-6 border-t border-white/10">
             <div class="flex items-center gap-3">
-                <div class="w-8 h-8 bg-white/10 flex items-center justify-center text-xs font-bold rounded-full">{% if user.first_name %}{{ user.first_name|slice:":1" }}{% else %}U{% endif %}</div>
+                <div
+                    class="w-8 h-8 flex items-center justify-center overflow-hidden rounded-full border border-white/10">
+                    {% if user.profile_image %}
+                    <img src="{{ user.profile_image }}" alt="Profile" class="w-full h-full object-cover">
+                    {% else %}
+                    <div class="w-full h-full bg-white/10 flex items-center justify-center text-xs font-bold">{{
+                        user.first_name|slice:":1" }}</div>
+                    {% endif %}
+                </div>
                 <div>
-                    <p class="text-xs font-bold uppercase">{% if user.is_authenticated %}{{ user.first_name }}
-                        {{user.last_name }}{% else %}Guest{% endif %}</p>
+                    <p class="text-xs font-bold uppercase">{{ user.first_name }} {{ user.last_name }}</p>
                     <p class="text-[10px] text-white/40 uppercase tracking-wider">ID: {{ user.id }}-LOG</p>
                 </div>
                 <a href="{% url 'logout' %}" class="ml-auto text-white/40 hover:text-white" title="Logout"><i
@@ -379,34 +395,42 @@ Address Unavailable
             <div class="bg-black border border-white/10 p-8 shadow-2xl relative">
                 <div class="flex justify-between items-start mb-8">
                     <div>
-                        <h2 class="text-xs font-bold uppercase tracking-[0.4em] text-white/40 mb-2" id="modal-order-id-label">Order Details</h2>
-                        <h3 class="text-3xl font-black uppercase tracking-tight text-white" id="modal-service-type">Service Type</h3>
+                        <h2 class="text-xs font-bold uppercase tracking-[0.4em] text-white/40 mb-2"
+                            id="modal-order-id-label">Order Details</h2>
+                        <h3 class="text-3xl font-black uppercase tracking-tight text-white" id="modal-service-type">
+                            Service Type</h3>
                     </div>
                     <button onclick="closeDetailsModal()" class="text-white/40 hover:text-white transition-colors">
                         <i data-lucide="x" class="w-6 h-6"></i>
                     </button>
                 </div>
-                
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                     <div class="space-y-6">
                         <div>
-                            <span class="text-[10px] font-bold uppercase tracking-widest text-white/40 block mb-2">Pickup Location</span>
+                            <span
+                                class="text-[10px] font-bold uppercase tracking-widest text-white/40 block mb-2">Pickup
+                                Location</span>
                             <p class="text-white text-sm font-medium leading-relaxed" id="modal-address"></p>
                         </div>
                         <div>
-                            <span class="text-[10px] font-bold uppercase tracking-widest text-white/40 block mb-2">Special Instructions</span>
+                            <span
+                                class="text-[10px] font-bold uppercase tracking-widest text-white/40 block mb-2">Special
+                                Instructions</span>
                             <p class="text-white/60 text-xs italic" id="modal-instructions"></p>
                         </div>
                     </div>
                     <div class="space-y-6">
                         <div class="grid grid-cols-2 gap-4">
                             <div class="p-4 border border-white/10 bg-white/5">
-                                <span class="text-[10px] font-bold uppercase tracking-widest text-white/40 block mb-1">Weight</span>
+                                <span
+                                    class="text-[10px] font-bold uppercase tracking-widest text-white/40 block mb-1">Weight</span>
                                 <span class="text-xl font-black text-white" id="modal-weight">0</span>
                                 <span class="text-[10px] font-bold text-white/40 ml-1">KG</span>
                             </div>
                             <div class="p-4 border border-white/10 bg-white/5">
-                                <span class="text-[10px] font-bold uppercase tracking-widest text-white/40 block mb-1">Bags</span>
+                                <span
+                                    class="text-[10px] font-bold uppercase tracking-widest text-white/40 block mb-1">Bags</span>
                                 <span class="text-xl font-black text-white" id="modal-bags">0</span>
                             </div>
                         </div>

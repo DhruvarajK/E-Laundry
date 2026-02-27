@@ -61,28 +61,34 @@ def get_dashboard_stats(delivery_man):
         'today_count': today_count
     }
 
-def logistics_home(request):
+def get_logistics_context(request):
     login_id = request.session.get('lid')
     if not login_id or login_id == 'out':
-        return HttpResponse("<script>alert('please login');window.location='/'</script>")
+        return None
     
     try:
         delivery_man = DeliveryMan.objects.get(LOGIN__id=login_id)
         stats = get_dashboard_stats(delivery_man)
-        
-        # Fetch active assignments for the dashboard
-        active_assignments = LogisticsAssignment.objects.filter(
-            pickup_or_delivery_man=delivery_man,
-            delivery_status__in=['assigned', 'pickuped', 'in_transit']
-        ).order_by('assignment_date')
-
-        return render(request, "logistics_home.html", {
-            'stats': stats,
+        return {
             'user': delivery_man,
-            'active_assignments': active_assignments
-        })
+            'stats': stats,
+        }
     except DeliveryMan.DoesNotExist:
-         return HttpResponse("<script>alert('User not found');window.location='/'</script>")
+        return None
+
+def logistics_home(request):
+    context = get_logistics_context(request)
+    if not context:
+        return HttpResponse("<script>alert('please login');window.location='/'</script>")
+    
+    # Fetch active assignments for the dashboard
+    active_assignments = LogisticsAssignment.objects.filter(
+        pickup_or_delivery_man=context['user'],
+        delivery_status__in=['assigned', 'pickuped', 'in_transit']
+    ).order_by('assignment_date')
+
+    context['active_assignments'] = active_assignments
+    return render(request, "logistics_home.html", context)
 
 
 def register_delivery_man(request):
@@ -173,11 +179,17 @@ def register_delivery_man(request):
 
 
 def view_profile(request):
-    usr_obj= DeliveryMan.objects.get(LOGIN=request.session['lid'])  # Assuming 'user' is a related field on the User model
-    return render(request, 'profile_view.html', {'user': usr_obj})
+    context = get_logistics_context(request)
+    if not context:
+        return HttpResponse("<script>alert('please login');window.location='/'</script>")
+    return render(request, 'profile_view.html', context)
 
 def update_profile(request):
-    usr_obj = DeliveryMan.objects.get(LOGIN=request.session['lid'])
+    context = get_logistics_context(request)
+    if not context:
+        return HttpResponse("<script>alert('please login');window.location='/'</script>")
+    
+    usr_obj = context['user']
 
     if request.method == 'POST':
         # Update fields based on the form input
@@ -207,55 +219,45 @@ def update_profile(request):
 
         usr_obj.save()
         messages.success(request, 'Profile updated successfully!')
-        return redirect('profile_view')
+        return redirect('view_profile')
 
-    return render(request, 'profile_update.html', {'user': usr_obj})
+    return render(request, 'profile_update.html', context)
 
 
 from django.shortcuts import render
 from user.models import LogisticsAssignment
 
 def view_assigned_services(request):
-    if 'lid' in request.session:
-        login_id = request.session['lid']
-        try:
-            # Get the DeliveryMan instance using the login foreign key
-            deliveryman = DeliveryMan.objects.get(LOGIN=login_id)
-        except DeliveryMan.DoesNotExist:
-            messages.error(request, "Delivery man not found.")
-            return redirect('login')
-        
-        print(deliveryman.id)  # Now printing the deliveryman id
-        
-        # Get filter parameters from GET request
-        selected_date = request.GET.get('date')
-        status_filter = request.GET.get('status')
-        
-        # Filter assignments using the DeliveryMan instance
-        services = LogisticsAssignment.objects.filter(
-            pickup_or_delivery_man=deliveryman
-        ).exclude(delivery_status='canceled')
-        
-        # Filter by date if provided
-        if selected_date:
-            services = services.filter(assignment_date__date=selected_date)
-            
-        # Filter by status if provided
-        if status_filter:
-            services = services.filter(delivery_status=status_filter)
-        
-        stats = get_dashboard_stats(deliveryman)
-
-        context = {
-            'assigned_services': services,
-            'selected_date': selected_date,
-            'status_filter': status_filter,
-            'stats': stats, # Add stats to context
-        }
-        return render(request, 'assigned_services.html', context)
-    else:
+    context = get_logistics_context(request)
+    if not context:
         messages.error(request, "Please log in first.")
         return redirect('login')
+    
+    deliveryman = context['user']
+    
+    # Get filter parameters from GET request
+    selected_date = request.GET.get('date')
+    status_filter = request.GET.get('status')
+    
+    # Filter assignments using the DeliveryMan instance
+    services = LogisticsAssignment.objects.filter(
+        pickup_or_delivery_man=deliveryman
+    ).exclude(delivery_status='canceled')
+    
+    # Filter by date if provided
+    if selected_date:
+        services = services.filter(assignment_date__date=selected_date)
+        
+    # Filter by status if provided
+    if status_filter:
+        services = services.filter(delivery_status=status_filter)
+    
+    context.update({
+        'assigned_services': services,
+        'selected_date': selected_date,
+        'status_filter': status_filter,
+    })
+    return render(request, 'assigned_services.html', context)
 
 
 def mark_as_paid(request, payment_id):
@@ -540,30 +542,24 @@ def assign_bag_with_qr(request, service_order_id):
 from django.utils import timezone
 
 def deliveryman_pending_orders(request):
-    # Get the logged-in delivery man's login id from session
-    login_id = request.session.get('lid')
-    if not login_id:
+    context = get_logistics_context(request)
+    if not context:
         return redirect("login")
 
-    try:
-        current_delivery_man = DeliveryMan.objects.get(LOGIN__id=login_id)
-    except DeliveryMan.DoesNotExist:
-        return redirect("login")
+    current_delivery_man = context['user']
+    stats = context['stats']
 
     # Use consistent status casing (using "pending" in this case)
     pending_orders = ServiceOrder.objects.filter(status="pending")
     
-    stats = get_dashboard_stats(current_delivery_man)
-
     if request.method == "POST":
         order_id = request.POST.get("order_id")
         if not order_id:
-            return render(request, "deliveryman_pending_orders.html", {
+            context.update({
                 "pending_orders": pending_orders,
-                "delivery_man": current_delivery_man,
                 "error": "No order selected.",
-                "stats": stats
             })
+            return render(request, "deliveryman_pending_orders.html", context)
 
         # Ensure the order exists and is still pending (use "pending")
         order = get_object_or_404(ServiceOrder, id=order_id, status="pending")
@@ -581,10 +577,9 @@ def deliveryman_pending_orders(request):
 
         return redirect("deliveryman_pending_orders")
 
-    return render(request, "deliveryman_pending_orders.html", {
+    context.update({
         "pending_orders": pending_orders,
-        "delivery_man": current_delivery_man,
-        "stats": stats
     })
+    return render(request, "deliveryman_pending_orders.html", context)
 
 
