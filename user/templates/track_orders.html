@@ -103,6 +103,16 @@
                         Delivery partner assignment pending
                     </div>
                     {% endif %}
+                    {% if order.status == 'pending' %}
+                    <form action="{% url 'cancel_order' order_id=order.id %}" method="post" class="flex-1 md:flex-none">
+                        {% csrf_token %}
+                        <button type="submit"
+                        class="w-full px-4 py-3 bg-red-100/5 border border-red-400/20 text-red-500  text-[10px] font-bold uppercase tracking-widest hover:bg-red-200/20 transition-colors"
+                        onclick="return confirm('Are you sure you want to cancel this order? Cancelling the order will result in a loss of 30 loyalty points.');">
+                        Cancel
+                        </button>
+                    </form>
+                    {% endif %}
                     {% if order.status == 'completed' or order.status == 'Completed' %}
                     <div class="pt-2">
                         <form action="{% url 'view_bill' order.id %}" method="get" class="flex-1 md:flex-none">
@@ -113,6 +123,7 @@
                         </form>
                     </div>
                     {% endif %}
+
                 </div>
             </div>
         </div>

@@ -415,51 +415,39 @@ def order_confirmed(request, order_id):
     return render(request, 'order_confirmed.html', context)
 
 
-
-
-
-
-
 def view_all_orders(request):
     # Grab the login id from the session
     login_id = request.session.get('lid')
     if not login_id:
-        # Handle error: maybe redirect to login page or return an error
         return redirect('login')
 
     try:
         login_instance = login.objects.get(pk=login_id)
     except login.DoesNotExist:
-        # Handle error if login instance isn't found
         return redirect('login')
-
-    # Based on the login type, get the corresponding instance and orders
     if login_instance.usertype.lower() == 'user':
         try:
             user_instance = user.objects.get(LOGIN=login_instance)
         except user.DoesNotExist:
             return HttpResponse("User not found", status=404)
-        orders = ServiceOrder.objects.filter(USER=user_instance)
+        orders = ServiceOrder.objects.filter(USER=user_instance).order_by('-order_date')
     elif login_instance.usertype.lower() == 'business':
         try:
             business_instance = Business.objects.get(LOGIN=login_instance)
         except Business.DoesNotExist:
             return HttpResponse("Business not found", status=404)
-        orders = ServiceOrder.objects.filter(BUSINESS=business_instance)
+        orders = ServiceOrder.objects.filter(BUSINESS=business_instance).order_by('-order_date')
     else:
-        # Optionally, handle other types or error out
         return HttpResponse("Invalid user type", status=400)
 
-    # Get the status filter from the request (default is 'all')
     status_filter = request.GET.get('status', 'all')
     if status_filter != 'all':
         orders = orders.filter(status=status_filter)
 
     response = render(request, 'view_all_orders.html', {
         'orders': orders,
-        'status_filter': status_filter,  # For dropdown selection in template
+        'status_filter': status_filter,  
     })
-    # No caching!
     response['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
     response['Pragma'] = 'no-cache'
     response['Expires'] = '0'
@@ -468,7 +456,6 @@ def view_all_orders(request):
 
 
 def cancel_order(request, order_id):
-    # Fetch the logged-in user or business based on the login type
     login_id = request.session.get('lid')
     if not login_id:
         return redirect('login')
@@ -478,7 +465,6 @@ def cancel_order(request, order_id):
     except login.DoesNotExist:
         return redirect('login')
 
-    # Determine if the request is from a user or business
     order_filter = {}
     if login_instance.usertype.lower() == 'user':
         try:
@@ -497,25 +483,21 @@ def cancel_order(request, order_id):
     else:
         return HttpResponse("Invalid user type", status=400)
 
-    # Fetch the order to cancel
     order = get_object_or_404(ServiceOrder, id=order_id, **order_filter)
 
-    # Check if the order status is 'pending'
     if order.status == 'pending':
         order.status = 'canceled'
         order.save()
 
         if login_instance.usertype.lower() == 'user':
-            user_instance.loyalty_points -= 50
+            user_instance.loyalty_points -= 30
             user_instance.save()
 
-        # Update logistics assignment if it exists
         logistics_assignment = LogisticsAssignment.objects.filter(service_order=order).first()
         if logistics_assignment:
             logistics_assignment.delivery_status = 'canceled'
             logistics_assignment.save()
 
-        # Update payment status if it exists
         payment = Payment.objects.filter(service_order=order).first()
         if payment:
             payment.payment_status = 'refunded' if payment.payment_status == 'paid' else 'canceled'
@@ -525,19 +507,17 @@ def cancel_order(request, order_id):
     else:
         messages.error(request, 'You can only cancel orders that are in the "pending" status.')
 
-    return redirect('view_all_orders')  # Redirect back to the order list
+    return redirect('view_all_orders')  
 
 
 
 def track_orders(request):
-    # Grab the login instance from the session
     login_id = request.session.get('lid')
     if not login_id or login_id == 'out':
         return redirect('login_return')
     
     login_instance = get_object_or_404(login, id=login_id)
-    
-    # Define the valid delivery statuses (both lowercase & title-case)
+
     valid_statuses = [
         'not_assigned', 'Not Assigned',
         'assigned', 'Assigned', 
@@ -547,16 +527,13 @@ def track_orders(request):
     ]
     print("All Orders:", ServiceOrder.objects.all())
 
-    
-    # Check the type of login to decide whether it's a business or user
+
     if login_instance.usertype.lower() == 'business':
-        # If it's a business login, get the corresponding Business instance
         business_instance = Business.objects.get(LOGIN=login_instance)
-        # Assume ServiceOrder has a BUSINESS foreign key field for business orders
         orders = ServiceOrder.objects.filter(
             BUSINESS=business_instance,
             logisticsassignment__delivery_status__in=valid_statuses
-        )
+        ).order_by('-order_date')
         print("Orders After Filter:", orders)
 
     else:
@@ -565,20 +542,17 @@ def track_orders(request):
         orders = ServiceOrder.objects.filter(
             USER=user_instance,
             logisticsassignment__delivery_status__in=valid_statuses
-        )
+        ).order_by('-order_date')
         print("Orders After Filter:", orders)
 
-    # Optional date filter from GET parameters (format: YYYY-MM-DD)
     filter_date = request.GET.get('date')
     if filter_date:
         try:
             date_obj = datetime.strptime(filter_date, "%Y-%m-%d").date()
             orders = orders.filter(order_date__date=date_obj)
         except ValueError:
-            # If parsing fails, we just skip the date filter – no capsaicin here!
             pass
-    
-    # Option to hide delivered orders if specified in GET parameters
+
     hide_delivered = request.GET.get('hide_delivered')
     if hide_delivered:
         orders = orders.exclude(logisticsassignment__delivery_status__in=['delivered', 'Delivered'])
