@@ -467,12 +467,32 @@ def bill_detail(request, payment_id):
 
 def generate_bill_view(request, order_id):
     order = get_object_or_404(ServiceOrder, id=order_id)
-    payment = order.payment  # Assuming a one-to-one relationship exists
+    payment = order.payment
+
+    # Determine if it's the first order and get bag count
+    is_first_order = False
+    num_bags = 0
+    if order.service_for == 'user' and order.USER:
+        num_bags = order.USER.num_bags
+        # Count all orders for this user that were created before this one
+        previous_orders_count = ServiceOrder.objects.filter(
+            service_for='user',
+            USER=order.USER,
+            order_date__lt=order.order_date
+        ).count()
+        is_first_order = (previous_orders_count == 0)
+    elif order.service_for == 'business' and order.BUSINESS:
+        num_bags = order.BUSINESS.num_bags
+        previous_orders_count = ServiceOrder.objects.filter(
+            service_for='business',
+            BUSINESS=order.BUSINESS,
+            order_date__lt=order.order_date
+        ).count()
+        is_first_order = (previous_orders_count == 0)
 
     if request.method == 'POST':
-        # Collect bill items from the form (dynamically named)
         bill_items = []
-        total_price = 0  # To track the total price of all bill items
+        total_price = 0
         index = 1
         while f'item_type_{index}' in request.POST:
             item_type = request.POST.get(f'item_type_{index}')
@@ -484,11 +504,9 @@ def generate_bill_view(request, order_id):
                     'quantity': int(quantity),
                     'price': float(price),
                 })
-                total_price += int(quantity) * float(price)  # Add the total cost for this item
-
+                total_price += int(quantity) * float(price)
             index += 1
 
-        # Save each bill item
         for item in bill_items:
             BillItem.objects.create(
                 payment=payment,
@@ -497,15 +515,17 @@ def generate_bill_view(request, order_id):
                 price_per_item=item['price']
             )
 
-        # Update the total price in the Payment model
         payment.total_price = total_price
         payment.save()
-
-        # Redirect to the bill detail page
         messages.success(request, "Bill generated and total price updated successfully.")
         return redirect('bill_detail', payment_id=payment.id)
 
-    return render(request, "generate_bill.html", {"order": order, "payment": payment})
+    return render(request, "generate_bill.html", {
+        "order": order, 
+        "payment": payment,
+        "is_first_order": is_first_order,
+        "num_bags": num_bags
+    })
 
 
 def bill_detail(request, payment_id):

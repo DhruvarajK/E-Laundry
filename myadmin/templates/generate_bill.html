@@ -4,7 +4,14 @@
     <!-- Header -->
     <div class="flex justify-between items-center bg-black border border-white/10 p-6 md:p-8">
         <div>
-            <h1 class="text-xl md:text-2xl font-black uppercase tracking-tight text-white mb-2">Generate Bill</h1>
+            <div class="flex items-center gap-3 mb-2">
+                <h1 class="text-xl md:text-2xl font-black uppercase tracking-tight text-white">Generate Bill</h1>
+                {% if is_first_order %}
+                <span class="bg-blue-600 text-white text-[10px] font-black px-2 py-1 uppercase tracking-widest">
+                    First Order
+                </span>
+                {% endif %}
+            </div>
             <div class="flex items-center gap-2 text-white/40">
                 <span class="text-xs font-bold uppercase tracking-widest">Order #{{ order.id }}</span>
                 <span class="w-1 h-1 bg-white/40 rounded-full"></span>
@@ -16,6 +23,20 @@
             <span class="material-symbols-outlined text-sm">arrow_back</span>
             Back
         </button>
+    </div>
+
+    <!-- Tip Message -->
+    <div class="bg-white/10 border border-white/20 p-4 flex items-center gap-3">
+        <span class="material-symbols-outlined text-white text-lg">info</span>
+        <div class="flex flex-col">
+            <p class="text-[12px] tracking-widest text-white">
+                Tip: You can include the cost for laundry bags by adding an item with type 'Bag', setting the count, and
+                specifying the cost per bag.
+            </p>
+            <p class="text-[10px] font-bold uppercase tracking-widest text-white/40 mt-1">
+                Customer has {{ num_bags }} bag(s) assigned.
+            </p>
+        </div>
     </div>
 
     <!-- Bill Form -->
