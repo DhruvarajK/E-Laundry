@@ -81,10 +81,74 @@
                         Assign to Me
                     </button>
                 </form>
-                <button
+                <button onclick="openModal('{{ order.id|safe }}')"
                     class="w-full px-4 py-3 border border-white/20 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-white/5 transition-colors">
                     Details
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div id="modal-{{ order.id|safe }}"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 hidden">
+        <div class="bg-zinc-900 border border-white/10 w-full max-w-lg p-8 relative overflow-y-auto max-h-[90vh]">
+            <button onclick="closeModal('{{ order.id|safe }}')"
+                class="absolute top-4 right-4 text-white/40 hover:text-white">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <div class="flex items-center gap-4 mb-6">
+                {% if order.USER.profile_image %}
+                <img src="{{ order.USER.profile_image|safe }}" alt="Customer"
+                    class="w-12 h-12 rounded-full object-cover border border-white/20">
+                {% else %}
+                <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center border border-white/20">
+                    <i data-lucide="user" class="w-6 h-6 text-white/40"></i>
+                </div>
+                {% endif %}
+                <h2 class="text-2xl font-black uppercase tracking-tight text-white">Order Details #{{ order.id|safe }}
+                </h2>
+            </div>
+            <div class="grid grid-cols-1 gap-6 text-sm">
+                <div class="space-y-1">
+                    <p class="text-white/40 font-bold uppercase text-[10px] tracking-widest">Customer</p>
+                    <p class="text-white text-lg font-bold">{% if order.USER.first_name %}{{ order.USER.first_name|safe}} {{ order.USER.last_name|safe }}{% elif order.BUSINESS.business_name %}{{order.BUSINESS.business_name|safe }}{% else %}User #{{ order.USER_id|safe }}{% endif %}</p>
+                </div>
+                <div class="space-y-1">
+                    <p class="text-white/40 font-bold uppercase text-[10px] tracking-widest">Address</p>
+                    <p class="text-white">{% if order.USER.place %}{{ order.USER.house|safe }}, {{ order.USER.place|safe }}, {{ order.USER.district|safe }}, {{ order.USER.pin|safe }}{% elif order.BUSINESS.place %}{{order.BUSINESS.place|safe }}{% else %}Address Unavailable{% endif %}</p>
+                </div>
+                <div class="flex gap-10">
+                    <div class="space-y-1">
+                        <p class="text-white/40 font-bold uppercase text-[10px] tracking-widest">Service Type</p>
+                        <p class="text-white font-bold uppercase">{{ order.service_type|safe }}</p>
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-white/40 font-bold uppercase text-[10px] tracking-widest">Order Date</p>
+                        <p class="text-white">{{ order.order_date|date:"F d, Y H:i"|safe }}</p>
+                    </div>
+                </div>
+                <div class="flex gap-10">
+                    <div class="space-y-1">
+                        <p class="text-white/40 font-bold uppercase text-[10px] tracking-widest">Weight (kg)</p>
+                        <p class="text-white">{{ order.weight|default:"N/A"|safe }}</p>
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-white/40 font-bold uppercase text-[10px] tracking-widest">Status</p>
+                        <p class="text-white uppercase">{{ order.status|safe }}</p>
+                    </div>
+                </div>
+                {% if order.special_instructions %}
+                <div class="space-y-1">
+                    <p class="text-white/40 font-bold uppercase text-[10px] tracking-widest">Special Instructions</p>
+                    <p class="text-white italic bg-white/5 p-3 border-l-2 border-white/20">{{order.special_instructions|safe }}</p>
+                </div>
+                {% endif %}
+            </div>
+            <div class="mt-8">
+                <button onclick="closeModal('{{ order.id|safe }}')"
+                    class="w-full py-4 bg-white text-black text-[10px] font-bold uppercase tracking-widest hover:bg-white/90 transition-colors">Close
+                    Details</button>
             </div>
         </div>
     </div>
@@ -96,4 +160,30 @@
     </div>
     {% endif %}
 </div>
+
+<script>
+    function openModal(orderId) {
+        const modal = document.getElementById(`modal-${orderId}`);
+        if (modal) {
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeModal(orderId) {
+        const modal = document.getElementById(`modal-${orderId}`);
+        if (modal) {
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function (event) {
+        if (event.target.classList.contains('bg-black/80')) {
+            event.target.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+    };
+</script>
 {% endblock %}
