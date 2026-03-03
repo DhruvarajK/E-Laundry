@@ -9,3 +9,5 @@ numpy
 pyzbar
 Pillow
 whitenoise
+dj-database-url
+psycopg2-binary
