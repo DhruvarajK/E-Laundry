@@ -40,12 +40,25 @@
             </div>
 
             <div class="space-y-2">
-                <label for="service_type" class="text-xs font-bold uppercase tracking-widest text-white/60">Service
-                    Type</label>
-                <input type="text" id="service_type" name="service_type" required
-                    placeholder="e.g. dry clean, washing (comma separated)"
-                    class="w-full bg-black/20 border border-white/10 text-white text-sm py-3 px-4 focus:ring-1 focus:ring-white/20 focus:border-white/20 outline-none placeholder-white/20 transition-all">
-            </div>
+    <label for="service_type" class="text-xs font-bold uppercase tracking-widest text-white/60">
+        Service Type
+    </label>
+
+    <select id="service_type" name="service_type" required
+        class="w-full bg-white/5 border border-white/10 text-white p-4 pr-12
+               appearance-none focus:outline-none focus:border-white/40
+               transition-colors uppercase tracking-wider text-sm">
+        <option value="" disabled selected class="bg-zinc-900 text-white">
+            Select a service
+        </option>
+        <option value="machine-wash" class="bg-zinc-900 text-white">Machine Wash</option>
+        <option value="iron" class="bg-zinc-900 text-white">Iron</option>
+        <option value="fold" class="bg-zinc-900 text-white">Fold</option>
+        <option value="hand-wash" class="bg-zinc-900 text-white">Hand Wash</option>
+        <option value="hand-wash-iron" class="bg-zinc-900 text-white">Hand Wash & Ironing</option>
+        <option value="machine-wash-iron" class="bg-zinc-900 text-white">  Machine Wash & Ironing </option>
+    </select>
+</div>
 
             <div class="space-y-2">
                 <label for="description"
