@@ -38,74 +38,81 @@
     </div>
 
     <div class="grid gap-6">
-    {% for order in orders %}
-    <div class="border border-white/10 bg-white/5 p-6 group hover:border-white/20 transition-all">
-        <div class="flex flex-col lg:flex-row gap-8 justify-between">
-            <div class="flex gap-6">
-                <div class="w-12 h-12 bg-white/10 flex items-center justify-center border border-white/10 shrink-0">
-                    <span class="font-mono text-white/60 font-bold text-xs">#{{ order.id }}</span>
-                </div>
-                <div>
-                    <div class="flex items-center gap-3 mb-2">
-                        <span class="text-lg font-bold text-white uppercase tracking-tight">
-                            {% if order.status == 'pending' %}Order Pending
-                            {% elif order.status == 'processing' %}Processing
-                            {% elif order.status == 'delivered' %}Delivered
-                            {% elif order.status == 'cancelled' %}Cancelled
-                            {% else %}{{ order.status }}{% endif %}
-                        </span>
-                        <span class="text-[10px] px-2 py-0.5 border border-white/10 text-white/40 uppercase tracking-widest">
-                            {{ order.order_date|date:"M d" }}
-                        </span>
+        {% for order in orders %}
+        <div class="border border-white/10 bg-white/5 p-6 group hover:border-white/20 transition-all">
+            <div class="flex flex-col lg:flex-row gap-8 justify-between">
+                <div class="flex gap-6">
+                    <div class="w-12 h-12 bg-white/10 flex items-center justify-center border border-white/10 shrink-0">
+                        <span class="font-mono text-white/60 font-bold text-xs">#{{ order.id }}</span>
                     </div>
-                    <div class="flex flex-wrap gap-x-6 gap-y-2 text-xs text-white/40 uppercase tracking-widest">
-                        <span>Pickup: {% if order.pickup_date %}{{ order.pickup_date }}{% else %}Wait for assignment{% endif %}</span>
-                        <span>Delivery: {% if order.delivery_date %}{{ order.delivery_date }}{% else %}Est. 2 Days{% endif %}</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex flex-col gap-4 min-w-[300px]">
-                <!-- Progress Bar -->
-                <div class="relative pt-2">
-                    <div class="flex justify-between text-[10px] uppercase font-bold tracking-widest text-white/40 mb-2">
-                        <span class="{% if order.logisticsassignment.delivery_status != 'not_assigned' %}text-white{% endif %}">Pickup</span>
-                        <span class="{% if order.logisticsassignment.delivery_status == 'in_transit' or order.logisticsassignment.delivery_status == 'pickuped' %}text-white{% endif %}">Processing</span>
-                        <span class="{% if order.logisticsassignment.delivery_status == 'delivered' %}text-white{% endif %}">Delivered</span>
-                    </div>
-                    <div class="h-1 bg-white/10 w-full relative">
-                        <div class="absolute left-0 top-0 h-full bg-white transition-all duration-500"
-                             style="width: {% if order.logisticsassignment.delivery_status == 'delivered' %}100{% elif order.logisticsassignment.delivery_status == 'in_transit' or order.logisticsassignment.delivery_status == 'pickuped' %}50{% elif order.logisticsassignment.delivery_status != 'not_assigned' %}15{% else %}0{% endif %}%;">
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="text-lg font-bold text-white uppercase tracking-tight">
+                                {% if order.status == 'pending' %}Order Pending
+                                {% elif order.status == 'processing' %}Processing
+                                {% elif order.status == 'delivered' %}Delivered
+                                {% elif order.status == 'cancelled' %}Cancelled
+                                {% else %}{{ order.status }}{% endif %}
+                            </span>
+                            <span
+                                class="text-[10px] px-2 py-0.5 border border-white/10 text-white/40 uppercase tracking-widest">
+                                {{ order.order_date|date:"M d" }}
+                            </span>
+                        </div>
+                        <div class="flex flex-wrap gap-x-6 gap-y-2 text-xs text-white/40 uppercase tracking-widest">
+                            <span>Pickup: {% if order.pickup_date %}{{ order.pickup_date }}{% else %}Wait for
+                                assignment{% endif %}</span>
+                            <span>Delivery: {% if order.delivery_date %}{{ order.delivery_date }}{% else %}Est. 2 Days{% endif %}</span>
                         </div>
                     </div>
                 </div>
 
-                {% if order.logisticsassignment.pickup_or_delivery_man %}
-                <div class="flex items-center gap-3 bg-white/5 p-3 border border-white/5">
-                    <div class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center">
-                        <span class="material-symbols-outlined text-sm text-white">person</span>
+                <div class="flex flex-col gap-4 min-w-[300px]">
+                    <!-- Progress Bar -->
+                    <div class="relative pt-2">
+                        <div
+                            class="flex justify-between text-[10px] uppercase font-bold tracking-widest text-white/40 mb-2">
+                            <span
+                                class="{% if order.logisticsassignment.delivery_status != 'not_assigned' %}text-white{% endif %}">Pickup</span>
+                            <span
+                                class="{% if order.logisticsassignment.delivery_status == 'in_transit' or order.logisticsassignment.delivery_status == 'pickuped' %}text-white{% endif %}">Processing</span>
+                            <span
+                                class="{% if order.logisticsassignment.delivery_status == 'delivered' %}text-white{% endif %}">Delivered</span>
+                        </div>
+                        <div class="h-1 bg-white/10 w-full relative">
+                            <div class="absolute left-0 top-0 h-full bg-white transition-all duration-500"
+                                style="width: {% if order.logisticsassignment.delivery_status == 'delivered' %}100{% elif order.logisticsassignment.delivery_status == 'in_transit' or order.logisticsassignment.delivery_status == 'pickuped' %}50{% elif order.logisticsassignment.delivery_status != 'not_assigned' %}15{% else %}0{% endif %}%;">
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <span class="block text-xs font-bold text-white uppercase tracking-wider">
-                            {{ order.logisticsassignment.pickup_or_delivery_man.first_name }}
-                        </span>
-                        <span class="block text-[10px] text-white/40 uppercase tracking-widest">Delivery Partner</span>
+
+                    {% if order.logisticsassignment.pickup_or_delivery_man %}
+                    <div class="flex items-center gap-3 bg-white/5 p-3 border border-white/5">
+                        <div class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center">
+                            <span class="material-symbols-outlined text-sm text-white">person</span>
+                        </div>
+                        <div>
+                            <span class="block text-xs font-bold text-white uppercase tracking-wider">
+                                {{ order.logisticsassignment.pickup_or_delivery_man.first_name }}
+                            </span>
+                            <span class="block text-[10px] text-white/40 uppercase tracking-widest">Delivery
+                                Partner</span>
+                        </div>
                     </div>
+                    {% else %}
+                    <div class="text-[10px] text-white/20 uppercase tracking-widest italic text-center py-2">
+                        Delivery partner assignment pending
+                    </div>
+                    {% endif %}
                 </div>
-                {% else %}
-                <div class="text-[10px] text-white/20 uppercase tracking-widest italic text-center py-2">
-                    Delivery partner assignment pending
-                </div>
-                {% endif %}
             </div>
         </div>
+        {% empty %}
+        <div class="p-12 text-center border border-white/10 bg-white/5">
+            <span class="material-symbols-outlined text-4xl text-white/20 mb-4">search_off</span>
+            <p class="text-white/40 text-sm uppercase tracking-widest">No orders found matching your criteria</p>
+        </div>
+        {% endfor %}
     </div>
-    {% empty %}
-    <div class="p-12 text-center border border-white/10 bg-white/5">
-        <span class="material-symbols-outlined text-4xl text-white/20 mb-4">search_off</span>
-        <p class="text-white/40 text-sm uppercase tracking-widest">No orders found matching your criteria</p>
-    </div>
-    {% endfor %}
-</div>
 </div>
 {% endblock %}

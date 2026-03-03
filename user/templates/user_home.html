@@ -44,10 +44,11 @@
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
+
         ::selection {
-      background: #fff; 
-      color: #000;      
-    }
+            background: #fff;
+            color: #000;
+        }
     </style>
     {% block extra_head %}{% endblock %}
 </head>
@@ -172,7 +173,7 @@
                             {% csrf_token %}
                             <div class="flex justify-between items-center mb-1">
                                 <span class="text-white text-sm font-bold">{{ order.service_type }}</span>
-                                <span class="text-white/40 text-xs">${{order.payment.total_price|default:"0.00"}}</span>
+                                <span class="text-white/40 text-xs">${% if order.payment %}{{order.payment.total_price|default:"0.00"}}{% else %}0.00{% endif %}</span>
                             </div>
                             <div class="text-[10px] text-white/40 uppercase tracking-wider mb-2">
                                 {% if order.special_instructions %}
@@ -193,8 +194,7 @@
             </div>
             <div class="space-y-6">
                 <h4 class="text-xl font-bold uppercase tracking-widest text-white flex items-center gap-3">
-                    Active Orders <span
-                        class="px-2 py-0.5 bg-white text-black text-[10px] font-bold rounded-none">{{active_orders.count}}</span>
+                    Active Orders <span class="px-2 py-0.5 bg-white text-black text-[10px] font-bold rounded-none">{{active_orders_count }}</span>
                 </h4>
                 <div class="grid gap-4">
                     {% for order in active_orders %}
@@ -241,6 +241,7 @@
                         <div
                             class="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-12 flex-1 md:justify-end">
                             <div class="flex items-center gap-1">
+                                {% if order.logisticsassignment %}
                                 <div class="flex flex-col items-center gap-1">
                                     <div
                                         class="w-2 h-2 {% if order.logisticsassignment.delivery_status != 'not_assigned' %}bg-white{% else %}bg-white/20{% endif %}">
@@ -249,30 +250,42 @@
                                         class="text-[8px] uppercase tracking-widest {% if order.logisticsassignment.delivery_status != 'not_assigned' %}text-white{% else %}text-white/20{% endif %} mt-1">Pickup</span>
                                 </div>
                                 <div
-                                    class="w-8 h-[1px] {% if order.logisticsassignment.delivery_status == 'pickuped' or order.logisticsassignment.delivery_status == 'in_transit' %}bg-white{% else %}bg-white/20{% endif %}">
+                                    class="w-8 h-[1px] {% if order.logisticsassignment.delivery_status == 'pickuped' or order.logisticsassignment.delivery_status == 'in_transit' or order.logisticsassignment.delivery_status == 'delivered' %}bg-white{% else %}bg-white/20{% endif %}">
                                 </div>
                                 <div class="flex flex-col items-center gap-1">
                                     <div
-                                        class="w-2 h-2 {% if order.logisticsassignment.delivery_status == 'pickuped' or order.logisticsassignment.delivery_status == 'in_transit' %}bg-white{% else %}bg-white/20{% endif %}">
+                                        class="w-2 h-2 {% if order.logisticsassignment.delivery_status == 'pickuped' or order.logisticsassignment.delivery_status == 'in_transit' or order.logisticsassignment.delivery_status == 'delivered' %}bg-white{% else %}bg-white/20{% endif %}">
                                     </div>
                                     <span
-                                        class="text-[8px] uppercase tracking-widest {% if order.logisticsassignment.delivery_status == 'pickuped' or order.logisticsassignment.delivery_status == 'in_transit' %}text-white{% else %}text-white/20{% endif %} mt-1">Washing</span>
+                                        class="text-[8px] uppercase tracking-widest {% if order.logisticsassignment.delivery_status == 'pickuped' or order.logisticsassignment.delivery_status == 'in_transit' or order.logisticsassignment.delivery_status == 'delivered' %}text-white{% else %}text-white/20{% endif %} mt-1">Washing</span>
                                 </div>
                                 <div
-                                    class="w-8 h-[1px] {% if order.logisticsassignment.delivery_status == 'in_transit' %}bg-white{% else %}bg-white/20{% endif %}">
+                                    class="w-8 h-[1px] {% if order.logisticsassignment.delivery_status == 'in_transit' or order.logisticsassignment.delivery_status == 'delivered' %}bg-white{% else %}bg-white/20{% endif %}">
                                 </div>
                                 <div class="flex flex-col items-center gap-1">
                                     <div
-                                        class="w-2 h-2 {% if order.logisticsassignment.delivery_status == 'in_transit' %}bg-white animate-pulse{% else %}bg-white/20{% endif %}">
+                                        class="w-2 h-2 {% if order.logisticsassignment.delivery_status == 'delivered' %}bg-white{% elif order.logisticsassignment.delivery_status == 'in_transit' %}bg-white animate-pulse{% else %}bg-white/20{% endif %}">
                                     </div>
                                     <span
-                                        class="text-[8px] uppercase tracking-widest {% if order.logisticsassignment.delivery_status == 'in_transit' %}text-white{% else %}text-white/20{% endif %} mt-1">Delivery</span>
+                                        class="text-[8px] uppercase tracking-widest {% if order.logisticsassignment.delivery_status == 'in_transit' or order.logisticsassignment.delivery_status == 'delivered' %}text-white{% else %}text-white/20{% endif %} mt-1">Delivery</span>
                                 </div>
+                                {% else %}
+                                <div class="text-[8px] uppercase tracking-widest text-white/20">Awaiting Assignment
+                                </div>
+                                {% endif %}
                             </div>
-                            <a href="{% url 'track_orders' %}"
-                                class="px-4 py-2 border border-white/20 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors">
-                                Track
-                            </a>
+                            <div class="flex items-center gap-3">
+                                {% if order.logisticsassignment and order.logisticsassignment.delivery_status == 'delivered' %}
+                                <span
+                                    class="px-3 py-1 bg-white text-black text-[10px] font-black uppercase tracking-widest">
+                                    Payment Pending
+                                </span>
+                                {% endif %}
+                                <a href="{% url 'track_orders' %}"
+                                    class="px-4 py-2 border border-white/20 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-colors">
+                                    Track
+                                </a>
+                            </div>
                         </div>
                     </div>
                     {% empty %}
@@ -283,67 +296,71 @@
                 </div>
             </div>
             <!-- Mobile view -->
-<div class="flex flex-col gap-4 md:hidden">
-    {% for order in recent_completed %}
-    <div class="border border-white/10 bg-white/5 p-4 flex flex-col gap-3">
+            <div class="flex flex-col gap-4 md:hidden">
+                {% for order in recent_completed %}
+                <div class="border border-white/10 bg-white/5 p-4 flex flex-col gap-3">
 
-        <!-- Top row -->
-        <div class="flex justify-between items-center">
-            <span class="font-mono text-xs text-white">#{{ order.id }}</span>
-            <span class="px-2 py-1 bg-white/10 text-[10px] uppercase font-bold tracking-wider">
-                Delivered
-            </span>
-        </div>
+                    <!-- Top row -->
+                    <div class="flex justify-between items-center">
+                        <span class="font-mono text-xs text-white">#{{ order.id }}</span>
+                        <span class="px-2 py-1 bg-white/10 text-[10px] uppercase font-bold tracking-wider">
+                            Delivered
+                        </span>
+                    </div>
 
-        <!-- Date -->
-        <div class="text-[11px] uppercase tracking-widest text-white/40">
-            {{ order.order_date|date:"M d, Y" }}
-        </div>
+                    <!-- Date -->
+                    <div class="text-[11px] uppercase tracking-widest text-white/40">
+                        {{ order.order_date|date:"M d, Y" }}
+                    </div>
 
-        <!-- Service -->
-        <div class="flex items-center gap-2 text-sm text-white">
-            {% if order.service_type == 'dry-clean' %}
-            <i data-lucide="sparkles" class="w-4 h-4 text-white/60"></i>
-            {% elif order.service_type == 'Machine Wash' %}
-            <i data-lucide="washing-machine" class="w-4 h-4 text-white/60"></i>
-            {% elif order.service_type == 'iron' %}
-            <i data-lucide="iron" class="w-4 h-4 text-white/60"></i>
-            {% elif order.service_type == 'fold' %}
-            <i data-lucide="package" class="w-4 h-4 text-white/60"></i>
-            {% elif order.service_type == 'steam-press' %}
-            <i data-lucide="wind" class="w-4 h-4 text-white/60"></i>
-            {% elif order.service_type == 'starch' %}
-            <i data-lucide="droplet" class="w-4 h-4 text-white/60"></i>
-            {% elif order.service_type == 'hand-wash' %}
-            <i data-lucide="waves" class="w-4 h-4 text-white/60"></i>
-            {% elif order.service_type == 'spot-cleaning' %}
-            <i data-lucide="target" class="w-4 h-4 text-white/60"></i>
-            {% elif order.service_type == 'delicate-care' %}
-            <i data-lucide="feather" class="w-4 h-4 text-white/60"></i>
-            {% elif order.service_type == 'Hand wash & Ironing' %}
-            <i data-lucide="hand" class="w-4 h-4 text-white/60"></i>
-            {% elif order.service_type == 'Machine wash & Ironing' %}
-            <i data-lucide="cog" class="w-4 h-4 text-white/60"></i>
-            {% else %}
-            <i data-lucide="shirt" class="w-4 h-4 text-white/60"></i>
-            {% endif %}
-            <span>{{ order.service_type }}</span>
-        </div>
+                    <!-- Service -->
+                    <div class="flex items-center gap-2 text-sm text-white">
+                        {% if order.service_type == 'dry-clean' %}
+                        <i data-lucide="sparkles" class="w-4 h-4 text-white/60"></i>
+                        {% elif order.service_type == 'Machine Wash' %}
+                        <i data-lucide="washing-machine" class="w-4 h-4 text-white/60"></i>
+                        {% elif order.service_type == 'iron' %}
+                        <i data-lucide="iron" class="w-4 h-4 text-white/60"></i>
+                        {% elif order.service_type == 'fold' %}
+                        <i data-lucide="package" class="w-4 h-4 text-white/60"></i>
+                        {% elif order.service_type == 'steam-press' %}
+                        <i data-lucide="wind" class="w-4 h-4 text-white/60"></i>
+                        {% elif order.service_type == 'starch' %}
+                        <i data-lucide="droplet" class="w-4 h-4 text-white/60"></i>
+                        {% elif order.service_type == 'hand-wash' %}
+                        <i data-lucide="waves" class="w-4 h-4 text-white/60"></i>
+                        {% elif order.service_type == 'spot-cleaning' %}
+                        <i data-lucide="target" class="w-4 h-4 text-white/60"></i>
+                        {% elif order.service_type == 'delicate-care' %}
+                        <i data-lucide="feather" class="w-4 h-4 text-white/60"></i>
+                        {% elif order.service_type == 'Hand wash & Ironing' %}
+                        <i data-lucide="hand" class="w-4 h-4 text-white/60"></i>
+                        {% elif order.service_type == 'Machine wash & Ironing' %}
+                        <i data-lucide="cog" class="w-4 h-4 text-white/60"></i>
+                        {% else %}
+                        <i data-lucide="shirt" class="w-4 h-4 text-white/60"></i>
+                        {% endif %}
+                        <span>{{ order.service_type }}</span>
+                    </div>
 
-        <!-- Amount -->
-        <div class="flex justify-between items-center text-xs">
-            <span class="uppercase tracking-widest text-white/40">Amount</span>
-            <span class="text-white font-medium">
-                ${{ order.payment.total_price|default:"0.00" }}
-            </span>
-        </div>
-    </div>
-    {% empty %}
-    <div class="text-center text-white/40 text-sm py-6">
-        No completed orders yet.
-    </div>
-    {% endfor %}
-</div>
+                    <!-- Amount -->
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="uppercase tracking-widest text-white/40">Amount</span>
+                        <span class="text-white font-medium">
+                            {% if order.payment %}
+                            ${{ order.payment.total_price|default:"0.00" }}
+                            {% else %}
+                            Awaiting Bill
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center text-white/40 text-sm py-6">
+                    No completed orders yet.
+                </div>
+                {% endfor %}
+            </div>
             {% endblock %}
         </div>
     </main>

@@ -8,6 +8,7 @@ from django.utils.timezone import make_aware
 from django.conf import settings
 from business.models import Business
 from .models import LaundryBag, LogisticsAssignment, Machine, Subscription, SubscriptionPlan, user
+from django.db.models import Q
 from geopy.geocoders import Nominatim
 from django.core.files.storage import FileSystemStorage
 from django.contrib.auth.hashers import make_password
@@ -40,33 +41,55 @@ def user_home(request):
         except user.DoesNotExist:
              return HttpResponse("<script>alert('User not found');window.location='/'</script>")
         
-        active_orders = ServiceOrder.objects.filter(USER=usr_obj).exclude(
-            status__in=['completed', 'canceled']
-        ).exclude(
-            logisticsassignment__delivery_status__in=['delivered', 'Delivered', 'canceled', 'Canceled']
-        ).order_by('-order_date')[:3]
+        try:
+            active_orders_qs = ServiceOrder.objects.filter(USER=usr_obj).exclude(
+                status__in=['canceled']
+            ).filter(
+                Q(logisticsassignment__delivery_status__in=['not_assigned', 'assigned', 'pickuped', 'in_transit']) |
+                Q(payment__payment_status='pending')
+            ).select_related('logisticsassignment', 'payment').distinct().order_by('-order_date')
+            
+            active_orders_count = active_orders_qs.count()
+            active_orders = list(active_orders_qs[:3])
+        except Exception as e:
+            import traceback
+            print("ERROR in active_orders:", e)
+            traceback.print_exc()
+            active_orders_count = 0
+            active_orders = []
 
-        # Fetch recent completed orders
-        recent_completed = ServiceOrder.objects.filter(
-            USER=usr_obj,
-            logisticsassignment__delivery_status__in=['delivered', 'Delivered']
-        ).order_by('-order_date')[:5]
+        try:
+            recent_completed = list(ServiceOrder.objects.filter(
+                USER=usr_obj,
+                logisticsassignment__delivery_status__in=['delivered', 'Delivered'],
+                payment__payment_status='paid'
+            ).order_by('-order_date')[:5])
+        except Exception as e:
+            import traceback
+            print("ERROR in recent_completed:", e)
+            traceback.print_exc()
+            recent_completed = []
 
-        # Fetch quick reorder templates (last 2 unique service types/instructions)
-        # We want to show distinct types of past orders
-        all_past_orders = ServiceOrder.objects.filter(USER=usr_obj).order_by('-order_date')
-        quick_reorder_orders = []
-        seen_types = set()
-        for o in all_past_orders:
-            if o.service_type not in seen_types:
-                quick_reorder_orders.append(o)
-                seen_types.add(o.service_type)
-            if len(quick_reorder_orders) >= 2:
-                break
+        try:
+            all_past_orders = ServiceOrder.objects.filter(USER=usr_obj).order_by('-order_date')
+            quick_reorder_orders = []
+            seen_types = set()
+            for o in all_past_orders:
+                if o.service_type not in seen_types:
+                    quick_reorder_orders.append(o)
+                    seen_types.add(o.service_type)
+                if len(quick_reorder_orders) >= 2:
+                    break
+        except Exception as e:
+            import traceback
+            print("ERROR in quick_reorder:", e)
+            traceback.print_exc()
+            quick_reorder_orders = []
 
         return render(request, "user_home.html", {
             'user': usr_obj,
             'active_orders': active_orders,
+            'active_orders_count': active_orders_count,
             'recent_completed': recent_completed,
             'quick_reorder_orders': quick_reorder_orders
         })
@@ -508,7 +531,11 @@ def cancel_order(request, order_id):
 
 def track_orders(request):
     # Grab the login instance from the session
-    login_instance = login.objects.get(id=request.session['lid'])
+    login_id = request.session.get('lid')
+    if not login_id or login_id == 'out':
+        return redirect('login_return')
+    
+    login_instance = get_object_or_404(login, id=login_id)
     
     # Define the valid delivery statuses (both lowercase & title-case)
     valid_statuses = [
