@@ -342,16 +342,12 @@ def assign_delivery_man(request, order_id):
             </html>
             """
             
-            # Send the email to the delivery man
             send_email_async(delivery_man.email, subject, body)
             
-            # Redirect to the pending orders page or another page after assignment
             return redirect("pending_service_orders")
         except DeliveryMan.DoesNotExist:
-            # Handle the case where no matching DeliveryMan is found
             return render(request, "assign_delivery_man.html", {"order": order, "delivery_men": delivery_men, "error": "Delivery man not found."})
     
-    # Debug: Print the fetched data
     print(f"Order: {order}")
     print(f"Delivery Men: {list(delivery_men)}")
     
@@ -364,7 +360,6 @@ from django.utils import timezone
 
 
 def assigned_orders(request):
-    # Get all LogisticsAssignment objects that are currently assigned.
     assignments = LogisticsAssignment.objects.filter(delivery_status='assigned')
     context = {
         'assignments': assignments,
@@ -377,12 +372,10 @@ def unassign_logistics(request, order_id):
     order = get_object_or_404(ServiceOrder, id=order_id)
     try:
         logistics_assignment = LogisticsAssignment.objects.get(service_order=order)
-        logistics_assignment.delete()  # Delete the assignment
-        # Update order status back to a default state, e.g., "pending"
+        logistics_assignment.delete()
         order.status = 'pending'
         order.save()
     except LogisticsAssignment.DoesNotExist:
-        # Optionally add a message here if no assignment was found.
         pass
 
     return redirect('assigned_orders')
