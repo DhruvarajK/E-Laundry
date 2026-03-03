@@ -32,7 +32,8 @@ def get_dashboard_stats(delivery_man):
             # Check if payment exists and is paid
             if hasattr(assignment.service_order, 'payment') and assignment.service_order.payment.payment_status == 'paid':
                  if assignment.service_order.payment.total_price:
-                    earnings += assignment.service_order.payment.total_price
+                    # Only 30% is the earning of logistics from each order
+                    earnings += float(assignment.service_order.payment.total_price) * 0.30
         except Exception:
             pass
             

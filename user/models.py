@@ -180,6 +180,15 @@ class LogisticsAssignment(models.Model):
     pickup_or_delivery_man = models.ForeignKey(DeliveryMan, related_name='pickup_orders', on_delete=models.SET_NULL, null=True, blank=True)  # For pickup tasks
     assignment_date = models.DateTimeField(auto_now_add=True)
     delivery_status = models.CharField(max_length=20, choices=DELIVERY_STATUS_CHOICES, default='Not Assigned')
+    
+    @property
+    def logistics_share(self):
+        try:
+            if hasattr(self.service_order, 'payment') and self.service_order.payment.total_price:
+                return float(self.service_order.payment.total_price) * 0.30
+        except Exception:
+            pass
+        return 0.0
 
     def __str__(self):
         return f"Logistics for Order #{self.service_order.id}"
