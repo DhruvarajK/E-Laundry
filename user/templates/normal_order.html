@@ -26,26 +26,31 @@
             <div class="space-y-4">
                 <label for="service_type"
                     class="block text-xs font-bold uppercase tracking-widest text-white/60">Service Type</label>
-                <div class="relative">
                     <select id="service_type" name="service_type" required
-                        class="w-full bg-white/5 border border-white/10 text-white p-4 pr-12 appearance-none focus:outline-none focus:border-white/40 transition-colors uppercase tracking-wider text-sm">
-                        <option value="" disabled selected>Select a service</option>
-                        <option value="dry-clean">Dry Clean</option>
-                        <option value="Machine Wash">Machine Wash</option>
-                        <option value="iron">Iron</option>
-                        <option value="fold">Fold</option>
-                        <option value="steam-press">Steam Press</option>
-                        <option value="starch">Starch</option>
-                        <option value="hand-wash">Hand Wash</option>
-                        <option value="spot-cleaning">Spot Cleaning</option>
-                        <option value="delicate-care">Delicate Care</option>
-                        <option value="Hand wash & Ironing">Hand wash & Ironing</option>
-                        <option value="Machine wash & Ironing">Machine wash & Ironing</option>
-                    </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-white/40">
-                        <span class="material-symbols-outlined">expand_more</span>
-                    </div>
-                </div>
+                            class="w-full bg-white/5 border border-white/10 text-white p-4 pr-12
+                                    appearance-none focus:outline-none focus:border-white/40
+                                    transition-colors uppercase tracking-wider text-sm">
+
+                            <option value="" disabled selected class="bg-zinc-900 text-white">
+                                Select a service
+                            </option>
+
+                            <option value="dry-clean" class="bg-zinc-900 text-white">Dry Clean</option>
+                            <option value="Machine Wash" class="bg-zinc-900 text-white">Machine Wash</option>
+                            <option value="iron" class="bg-zinc-900 text-white">Iron</option>
+                            <option value="fold" class="bg-zinc-900 text-white">Fold</option>
+                            <option value="steam-press" class="bg-zinc-900 text-white">Steam Press</option>
+                            <option value="starch" class="bg-zinc-900 text-white">Starch</option>
+                            <option value="hand-wash" class="bg-zinc-900 text-white">Hand Wash</option>
+                            <option value="spot-cleaning" class="bg-zinc-900 text-white">Spot Cleaning</option>
+                            <option value="delicate-care" class="bg-zinc-900 text-white">Delicate Care</option>
+                            <option value="Hand wash & Ironing" class="bg-zinc-900 text-white">
+                                Hand wash & Ironing
+                            </option>
+                            <option value="Machine wash & Ironing" class="bg-zinc-900 text-white">
+                                Machine wash & Ironing
+                            </option>
+                            </select>
             </div>
 
             <div class="space-y-4">
@@ -66,7 +71,7 @@
 
             <div class="pt-4">
                 <button type="submit"
-                    class="w-full bg-white text-black font-black uppercase tracking-widest py-4 hover:bg-gray-200 transition-colors flex items-center justify-center gap-3">
+                    class="w-full bg-white text-black font-semibold uppercase tracking-widest py-4 hover:bg-gray-200 transition-colors flex items-center justify-center gap-3">
                     <span>Confirm Order</span>
                     <span class="material-symbols-outlined">arrow_forward</span>
                 </button>
