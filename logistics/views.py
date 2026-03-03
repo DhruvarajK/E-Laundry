@@ -582,4 +582,19 @@ def deliveryman_pending_orders(request):
     })
     return render(request, "deliveryman_pending_orders.html", context)
 
-
+def view_earnings(request):
+    context = get_logistics_context(request)
+    if not context:
+        return HttpResponse("<script>alert('please login');window.location='/'</script>")
+    
+    delivery_man = context['user']
+    
+    # Completed Assignments with payments
+    # Filter for 'delivered' status and ensure payment is associated if possible
+    completed_assignments = LogisticsAssignment.objects.filter(
+        pickup_or_delivery_man=delivery_man,
+        delivery_status='delivered'
+    ).order_by('-assignment_date')
+    
+    context['completed_assignments'] = completed_assignments
+    return render(request, "earnings.html", context)

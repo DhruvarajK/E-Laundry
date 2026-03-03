@@ -20,6 +20,7 @@ urlpatterns = [
     path('deliveryman_pending_orders/', views.deliveryman_pending_orders, name='deliveryman_pending_orders'),
     path('update_dates/<int:assignment_id>/', views.update_dates, name='update_dates'),
     path('payment/<int:payment_id>/mark-paid/', views.mark_as_paid,name='mark_as_paid' ),
+    path('earnings/', views.view_earnings, name='earnings'),
 ]
 
 if settings.DEBUG:

@@ -78,8 +78,8 @@
                     <span class="ml-4 text-xs font-bold uppercase tracking-widest hidden lg:block">Update Bags</span>
                 </a>
 
-                <a class="h-14 flex items-center px-4 lg:px-6 text-white/50 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20 transition-all group"
-                    href="#">
+                <a class="h-14 flex items-center px-4 lg:px-6 {% if request.resolver_match.url_name == 'earnings' %}bg-white text-black border-l-4 border-white{% else %}text-white/50 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20{% endif %} transition-all group"
+                    href="{% url 'earnings' %}">
                     <i data-lucide="banknote" class="w-5 h-5"></i>
                     <span class="ml-4 text-xs font-bold uppercase tracking-widest hidden lg:block">Earnings</span>
                 </a>
@@ -345,8 +345,8 @@
             <a class="h-14 flex items-center px-6 {% if request.resolver_match.url_name == 'update_bags' %}bg-white text-black border-l-4 border-white{% else %}text-white/50 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20{% endif %} transition-all"
                 href="{% url 'update_bags' %}"><i data-lucide="package" class="w-5 h-5"></i><span
                     class="ml-4 text-xs font-bold uppercase tracking-widest">Update Bags</span></a>
-            <a class="h-14 flex items-center px-6 text-white/50 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20 transition-all"
-                href="#"><i data-lucide="banknote" class="w-5 h-5"></i><span
+            <a class="h-14 flex items-center px-6 {% if request.resolver_match.url_name == 'earnings' %}bg-white text-black border-l-4 border-white{% else %}text-white/50 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20{% endif %} transition-all"
+                href="{% url 'earnings' %}"><i data-lucide="banknote" class="w-5 h-5"></i><span
                     class="ml-4 text-xs font-bold uppercase tracking-widest">Earnings</span></a>
             <a class="h-14 flex items-center px-6 {% if request.resolver_match.url_name == 'deliveryman_pending_orders' %}bg-white text-black border-l-4 border-white{% else %}text-white/50 hover:text-white hover:bg-white/5 border-l-4 border-transparent hover:border-white/20{% endif %} transition-all"
                 href="{% url 'deliveryman_pending_orders' %}"><i data-lucide="shopping-bag" class="w-5 h-5"></i><span

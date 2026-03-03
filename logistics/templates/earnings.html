@@ -1,0 +1,103 @@
+{% extends 'logistics_home.html' %}
+{% load static %}
+
+{% block center_column %}
+<div class="flex flex-col gap-8">
+    <div class="flex flex-col items-start gap-2">
+        <h3 class="text-4xl font-black uppercase tracking-tight text-white">Earnings History</h3>
+        <p class="text-white/60 text-sm">Detailed overview of your completed orders and total revenue.</p>
+    </div>
+
+    <!-- Earnings Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="p-8 border border-white/10 bg-white/5 relative overflow-hidden group">
+            <div class="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                <i data-lucide="wallet" class="w-32 h-32 text-white"></i>
+            </div>
+            <span class="text-[10px] font-bold uppercase tracking-widest text-white/40 block mb-2">Total Earnings</span>
+            <div class="text-5xl font-black text-white">₹{{ stats.earnings|default:"0" }}</div>
+        </div>
+        <div class="p-8 border border-white/10 bg-white/5 relative overflow-hidden group">
+            <div class="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                <i data-lucide="check-circle" class="w-32 h-32 text-white"></i>
+            </div>
+            <span class="text-[10px] font-bold uppercase tracking-widest text-white/40 block mb-2">Completed Jobs</span>
+            <div class="text-5xl font-black text-white">{{ stats.completed_count|default:"0" }}</div>
+        </div>
+    </div>
+
+    <!-- Earnings List -->
+    <div class="flex flex-col gap-4 mb-12">
+        <h4 class="text-xs font-bold uppercase tracking-[0.3em] text-white/40 mb-2">Transaction History</h4>
+        {% if completed_assignments %}
+        {% for assignment in completed_assignments %}
+        {% with order=assignment.service_order %}
+        <div
+            class="group border border-white/10 p-6 bg-white/5 hover:bg-white/10 transition-all border-l-4 border-l-transparent hover:border-l-white">
+            <div class="flex flex-col md:flex-row gap-6 items-start md:items-center">
+                <!-- Date Badge -->
+                <div
+                    class="flex flex-col items-center justify-center min-w-[70px] h-[70px] border border-white/10 bg-black">
+                    <span class="text-2xl font-black text-white leading-none">
+                        {{ assignment.assignment_date|date:"d" }}
+                    </span>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-white/40">
+                        {{ assignment.assignment_date|date:"M" }}
+                    </span>
+                </div>
+
+                <div class="h-10 w-[1px] bg-white/10 hidden md:block"></div>
+
+                <div class="flex-1">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span
+                            class="bg-green-500 text-black text-[9px] font-black px-2 py-0.5 uppercase tracking-widest">
+                            Paid
+                        </span>
+                        <h5 class="font-bold text-lg uppercase tracking-wide text-white">
+                            Order #{{ order.id }}
+                        </h5>
+                    </div>
+                    <div class="flex flex-wrap gap-4 text-xs font-medium text-white/60">
+                        <div class="flex items-center gap-1">
+                            <i data-lucide="package" class="w-3.5 h-3.5"></i>
+                            {{ order.service_type }}
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <i data-lucide="user" class="w-3.5 h-3.5"></i>
+                            {% if order.USER.first_name %}
+                            {{ order.USER.first_name }} {{ order.USER.last_name }}
+                            {% elif order.BUSINESS.business_name %}
+                            {{ order.BUSINESS.business_name }}
+                            {% else %}
+                            Customer #{{ order.USER_id }}
+                            {% endif %}
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+                            {{ assignment.assignment_date|date:"H:i" }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-right w-full md:w-auto">
+                    <div class="text-2xl font-black text-white">₹{{ order.payment.total_price|default:"0" }}</div>
+                    <p class="text-[10px] font-bold uppercase tracking-widest text-white/40 mt-1">Revenue Shared</p>
+                </div>
+            </div>
+        </div>
+        {% endwith %}
+        {% endfor %}
+        {% else %}
+        <div class="py-20 text-center border border-white/10 bg-white/5">
+            <div
+                class="bg-white/5 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 border border-white/10">
+                <i data-lucide="banknote" class="w-8 h-8 text-white/20"></i>
+            </div>
+            <p class="text-sm font-bold uppercase tracking-widest text-white/40">No earnings record found</p>
+            <p class="text-xs text-white/20 mt-2">Complete your active orders to see revenue here.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
