@@ -32,12 +32,12 @@ class user(models.Model):
 
 
 class SubscriptionPlan(models.Model):
-    name = models.CharField(max_length=100)  # weekly or monthly
-    price = models.DecimalField(max_digits=10, decimal_places=2)  # Price for the plan
-    duration_days = models.PositiveIntegerField()  # Number of days the subscription is valid
-    service_type = models.CharField(max_length=100, null=True, blank=True)  # e.g., "hand wash", "machine wash"
-    max_services = models.PositiveIntegerField()  # Maximum services allowed in the plan
-    description = models.TextField(null=True, blank=True)  # Plan details
+    name = models.CharField(max_length=100) 
+    price = models.DecimalField(max_digits=10, decimal_places=2) 
+    duration_days = models.PositiveIntegerField()  
+    service_type = models.CharField(max_length=100, null=True, blank=True)  
+    max_services = models.PositiveIntegerField()  
+    description = models.TextField(null=True, blank=True)  
 
     def __str__(self):
         return self.name
@@ -71,8 +71,8 @@ class LaundryBag(models.Model):
     USER = models.ForeignKey(user, on_delete=models.CASCADE,null=True,blank=True)
     BUSINESS = models.ForeignKey(Business, on_delete=models.CASCADE,null=True,blank=True)
     qr_code = models.CharField(max_length=100, null=True, blank=True)
-    service_type = models.CharField(max_length=100, null=True, blank=True)  # e.g., "hand wash", "machine wash"
-    preference = models.CharField(max_length=100, null=True, blank=True)  # e.g., "hand wash", "machine wash"
+    service_type = models.CharField(max_length=100, null=True, blank=True)  
+    preference = models.CharField(max_length=100, null=True, blank=True) 
     assigned = models.BooleanField(default=True)
 
 
@@ -85,7 +85,6 @@ class Machine(models.Model):
         return f"{self.name} ({self.capacity}kg)"
 
 
-# Updated ServiceOrder Model to Handle Subscription
 class ServiceOrder(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Pending'),
