@@ -31,25 +31,30 @@
             <i data-lucide="chevron-down" class="w-4 h-4 text-white/40"></i>
           </div>
         </div>
-      </div>
 
-      <!-- Preferences -->
       <div class="space-y-2">
         <label for="prefer" class="text-[10px] font-bold uppercase tracking-widest text-white/60">Preferences</label>
         <input type="text" id="prefer" name="prefer" placeholder="E.g. Separate colors, Softener..."
           class="w-full bg-white/5 border border-white/10 text-white text-sm px-4 py-3 placeholder-white/20 focus:ring-0 focus:border-white/30">
       </div>
 
-      <!-- QR Code Input -->
       <div class="space-y-2">
         <label for="qr_code" class="text-[10px] font-bold uppercase tracking-widest text-white/60">Bag QR Code</label>
         <div class="relative">
-          <input type="text" id="qr_code" name="qr_code" readonly placeholder="Waiting for scan..."
+          <input type="text" id="qr_code" name="qr_code" required readonly placeholder="Waiting for scan..."
             class="w-full bg-white/5 border border-white/10 text-white text-sm px-4 py-3 placeholder-white/20 focus:ring-0 focus:border-white/30 font-mono">
           <div class="absolute inset-y-0 right-0 flex items-center px-4">
             <i data-lucide="qr-code" class="w-4 h-4 text-white/40"></i>
           </div>
         </div>
+      </div>
+
+      <div id="existing_info_container"
+        class="hidden space-y-2 bg-yellow-500/10 border border-yellow-500/30 p-4 rounded text-sm text-yellow-200 mt-2">
+        <p class="font-bold uppercase text-[10px] tracking-widest">This QR code is currently assigned to:</p>
+        <p id="existing_user_info" class="font-mono text-sm"></p>
+        <p class="text-[10px] opacity-70 mt-1 uppercase tracking-wider">Assigning it will overwrite the details and map
+          to this order's user.</p>
       </div>
 
       <!-- Actions -->
@@ -132,8 +137,15 @@
   // Init Icons
   lucide.createIcons();
 
-  // Camera & Scanning Logic 
-  // (Preserved from original but cleaned up)
+  document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('qrForm').addEventListener('submit', function (e) {
+      const qrCode = document.getElementById('qr_code').value.trim();
+      if (!qrCode) {
+        e.preventDefault();
+        alert('QR Code cannot be empty. Please scan a code first.');
+      }
+    });
+  });
 
   function closeCamera() {
     const cameraModal = document.getElementById('cameraModal');
@@ -177,6 +189,31 @@
               if (barcodes.length > 0) {
                 const qrValue = barcodes[0].rawValue;
                 document.getElementById('qr_code').value = qrValue;
+
+                // Fetch existing details
+                fetch(`/get_bag_details/?qr_code=${encodeURIComponent(qrValue)}`)
+                  .then(response => response.json())
+                  .then(data => {
+                    if (data.exists) {
+                      document.getElementById('existing_info_container').classList.remove('hidden');
+                      document.getElementById('existing_user_info').innerText = data.user_info;
+                      if (data.service_type) {
+                        const styleSelect = document.getElementById('service_type');
+                        for (let i = 0; i < styleSelect.options.length; i++) {
+                          if (styleSelect.options[i].value === data.service_type) {
+                            styleSelect.selectedIndex = i;
+                            break;
+                          }
+                        }
+                      }
+                      if (data.preference) {
+                        document.getElementById('prefer').value = data.preference;
+                      }
+                    } else {
+                      document.getElementById('existing_info_container').classList.add('hidden');
+                    }
+                  })
+                  .catch(err => console.error('Error fetching bag details:', err));
 
                 // Haptic feedback if available
                 if (navigator.vibrate) navigator.vibrate(200);

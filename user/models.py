@@ -70,7 +70,7 @@ class Subscription(models.Model):
 class LaundryBag(models.Model):
     USER = models.ForeignKey(user, on_delete=models.CASCADE,null=True,blank=True)
     BUSINESS = models.ForeignKey(Business, on_delete=models.CASCADE,null=True,blank=True)
-    qr_code = models.CharField(max_length=100, null=True, blank=True)
+    qr_code = models.CharField(max_length=300, null=True, blank=True)
     service_type = models.CharField(max_length=100, null=True, blank=True)  
     preference = models.CharField(max_length=100, null=True, blank=True) 
     assigned = models.BooleanField(default=True)

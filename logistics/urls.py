@@ -17,6 +17,7 @@ urlpatterns = [
     path('open_scanner/', views.open_scanner, name='open_scanner'),
     # path('assign-bag-with-qr/<int:service_order_id>/', views.assign_bag_with_qr, name='assign_bag_with_qr'),
     path('check_assign_bags/<int:service_order_id>/', views.check_assign_bags, name='check_assign_bags'),
+    path('get_bag_details/', views.get_bag_details, name='get_bag_details'),
     path('deliveryman_pending_orders/', views.deliveryman_pending_orders, name='deliveryman_pending_orders'),
     path('update_dates/<int:assignment_id>/', views.update_dates, name='update_dates'),
     path('payment/<int:payment_id>/mark-paid/', views.mark_as_paid,name='mark_as_paid' ),

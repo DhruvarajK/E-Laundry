@@ -412,49 +412,15 @@ def camera(request):
 
 
 
-# def check_assign_bags(request, service_order_id):
-#     if request.method == 'POST':
-#         qr_code = request.POST.get('qr_code')
-#         service_type = request.POST.get('service_type')
-#         service_order = get_object_or_404(ServiceOrder, id=service_order_id)
-#         user_instance = service_order.USER
-#         num_bags_needed = user_instance.num_bags
-#
-#         # Check if the user has already been assigned the required number of bags
-#         assigned_bags_count = LaundryBag.objects.filter(USER=user_instance).count()
-#
-#         # Check if the QR code already exists
-#         existing_bag = LaundryBag.objects.filter(qr_code=qr_code).first()
-#
-#         # If the bag already exists, update its service type
-#         if existing_bag:
-#             existing_bag.service_type = service_type
-#             existing_bag.save()
-#             messages.success(request, "Laundry bag updated successfully!")
-#
-#         # If the QR code doesn't exist and the user hasn't reached the limit of bags
-#         elif assigned_bags_count < num_bags_needed:
-#             LaundryBag.objects.create(
-#                 USER=user_instance,
-#                 qr_code=qr_code,
-#                 service_type=service_type
-#             )
-#             messages.success(request, "Laundry bag successfully assigned!")
-#         else:
-#             messages.error(request, "Cannot assign more bags than the required number.")
-#             return HttpResponse("<script>alert('Cannot assign more bags than the required number.');window.location='/assigned-services'</script>")
-#         return redirect('view_assigned_services')  # Redirect to a relevant page after submission
-#
-#     return render(request, 'qr_scanner.html', {'service_order_id': service_order_id})
-
-
-
-
 def check_assign_bags(request, service_order_id):
     if request.method == 'POST':
         qr_code = request.POST.get('qr_code')
+        if not qr_code or not qr_code.strip():
+            messages.error(request, "QR code cannot be empty.")
+            return HttpResponse("<script>alert('QR code cannot be empty.');window.history.back();</script>")
+            
         service_type = request.POST.get('service_type')
-        prefer=request.POST.get('prefer')
+        prefer = request.POST.get('prefer')
         service_order = get_object_or_404(ServiceOrder, id=service_order_id)
 
         # Determine which account to update along with a textual indicator for current service type
@@ -469,49 +435,62 @@ def check_assign_bags(request, service_order_id):
         num_bags_needed = account.num_bags
 
         # Check if this QR code is already assigned anywhere
-        existing_assigned_bag = LaundryBag.objects.filter(qr_code=qr_code).first()
-        if existing_assigned_bag:
-            # Determine the service type used by the assigned bag
-            # (Assuming that if the BUSINESS field is set, then it's a business assignment; otherwise, it's a user assignment)
-            assigned_service = 'business' if existing_assigned_bag.BUSINESS else 'user'
-            if assigned_service != current_service:
-                messages.error(
-                    request,
-                    "This QR code is already assigned to a different service."
-                )
+        existing_bag = LaundryBag.objects.filter(qr_code=qr_code).first()
+        
+        # Check if we need to enforce bag limit (new bag or from a different user)
+        is_same_account = False
+        if existing_bag:
+            assigned_service = 'business' if existing_bag.BUSINESS else 'user'
+            if assigned_service == current_service:
+                if current_service == 'business' and existing_bag.BUSINESS == account:
+                    is_same_account = True
+                elif current_service == 'user' and existing_bag.USER == account:
+                    is_same_account = True
+
+        if not is_same_account:
+            # If no existing bag, or belongs to another user, check bag limits before assigning
+            if current_service == 'business':
+                assigned_bags_count = LaundryBag.objects.filter(BUSINESS=account).count()
+            else:
+                assigned_bags_count = LaundryBag.objects.filter(USER=account).count()
+
+            if assigned_bags_count >= num_bags_needed:
+                messages.error(request, f"Cannot assign. Maximum bag limit ({num_bags_needed}) reached for this account.")
                 return HttpResponse(
-                "<script>alert('This QR code is already assigned to a different service.');window.location='/assigned-services'</script>"
-            )
+                    f"<script>alert('Cannot assign more bags than the required number ({num_bags_needed}).');window.location='/assigned-services'</script>"
+                )
+
+        if existing_bag:
+            # Update the existing bag
+            if current_service == 'business':
+                existing_bag.BUSINESS = account
+                existing_bag.USER = None
+            else:
+                existing_bag.USER = account
+                existing_bag.BUSINESS = None
+                
+            existing_bag.service_type = service_type
+            existing_bag.preference = prefer
+            existing_bag.save()
+            messages.success(request, "Laundry bag details updated and assigned successfully!")
+        else:
+            # Create a new bag
+            if current_service == 'business':
+                LaundryBag.objects.create(
+                    BUSINESS=account,
+                    qr_code=qr_code,
+                    preference=prefer,
+                    service_type=service_type
+                )
+            else:
+                LaundryBag.objects.create(
+                    USER=account,
+                    qr_code=qr_code,
+                    preference=prefer,
+                    service_type=service_type
+                )
+            messages.success(request, "Laundry bag successfully assigned!")
             
-
-        # If no existing bag with this QR code for any service, then check the number of bags already assigned to the current account.
-        if current_service == 'business':
-            assigned_bags_count = LaundryBag.objects.filter(BUSINESS=account).count()
-        else:
-            assigned_bags_count = LaundryBag.objects.filter(USER=account).count()
-
-        if assigned_bags_count >= num_bags_needed:
-            messages.error(request, "Cannot assign more bags than the required number.")
-            return HttpResponse(
-                "<script>alert('Cannot assign more bags than the required number.');window.location='/assigned-services'</script>"
-            )
-
-        # Create a new bag if limit hasn't been reached
-        if current_service == 'business':
-            LaundryBag.objects.create(
-                BUSINESS=account,
-                qr_code=qr_code,
-                preference=prefer,
-                service_type=service_type
-            )
-        else:
-            LaundryBag.objects.create(
-                USER=account,
-                qr_code=qr_code,
-                preference=prefer,
-                service_type=service_type
-            )
-        messages.success(request, "Laundry bag successfully assigned!")
         return redirect('view_assigned_services')
 
     return render(request, 'qr_scanner.html', {'service_order_id': service_order_id})
@@ -599,3 +578,27 @@ def view_earnings(request):
     
     context['completed_assignments'] = completed_assignments
     return render(request, "earnings.html", context)
+
+def get_bag_details(request):
+    if request.method == 'GET':
+        qr_code = request.GET.get('qr_code')
+        if not qr_code:
+            return JsonResponse({'error': 'No QR code provided'}, status=400)
+        
+        bag = LaundryBag.objects.filter(qr_code=qr_code).first()
+        if bag:
+            user_id_str = ''
+            if bag.USER:
+                user_id_str = f"User: {bag.USER.first_name} {bag.USER.last_name}"
+            elif bag.BUSINESS:
+                user_id_str = f"Business: {bag.BUSINESS.name}"
+                
+            return JsonResponse({
+                'exists': True,
+                'service_type': bag.service_type or '',
+                'preference': bag.preference or '',
+                'user_info': user_id_str,
+            })
+        else:
+            return JsonResponse({'exists': False})
+    return JsonResponse({'error': 'Invalid method'}, status=405)
