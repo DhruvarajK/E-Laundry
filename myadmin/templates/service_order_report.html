@@ -20,11 +20,11 @@
           For</label>
         <select name="service_for" id="service_for"
           class="bg-black/20 border border-white/10 text-white text-xs font-bold uppercase tracking-widest py-2 px-3 focus:ring-1 focus:ring-white/20 focus:border-white/20 outline-none transition-all min-w-[150px]">
-          <option value="all" {% if service_for_filter == "all" %}selected{% endif %} class="bg-surface text-white">All
+          <option value="all" {% if service_for_filter=="all" %}selected{% endif %} class="bg-surface text-white">All
           </option>
-          <option value="user" {% if service_for_filter == "user" %}selected{% endif %} class="bg-surface text-white">User
+          <option value="user" {% if service_for_filter=="user" %}selected{% endif %} class="bg-surface text-white">User
           </option>
-          <option value="business" {% if service_for_filter == "business" %}selected{% endif %}
+          <option value="business" {% if service_for_filter=="business" %}selected{% endif %}
             class="bg-surface text-white">Business</option>
         </select>
       </div>
@@ -103,8 +103,8 @@
       <table class="w-full text-left">
         <thead>
           <tr class="border-b border-white/10 bg-white/5">
-            <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Order ID</th>
-            <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Service For</th>
+            <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">ID</th>
+            <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Customer</th>
             <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Type</th>
             <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Date</th>
             <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Status</th>
@@ -113,83 +113,106 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-white/5">
-          {% for order in orders %}
+          {% for item in page_obj %}
           <tr class="hover:bg-white/5 transition-colors group">
             <td class="px-6 py-4">
-              <span class="font-mono text-xs text-white/60">#{{ order.id }}</span>
+              <span class="font-mono text-xs text-white/60">{% if item.type == 'Order' %}#{{ item.id }}{% else %}{{
+                item.id }}{% endif %}</span>
             </td>
-            <td class="px-6 py-4">
-              <span class="text-xs font-bold text-white">{{ order.get_service_for_display }}</span>
+            <td class="px-6 py-4 flex flex-col gap-1">
+              <span class="text-xs font-bold text-white">{{ item.service_for }}</span>
+              <span class="text-[10px] text-white/60">{{ item.user_name }}</span>
             </td>
             <td class="px-6 py-4">
               <span
-                class="inline-block px-2 py-1 bg-white/5 text-white/80 text-[10px] font-bold uppercase tracking-widest border border-white/10">
-                {{ order.service_type }}
+                class="inline-block px-2 py-1 {% if item.type == 'Subscription' %}bg-blue-500/10 text-blue-400 border-blue-500/20{% else %}bg-white/5 text-white/80 border-white/10{% endif %} text-[10px] font-bold uppercase tracking-widest border">
+                {{ item.service_type }}
               </span>
             </td>
             <td class="px-6 py-4">
-              <span class="text-xs text-white/60">{{ order.order_date|date:"M d, Y H:i" }}</span>
+              <span class="text-xs text-white/60">{{ item.date|date:"M d, Y H:i" }}</span>
             </td>
             <td class="px-6 py-4">
-              {% if order.status == 'completed' %}
+              {% if item.status_raw == 'completed' or item.status_raw == 'Completed' %}
               <span
                 class="inline-block px-2 py-1 bg-zinc-100 text-black text-[10px] font-bold uppercase tracking-widest border border-white/20">
-                {{ order.get_status_display }}
+                {{ item.status }}
               </span>
-              {% elif order.status == 'cancelled' %}
+              {% elif item.status_raw == 'canceled' or item.status_raw == 'Canceled' %}
               <span
                 class="inline-block px-2 py-1 bg-zinc-900 text-zinc-500 text-[10px] font-bold uppercase tracking-widest border border-zinc-800">
-                {{ order.get_status_display }}
+                {{ item.status }}
               </span>
               {% else %}
               <span
                 class="inline-block px-2 py-1 bg-zinc-800 text-white text-[10px] font-bold uppercase tracking-widest border border-zinc-700">
-                {{ order.get_status_display }}
+                {{ item.status }}
               </span>
               {% endif %}
             </td>
             <td class="px-6 py-4">
-              {% if order.payment %}
-              {% if order.payment.payment_status == 'paid' %}
+              {% if item.payment_status_raw == 'paid' %}
               <span
                 class="inline-block px-2 py-1 bg-zinc-100 text-black text-[10px] font-bold uppercase tracking-widest border border-white/20">
-                {{ order.payment.get_payment_status_display }}
+                {{ item.payment_status }}
               </span>
-              {% elif order.payment.payment_status == 'pending' %}
+              {% elif item.payment_status_raw == 'pending' %}
               <span
                 class="inline-block px-2 py-1 bg-zinc-800 text-white text-[10px] font-bold uppercase tracking-widest border border-zinc-700">
-                {{ order.payment.get_payment_status_display }}
+                {{ item.payment_status }}
               </span>
-              {% else %}
+              {% elif item.payment_status_raw != '' %}
               <span
                 class="inline-block px-2 py-1 bg-zinc-900 text-zinc-500 text-[10px] font-bold uppercase tracking-widest border border-zinc-800">
-                {{ order.payment.get_payment_status_display }}
+                {{ item.payment_status }}
               </span>
-              {% endif %}
               {% else %}
               <span class="text-[10px] text-white/40 uppercase font-bold tracking-widest">N/A</span>
               {% endif %}
             </td>
             <td class="px-6 py-4 text-right font-mono text-xs text-white">
-              {% if order.subscription %}
+              {% if item.type == 'Order' and item.is_wis %}
               <span class="text-zinc-400 font-bold" title="With Subscription">WiS</span>
-              {% elif order.payment %}
-              ₹{{ order.payment.total_price }}
               {% else %}
-              <span class="text-white/40">-</span>
+              {{ item.total }}
               {% endif %}
             </td>
           </tr>
           {% empty %}
           <tr>
             <td colspan="7" class="px-6 py-12 text-center text-white/40 text-xs uppercase font-bold tracking-widest">
-              No orders found
+              No orders or subscriptions found
             </td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
+
+    <!-- Pagination Controls -->
+    {% if page_obj.has_other_pages %}
+    <div class="px-6 py-4 border-t border-white/10 flex justify-between items-center bg-white/5">
+      <span class="text-[10px] text-white/40 uppercase font-bold tracking-widest">
+        Showing {{ page_obj.start_index }} to {{ page_obj.end_index }} of {{ page_obj.paginator.count }} entries
+      </span>
+      <div class="flex gap-2">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}{% if filter_date %}&date={{ filter_date }}{% endif %}{% if service_for_filter %}&service_for={{ service_for_filter }}{% endif %}"
+          class="px-3 py-1 bg-zinc-800 text-white text-[10px] font-bold uppercase tracking-widest border border-zinc-700 hover:bg-zinc-700 transition">Prev</a>
+        {% endif %}
+
+        <span
+          class="px-3 py-1 bg-zinc-900 text-white/60 text-[10px] font-bold uppercase tracking-widest border border-zinc-800">
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if filter_date %}&date={{ filter_date }}{% endif %}{% if service_for_filter %}&service_for={{ service_for_filter }}{% endif %}"
+          class="px-3 py-1 bg-zinc-800 text-white text-[10px] font-bold uppercase tracking-widest border border-zinc-700 hover:bg-zinc-700 transition">Next</a>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
   </div>
 
   <!-- Legend -->

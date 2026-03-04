@@ -600,33 +600,39 @@ def list_subscription_plans(request):
     return render(request, 'list_subscription_plans.html', {'plans': plans})
 
 def service_order_report(request):
+    from django.core.paginator import Paginator
     # Get filter parameters from query string
     date_filter = request.GET.get('date', '')
     service_for_filter = request.GET.get('service_for', 'all')
     
     orders = ServiceOrder.objects.all()
+    subscriptions = Subscription.objects.all()
     filter_date = None
-    user_total = Subscription.objects.filter(
-        subscription_for='user'
-    ).aggregate(total=Sum('subscription_plan__price'))['total'] or 0
-
-    business_total = Subscription.objects.filter(
-        subscription_for='business'
-    ).aggregate(total=Sum('subscription_plan__price'))['total'] or 0
 
     # Filter by date if provided
     if date_filter:
         try:
             filter_date = datetime.strptime(date_filter, '%Y-%m-%d').date()
             orders = orders.filter(order_date__date=filter_date)
+            # Filter subscriptions by start_date for the report
+            subscriptions = subscriptions.filter(start_date__date=filter_date)
         except ValueError:
-            filter_date = None  # You can add error handling if needed
+            filter_date = None
 
     # Filter by service_for if provided (user, business, or all)
     if service_for_filter in ['user', 'business']:
         orders = orders.filter(service_for=service_for_filter)
+        subscriptions = subscriptions.filter(subscription_for=service_for_filter)
 
     # Summary stats
+    user_total = subscriptions.filter(
+        subscription_for='user'
+    ).aggregate(total=Sum('subscription_plan__price'))['total'] or 0
+
+    business_total = subscriptions.filter(
+        subscription_for='business'
+    ).aggregate(total=Sum('subscription_plan__price'))['total'] or 0
+
     total_orders = orders.count()
     user_service_count = orders.filter(service_for='user').count()
     business_service_count = orders.filter(service_for='business').count()
@@ -638,8 +644,71 @@ def service_order_report(request):
     ).aggregate(total=Sum('total_price'))
     total_revenue = revenue_data['total'] or 0
 
+    # Create combined list
+    combined_list = []
+    
+    for order in orders:
+        user_name = "N/A"
+        if order.service_for == 'user' and order.USER:
+            user_name = f"{order.USER.first_name} {order.USER.last_name}"
+        elif order.service_for == 'business' and order.BUSINESS:
+            user_name = order.BUSINESS.business_name
+            
+        payment_status = "N/A"
+        payment_status_raw = ""
+        total_price = "-"
+        if hasattr(order, 'payment') and order.payment:
+            payment_status = order.payment.get_payment_status_display()
+            payment_status_raw = order.payment.payment_status
+            total_price = f"₹{order.payment.total_price}" if order.payment.total_price else "-"
+            
+        combined_list.append({
+            'type': 'Order',
+            'id': f"{order.id}",
+            'service_for': order.get_service_for_display(),
+            'user_name': user_name,
+            'service_type': order.service_type,
+            'date': order.order_date,
+            'status': order.get_status_display(),
+            'status_raw': order.status,
+            'payment_status': payment_status,
+            'payment_status_raw': payment_status_raw,
+            'total': total_price,
+            'is_wis': bool(order.subscription),
+        })
+
+    for sub in subscriptions:
+        user_name = "N/A"
+        if sub.subscription_for == 'user' and sub.user:
+            user_name = f"{sub.user.first_name} {sub.user.last_name}"
+        elif sub.subscription_for == 'business' and sub.business:
+            user_name = sub.business.business_name
+            
+        combined_list.append({
+            'type': 'Subscription',
+            'id': f"SUB-{sub.id}",
+            'service_for': sub.get_subscription_for_display(),
+            'user_name': user_name,
+            'service_type': sub.subscription_plan.name,
+            'date': sub.start_date,
+            'status': 'Active' if sub.is_active else 'Inactive',
+            'status_raw': 'completed' if sub.is_active else 'canceled',
+            'payment_status': 'Paid',
+            'payment_status_raw': 'paid',
+            'total': f"₹{sub.subscription_plan.price}",
+            'is_wis': False,
+        })
+        
+    # Sort combined list by date descending
+    combined_list.sort(key=lambda x: x['date'], reverse=True)
+    
+    # Pagination
+    paginator = Paginator(combined_list, 5)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {
-        'orders': orders,
+        'page_obj': page_obj,
         'filter_date': date_filter,
         'total_orders': total_orders,
         'user_service_count': user_service_count,
@@ -648,7 +717,7 @@ def service_order_report(request):
         'service_for_filter': service_for_filter,
         'user_total': user_total,
         'business_total': business_total,
-        'grand_total': user_total + business_total,
+        'grand_total': total_revenue + user_total + business_total,
     }
     return render(request, 'service_order_report.html', context)
 
