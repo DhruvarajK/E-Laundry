@@ -178,24 +178,25 @@
                 <i data-lucide="message-square" class="w-5 h-5"></i>
                 Feedback
             </a>
-
-            <div class="mt-auto border-t border-white/10 pt-4">
-                <a class="flex items-center gap-4 px-4 py-3 text-red-500 hover:bg-red-500/10 font-bold text-xs uppercase tracking-widest transition-colors"
-                    href="{% url 'logout' %}">
-                    <i data-lucide="log-out" class="w-5 h-5"></i>
-                    Logout
-                </a>
-            </div>
         </nav>
         <div class="p-6 border-t border-white/10">
             <div class="flex items-center gap-3">
                 <div class="w-8 h-8 bg-white/10 flex items-center justify-center rounded">
                     <i data-lucide="shield" class="w-4 h-4 text-white"></i>
                 </div>
+
                 <div class="flex flex-col">
                     <span class="text-xs font-bold uppercase">Administrator</span>
                     <span class="text-[10px] text-white/40 uppercase">System Control</span>
                 </div>
+                <a href="/logout">
+                    <button class="ml-auto flex items-center gap-2 p-2 text-xs uppercase
+                            border border-white/10 hover:border-white/30
+                            text-white/70 hover:text-white transition">
+                        <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                    </button>
+                </a>
+
             </div>
         </div>
     </aside>
