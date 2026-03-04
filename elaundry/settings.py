@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'payment',
     'user',
     'django_crontab',
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
 CRONJOBS = [
@@ -132,15 +134,25 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
-
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
+STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+# Cloudinary Storage Configuration
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
+}
+
+# Use Cloudinary for media storage if credentials are provided
+if all([CLOUDINARY_STORAGE['CLOUD_NAME'], CLOUDINARY_STORAGE['API_KEY'], CLOUDINARY_STORAGE['API_SECRET']]):
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+else:
+    # Local fallback/development
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 
 # Default primary key field type
