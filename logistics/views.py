@@ -239,11 +239,12 @@ def view_assigned_services(request):
     # Get filter parameters from GET request
     selected_date = request.GET.get('date')
     status_filter = request.GET.get('status')
+    hide_delivered = request.GET.get('hide_delivered', 'true') == 'true'
     
     # Filter assignments using the DeliveryMan instance
     services = LogisticsAssignment.objects.filter(
         pickup_or_delivery_man=deliveryman
-    ).exclude(delivery_status='canceled')
+    ).exclude(delivery_status='canceled').order_by('-assignment_date')
     
     # Filter by date if provided
     if selected_date:
@@ -252,11 +253,14 @@ def view_assigned_services(request):
     # Filter by status if provided
     if status_filter:
         services = services.filter(delivery_status=status_filter)
+    elif hide_delivered:
+        services = services.exclude(delivery_status='delivered')
     
     context.update({
         'assigned_services': services,
         'selected_date': selected_date,
         'status_filter': status_filter,
+        'hide_delivered': hide_delivered,
     })
     return render(request, 'assigned_services.html', context)
 
