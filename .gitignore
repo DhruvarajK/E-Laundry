@@ -4,3 +4,4 @@ __pycache__/
 logo.html
 favicon/
 staticfiles/
+qr_gen.py
