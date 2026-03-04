@@ -220,7 +220,7 @@ def update_profile(request):
 
         usr_obj.save()
         messages.success(request, 'Profile updated successfully!')
-        return redirect('view_profile')
+        return redirect('profile_view')
 
     return render(request, 'profile_update.html', context)
 
