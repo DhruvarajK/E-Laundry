@@ -20,11 +20,11 @@
           For</label>
         <select name="service_for" id="service_for"
           class="bg-black/20 border border-white/10 text-white text-xs font-bold uppercase tracking-widest py-2 px-3 focus:ring-1 focus:ring-white/20 focus:border-white/20 outline-none transition-all min-w-[150px]">
-          <option value="all" {% if service_for_filter=="all" %}selected{% endif %} class="bg-surface text-white">All
+          <option value="all" {% if service_for_filter == "all" %}selected{% endif %} class="bg-surface text-white">All
           </option>
-          <option value="user" {% if service_for_filter=="user" %}selected{% endif %} class="bg-surface text-white">User
+          <option value="user" {% if service_for_filter == "user" %}selected{% endif %} class="bg-surface text-white">User
           </option>
-          <option value="business" {% if service_for_filter=="business" %}selected{% endif %}
+          <option value="business" {% if service_for_filter == "business" %}selected{% endif %}
             class="bg-surface text-white">Business</option>
         </select>
       </div>
@@ -103,7 +103,6 @@
       <table class="w-full text-left">
         <thead>
           <tr class="border-b border-white/10 bg-white/5">
-            <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">ID</th>
             <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Customer</th>
             <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Type</th>
             <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-white/40">Date</th>
@@ -115,10 +114,6 @@
         <tbody class="divide-y divide-white/5">
           {% for item in page_obj %}
           <tr class="hover:bg-white/5 transition-colors group">
-            <td class="px-6 py-4">
-              <span class="font-mono text-xs text-white/60">{% if item.type == 'Order' %}#{{ item.id }}{% else %}{{
-                item.id }}{% endif %}</span>
-            </td>
             <td class="px-6 py-4 flex flex-col gap-1">
               <span class="text-xs font-bold text-white">{{ item.service_for }}</span>
               <span class="text-[10px] text-white/60">{{ item.user_name }}</span>
