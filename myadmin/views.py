@@ -13,9 +13,9 @@ from django.urls import reverse
 from datetime import date, datetime, timedelta
 from django.utils import timezone
 from django.db.models import Sum
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+from django.core.mail import send_mail
+from django.utils.html import strip_tags
+from django.conf import settings
 from dotenv import load_dotenv
 import os
 from .auth_check import login_required
@@ -108,26 +108,18 @@ EMAIL_PASS = os.getenv("EMAIL_PASS")
 
 def send_email(to_email: str, subject: str, body: str):
     try:
-        msg = MIMEMultipart("alternative")
-        msg["From"] = EMAIL_USER
-        msg["To"] = to_email
-        msg["Subject"] = subject
+        # Create a plain text version for safety
+        plain_message = strip_tags(body)
         
-        # Create plain text fallback
-        text = """Welcome to Azoria AI! Please enable HTML to view this email."""
-        html = body
-        
-        # Attach both versions
-        msg.attach(MIMEText(text, "plain"))
-        msg.attach(MIMEText(html, "html"))
-        
-        with smtplib.SMTP("smtp.gmail.com", 587) as server:
-            server.starttls()
-            server.login(EMAIL_USER, EMAIL_PASS)
-            server.sendmail(EMAIL_USER, to_email, msg.as_string())
-            
-    except smtplib.SMTPException as e:
-        print(f"SMTP error sending to {to_email}: {e}")
+        send_mail(
+            subject=subject,
+            message=plain_message,
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[to_email],
+            html_message=body,
+            fail_silently=False,
+        )
+        print(f"Email sent successfully to {to_email}")
     except Exception as e:
         print(f"General error sending to {to_email}: {e}")
 
